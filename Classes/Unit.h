@@ -2,42 +2,43 @@
 #define UNIT_H_
 
 #include <string>
+#include "cocos2d.h"
 
 class UnitWeapon;
 class UnitAnimation;
 
-class Unit {
+class Unit :public cocos2d::Node {
 public:
 	Unit();
-	~Unit();
+	virtual ~Unit();
+	virtual bool init();
+	CREATE_FUNC(Unit);
 
 public:
+	enum races_type {
+		terran,
+	};
+	enum unit_state {
+		production, idle, move, attack, petrol, hold
+	};
 	enum direction {
 		up, down, left, right, up_left, up_right, down_left, down_right,
 	};
-	enum unit_state {
-		production, idle, move, attack, petrol
-	};
-	enum unit_type {
+	typedef enum unit_type {
 		marine,
-	};
-	enum building_type {
-
-	};
-	enum unit_size_type {
-		small, medium, large, building
-	};
+	} building_type;
 	enum upgrade_type {
 		bionic, mechanic, air_force
 	};
-	enum races_type {
-		terran
+	enum unit_size_type {
+		small_unit, medium_unit, large_unit, building
 	};
+	
 	enum special_effects {
 		none, clockking, 
 	};
 	
-	struct Unit_info {
+	struct unit_info {
 		unit_type _unit_type;					// 유닛 종류
 		upgrade_type _upgrade_type;				// 업그레이드 종류
 		std::string _unit_name;					// 유닛 이름
@@ -66,7 +67,10 @@ public:
 	void hold_unit();
 
 private:
-	Unit_info _unit_info;
+	races_type _races_type;						// 종족
+	unit_state _unit_state;						// 유닛의 현재 상태
+	
+	unit_info _unit_info;
 	production_info _production_info;
 
 	float _move_speed;							// 이동속도

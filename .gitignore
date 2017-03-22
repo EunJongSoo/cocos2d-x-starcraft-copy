@@ -2,5 +2,6 @@ cocos2d/
 [Dd]ebug*/
 release*/
 *.dll
-*.VC.*
 *.VC.*
+*.VC.*
+*복사본*
