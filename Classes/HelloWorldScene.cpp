@@ -35,6 +35,8 @@ bool HelloWorld::init()
 	_unit->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
 	this->addChild(_unit);
     
+	this->schedule(schedule_selector(HelloWorld::update), 1.0f / 9.0f);
+
     return true;
 }
 

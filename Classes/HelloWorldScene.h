@@ -18,8 +18,8 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	virtual void update(float __dt);
-
 	Unit* _unit;
+	
 };
 
 #endif // __HELLOWORLD_SCENE_H__
