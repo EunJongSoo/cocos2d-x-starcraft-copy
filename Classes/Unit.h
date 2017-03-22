@@ -33,7 +33,7 @@ public:
 private:
 	std::string unit_name;
 	
-
+	//ss
 
 	int hp;									// 체력
 	int mp;									// 마력
