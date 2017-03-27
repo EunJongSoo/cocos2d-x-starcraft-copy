@@ -7,9 +7,9 @@
 
 class UnitWeapon;
 class UnitAnimation;
-class MarineMoveAnimation;
-class MarineDieAnimation;
-class MarineAttackAnimation;
+//class MarineMoveAnimation;
+//class MarineDieAnimation;
+//class MarineAttackAnimation;
 
 class Unit :public cocos2d::Sprite {
 public:
@@ -101,17 +101,22 @@ private:
 	unsigned int _max_frame;
 	float _dt;
 	float _dt2;
+	
 
 	std::vector<cocos2d::SpriteFrame*> animation_vector;
 	std::vector<cocos2d::SpriteFrame*> move_animation_vector;
 	std::vector<cocos2d::SpriteFrame*> attack_animation_vector;
 	std::vector<cocos2d::SpriteFrame*> die_animation_vector;
 
+	std::vector<UnitWeapon*> bullet_vector;
+
 
 
 	/*MarineMoveAnimation* move_animation;
 	MarineDieAnimation* die_animation;
 	MarineAttackAnimation* attack_animation;*/
+
+	UnitWeapon* weapon;
 
 	void init_state();
 	void move_();
@@ -120,6 +125,8 @@ private:
 	bool sprite_flip_x(const bool _b);
 
 	void attack_run_action_animation(const float __dt);
+
+	bool _fire;
 };
 
 #endif

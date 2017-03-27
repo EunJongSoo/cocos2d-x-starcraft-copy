@@ -1,9 +1,12 @@
 #include "Unit.h"
-#include "MarineDieAnimation.h"
-#include "MarineAttackAnimation.h"
-#include "MarineMoveAnimation.h"
+//#include "MarineDieAnimation.h"
+//#include "MarineAttackAnimation.h"
+//#include "MarineMoveAnimation.h"
+#include "SimpleAudioEngine.h"
+#include "UnitWeapon.h"
 
 using namespace cocos2d;
+using namespace CocosDenshion;
 
 Unit::Unit() : _unit_state(unit_state::idle) {
 }
@@ -154,6 +157,12 @@ void Unit::run_action_animation(float _dt) {
 	case attack: {
 		// 局聪皋捞记 贸府
 		attack_run_action_animation(_dt);
+		if (_fire) {
+			SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
+			weapon = UnitWeapon::create();
+			weapon->setPosition(_target_unit->getPosition());
+			bullet_vector.push_back(weapon);
+		}
 		//attack_animation->run_action_animation(_dt, _unit_dir);
 		// 傍拜贸府
 		break;
@@ -168,6 +177,9 @@ void Unit::run_action_animation(float _dt) {
 		break;
 	default:
 		break;
+	}
+	for (UnitWeapon* weapon : bullet_vector) {
+		weapon->run_action_weapon_animation();
 	}
 }
 
@@ -208,6 +220,14 @@ void Unit::attack_run_action_animation(const float __dt) {
 	_dt2 += __dt;
 	if (0.05f > _dt) return;
 	if (_attack_speed > _dt2) return;
+	
+	if (_frame == 2) {
+		_fire = true;
+	}
+	else {
+		_fire = false;
+	}
+
 	_dt = 0;
 	if (sprite_flip_x(_unit_dir > left_check)) {
 		_unit_dir2 = _unit_dir - 10;

@@ -29,7 +29,9 @@ bool HelloWorld::init()
     }
     
 	auto sprite_cache = SpriteFrameCache::getInstance();
-	sprite_cache->addSpriteFramesWithFile("unit/marine/marine.plist", "unit/marine/marine.png");
+	sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
+	sprite_cache->addSpriteFramesWithFile("img/unit/marine/tspark.plist", "img/unit/marine/tspark.png");
+
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
