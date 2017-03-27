@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "unit.h"
 
+#include "Header.h"
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -17,9 +19,11 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
+	void on_mouse_up(cocos2d::Event *_event);
 	virtual void update(float __dt);
 	Unit* _unit;
-	
+	Unit* _unit2;
+	int unit_state;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

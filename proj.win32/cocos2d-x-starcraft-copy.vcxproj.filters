@@ -44,6 +44,18 @@
     <ClInclude Include="..\Classes\UnitAnimation.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Header.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MarineAttackAnimation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MarineDieAnimation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MarineMoveAnimation.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

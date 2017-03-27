@@ -2,6 +2,8 @@
 #define UNIT_ANIMATION_H_
 
 #include "cocos2d.h"
+#include "header.h"
+#include <vector>
 
 class UnitAnimation : public cocos2d::Sprite {
 public:
@@ -9,15 +11,18 @@ public:
 	virtual ~UnitAnimation();
 	virtual bool init();
 	CREATE_FUNC(UnitAnimation);
+	virtual void run_action_animation(const float _dt) {};
 
-	cocos2d::Texture2D* texture[10];
-
-	void run_action_animation();
-
-private:
+protected:
+	bool sprite_flip_x(const bool _b);
+	
 	unsigned int _frame;		// 애니메이션 프레임수
 	unsigned int _max_frame;
-	float animation_speed;      // 애니메이션 스피드
+	float _animation_time;      // 애니메이션 스피드
+	float _dt;
+	float _dt2;
+
+	std::vector<cocos2d::SpriteFrame*> sprite_vector;
 };
 
 #endif

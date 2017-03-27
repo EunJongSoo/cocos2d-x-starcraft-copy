@@ -3,11 +3,15 @@
 
 #include <string>
 #include "cocos2d.h"
+#include "header.h"
 
 class UnitWeapon;
 class UnitAnimation;
+class MarineMoveAnimation;
+class MarineDieAnimation;
+class MarineAttackAnimation;
 
-class Unit :public cocos2d::Node {
+class Unit :public cocos2d::Sprite {
 public:
 	Unit();
 	virtual ~Unit();
@@ -18,12 +22,7 @@ public:
 	enum races_type {
 		terran,
 	};
-	enum unit_state {
-		production, idle, move, attack, petrol, hold
-	};
-	enum direction {
-		up, down, left, right, up_left, up_right, down_left, down_right,
-	};
+	
 	typedef enum unit_type {
 		marine,
 	} building_type;
@@ -60,16 +59,23 @@ public:
 		unsigned int _required_supply;			// 필요 인구수
 	};
 	
-	void attack_unit();
-	void move_unit();
+	void attack_unit(Unit* const _target);
+	void move_unit(const float _x, const float _y);
 	void stop_unit();
 	void patrol_unit();
 	void hold_unit();
+	void die_unit();
 
+	void run_action_animation(float _dt);
+	
+
+	direction _unit_dir;
+	int _unit_dir2;
 private:
 	races_type _races_type;						// 종족
 	unit_state _unit_state;						// 유닛의 현재 상태
 	
+
 	unit_info _unit_info;
 	production_info _production_info;
 
@@ -79,9 +85,8 @@ private:
 	float _min_attack_range;					// 최소_사정거리
 	float _max_attack_range;					// 최대_사정거리
 	
-	direction _unit_dir;						// 유닛이 보는 방향
-	
 	Unit* _target_unit;							// 공격 목표
+	cocos2d::Vec2 move_vec2;
 	float _move_x;								// 이동 목표_x
 	float _move_y;								// 이동 목표_y
 	float _pos_x;								// 유닛 좌표_x
@@ -92,10 +97,29 @@ private:
 	float _production_time;						// 현재 생산 시간
 	special_effects _unit_effects;				// 현재 특수이팩트
 
+	unsigned int _frame;						// 애니메이션 프레임수
+	unsigned int _max_frame;
+	float _dt;
+	float _dt2;
 
-	// 상속받은 개체가 가져야한다.
-	UnitWeapon* _unit_weapon;
-	UnitAnimation* _unit_animation;
+	std::vector<cocos2d::SpriteFrame*> animation_vector;
+	std::vector<cocos2d::SpriteFrame*> move_animation_vector;
+	std::vector<cocos2d::SpriteFrame*> attack_animation_vector;
+	std::vector<cocos2d::SpriteFrame*> die_animation_vector;
+
+
+
+	/*MarineMoveAnimation* move_animation;
+	MarineDieAnimation* die_animation;
+	MarineAttackAnimation* attack_animation;*/
+
+	void init_state();
+	void move_();
+	void check_dir(const cocos2d::Vec2 & _dir);
+	void move_run_action_animation(const float __dt);
+	bool sprite_flip_x(const bool _b);
+
+	void attack_run_action_animation(const float __dt);
 };
 
 #endif
