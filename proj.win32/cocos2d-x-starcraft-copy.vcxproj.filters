@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Unit">
+      <UniqueIdentifier>{8888cf03-369c-44bb-8b09-4a1eb64f5178}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -22,13 +25,13 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Unit.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Unit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\UnitAnimation.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Unit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\UnitWeapon.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Unit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,26 +44,17 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Unit.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\UnitAnimation.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Header.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\MarineAttackAnimation.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\Classes\Unit.h">
+      <Filter>src\Unit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\MarineDieAnimation.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MarineMoveAnimation.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\Classes\UnitAnimation.h">
+      <Filter>src\Unit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\UnitWeapon.h">
-      <Filter>src</Filter>
+      <Filter>src\Unit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,15 +1,11 @@
 #ifndef UNIT_H_
 #define UNIT_H_
 
-#include <string>
 #include "cocos2d.h"
 #include "header.h"
 
 class UnitWeapon;
 class UnitAnimation;
-//class MarineMoveAnimation;
-//class MarineDieAnimation;
-//class MarineAttackAnimation;
 
 class Unit :public cocos2d::Sprite {
 public:
@@ -96,36 +92,16 @@ private:
 	
 	float _production_time;						// 현재 생산 시간
 	special_effects _unit_effects;				// 현재 특수이팩트
-
-	unsigned int _frame;						// 애니메이션 프레임수
-	unsigned int _max_frame;
-	float _dt;
-	float _dt2;
 	
-
-	std::vector<cocos2d::SpriteFrame*> animation_vector;
-	std::vector<cocos2d::SpriteFrame*> move_animation_vector;
-	std::vector<cocos2d::SpriteFrame*> attack_animation_vector;
-	std::vector<cocos2d::SpriteFrame*> die_animation_vector;
-
-	std::vector<UnitWeapon*> bullet_vector;
-
-
-
-	/*MarineMoveAnimation* move_animation;
-	MarineDieAnimation* die_animation;
-	MarineAttackAnimation* attack_animation;*/
-
+	UnitAnimation* move_animation;
+	UnitAnimation* attack_animation;
+	UnitAnimation* die_animation;
+	
 	UnitWeapon* weapon;
-
-	void init_state();
-	void move_();
+	std::vector<UnitWeapon*> bullet_vector;
+	
+	void run_action_move();
 	void check_dir(const cocos2d::Vec2 & _dir);
-	void move_run_action_animation(const float __dt);
-	bool sprite_flip_x(const bool _b);
-
-	void attack_run_action_animation(const float __dt);
-
 	bool _fire;
 };
 

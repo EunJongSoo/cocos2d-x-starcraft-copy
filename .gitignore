@@ -4,3 +4,4 @@ release*/
 *.dll
 *.VC.*
 *.VC.*
+*.vcxpro*

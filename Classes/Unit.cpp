@@ -1,7 +1,5 @@
 #include "Unit.h"
-//#include "MarineDieAnimation.h"
-//#include "MarineAttackAnimation.h"
-//#include "MarineMoveAnimation.h"
+#include "UnitAnimation.h"
 #include "SimpleAudioEngine.h"
 #include "UnitWeapon.h"
 
@@ -12,6 +10,8 @@ Unit::Unit() : _unit_state(unit_state::idle) {
 }
 
 Unit::~Unit() {
+	delete move_animation;
+	delete attack_animation;
 }
 
 bool Unit::init() {
@@ -21,102 +21,35 @@ bool Unit::init() {
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	this->initWithSpriteFrame(sprite_cache->spriteFrameByName("marine016.bmp"));
 
-	char str[16];
+	move_animation = new UnitAnimation();
+	this->addChild(move_animation);
+	move_animation->init_animation("marine", 9, 68, 9);
 
-	// move animation
-	for (int j = 0; j < 9; ++j) {
-		for (int i = 0; i < 9; ++i) {
-			sprintf_s(str, sizeof(str), "marine%03d.bmp", 68 + j * 2 + i * 17);
-			move_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		}
-	}
-
-	// attack animation
-	for (int j = 0; j < 9; ++j) {
-		sprintf_s(str, sizeof(str), "marine%03d.bmp", 17 + j * 2);
-		attack_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		sprintf_s(str, sizeof(str), "marine%03d.bmp", 34 + j * 2);
-		attack_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		for (int i = 0; i < 3; ++i) {
-			sprintf_s(str, sizeof(str), "marine%03d.bmp", 51 + j * 2);
-			attack_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-			sprintf_s(str, sizeof(str), "marine%03d.bmp", 34 + j * 2);
-			attack_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		}
-	}
-
-	// die animation
-	for (int i = 221; i < 229; ++i) {
-		sprintf_s(str, sizeof(str), "marine%03d.bmp", i);
-		die_animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-	}
+	attack_animation = new UnitAnimation();
+	this->addChild(attack_animation);
+	attack_animation->init_animation("marine", 8, 51, 2, 3, -17);
 
 	_move_speed = 2.0f;
 	_attack_speed = 0.3f;
-	_dt = 0.0f;
 	_unit_dir = up;
 	_unit_state = idle;
-
-	_frame = 0;
-	_max_frame = 0;
-	_unit_dir2 = up;
-
-	_dt2 = 0.2f;
-
+	
 	return true;
 }
 
-void Unit::init_state() {
-	switch (_unit_state)
-	{
-	case production:
-		break;
-	case idle:
-		break;
-	case move:
-		break;
-	case attack:
-		break;
-	case petrol:
-		break;
-	case hold:
-		break;
-	case die:
-		break;
-	default:
-		break;
-	}
-}
-
 void Unit::attack_unit(Unit* const _target) {
-	init_state();
-
 	_target_unit = _target;
 	_unit_state = unit_state::attack;
-	_frame = 0;
-	_max_frame = 8;
-
 	Vec2 vec2 = _target_unit->getPosition() - this->getPosition();
 	vec2.normalize();
 	check_dir(vec2);
-
-	/*attack_animation->setVisible(true);
-	move_animation->setVisible(false);
-	die_animation->setVisible(false);*/
 }
 
 void Unit::move_unit(const float _x, const float _y) {
-	init_state();
-
 	move_vec2 = Vec2(_x, _y);
 	_move_x = _x;
 	_move_y = _y;
 	_unit_state = unit_state::move;
-	_frame = 0;
-	_max_frame = 9;
-	/*move_animation->setVisible(true);
-	attack_animation->setVisible(false);
-	die_animation->setVisible(false);*/
 }
 
 void Unit::stop_unit() {
@@ -132,12 +65,7 @@ void Unit::hold_unit() {
 }
 
 void Unit::die_unit() {
-	init_state();
-
 	_unit_state = unit_state::die;
-	/*move_animation->setVisible(false);
-	attack_animation->setVisible(false);
-	die_animation->setVisible(true);*/
 }
 
 void Unit::run_action_animation(float _dt) {
@@ -148,23 +76,22 @@ void Unit::run_action_animation(float _dt) {
 	case idle:
 		break;
 	case move:
-		// 局聪皋捞记 贸府
-		move_run_action_animation(_dt);
-		//move_animation->run_action_animation(_dt, _unit_dir);
 		// 捞悼贸府
-		move_();
+		run_action_move();
+		// 局聪皋捞记 贸府
+		move_animation->run_action_aniamtion(_dt, _unit_dir);
 		break;
 	case attack: {
 		// 局聪皋捞记 贸府
-		attack_run_action_animation(_dt);
-		if (_fire) {
+		attack_animation->run_action_aniamtion(_dt, _unit_dir, 2);
+		/*if (_fire) {
 			SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
 			weapon = UnitWeapon::create();
 			weapon->setPosition(_target_unit->getPosition());
 			bullet_vector.push_back(weapon);
-		}
-		//attack_animation->run_action_animation(_dt, _unit_dir);
-		// 傍拜贸府
+			weapon->retain();
+			this->addChild(weapon);
+		}*/
 		break;
 	}
 	case petrol:
@@ -172,8 +99,6 @@ void Unit::run_action_animation(float _dt) {
 	case hold:
 		break;
 	case die:
-		//die_animation->run_action_animation(_dt);
-		// 荤噶贸府
 		break;
 	default:
 		break;
@@ -183,7 +108,7 @@ void Unit::run_action_animation(float _dt) {
 	}
 }
 
-void Unit::move_() {
+void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
 	if (bounding.containsPoint(move_vec2)) {
 		_unit_state = idle;
@@ -196,56 +121,6 @@ void Unit::move_() {
 		check_dir(vec2);
 		this->setPosition(_position + (vec2 * _move_speed));
 	}
-}
-
-void Unit::move_run_action_animation(const float __dt) {
-	_dt += __dt;
-	if (0.05f > _dt) return;
-	_dt = 0;
-	if (sprite_flip_x(_unit_dir > left_check)) {
-		_unit_dir2 = _unit_dir - 10;
-	}
-	else {
-		_unit_dir2 = _unit_dir;
-	}
-	this->setSpriteFrame(move_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
-	if (_frame >= _max_frame) {
-		_frame = 0;
-
-	}
-}
-
-void Unit::attack_run_action_animation(const float __dt) {
-	_dt += __dt;
-	_dt2 += __dt;
-	if (0.05f > _dt) return;
-	if (_attack_speed > _dt2) return;
-	
-	if (_frame == 2) {
-		_fire = true;
-	}
-	else {
-		_fire = false;
-	}
-
-	_dt = 0;
-	if (sprite_flip_x(_unit_dir > left_check)) {
-		_unit_dir2 = _unit_dir - 10;
-	}
-	else {
-		_unit_dir2 = _unit_dir;
-	}
-	this->setSpriteFrame(attack_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
-	if (_frame >= _max_frame) {
-		_frame = 2;
-		_dt2 = 0;
-	}
-}
-
-bool Unit::sprite_flip_x(const bool _b) {
-	if (_b != this->isFlippedX())
-		this->setFlippedX(_b);
-	return _b;
 }
 
 void Unit::check_dir(const cocos2d::Vec2 & _dir) {
@@ -283,3 +158,47 @@ void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 		}
 	}
 }
+
+//void Unit::move_run_action_animation(const float __dt) {
+//	_dt += __dt;
+//	if (0.05f > _dt) return;
+//	_dt = 0;
+//	if (sprite_flip_x(_unit_dir > left_check)) {
+//		_unit_dir2 = _unit_dir - 10;
+//	}
+//	else {
+//		_unit_dir2 = _unit_dir;
+//	}
+//	this->setSpriteFrame(move_clip.move_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
+//	if (_frame >= _max_frame) {
+//		_frame = 0;
+//
+//	}
+//}
+//
+//void Unit::attack_run_action_animation(const float __dt) {
+//	_dt += __dt;
+//	_dt2 += __dt;
+//	if (0.05f > _dt) return;
+//	if (_attack_speed > _dt2) return;
+//
+//	if (_frame == 2) {
+//		_fire = true;
+//	}
+//	else {
+//		_fire = false;
+//	}
+//
+//	_dt = 0;
+//	if (sprite_flip_x(_unit_dir > left_check)) {
+//		_unit_dir2 = _unit_dir - 10;
+//	}
+//	else {
+//		_unit_dir2 = _unit_dir;
+//	}
+//	this->setSpriteFrame(attack_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
+//	if (_frame >= _max_frame) {
+//		_frame = 2;
+//		_dt2 = 0;
+//	}
+//}
