@@ -58,9 +58,9 @@ public:
 	};
 	
 	void attack_unit(Unit* const _target);
-	void move_unit(const float _x, const float _y);
+	void move_unit(const cocos2d::Vec2& _move_pos);
 	void stop_unit();
-	void patrol_unit();
+	void patrol_unit(const cocos2d::Vec2& _move_pos);
 	void hold_unit();
 	void die_unit();
 	void hit(int _dmg);
@@ -86,8 +86,7 @@ private:
 	
 	Unit* target_unit;							// 공격 목표
 	cocos2d::Vec2 move_vec2;
-	float pos_x;								// 유닛 좌표_x
-	float pos_y;								// 유닛 좌표_y
+	cocos2d::Vec2 my_pos_vec2;
 	unsigned int tile_x;						// 타일 위치_x
 	unsigned int tile_y;						// 타일 위치_y
 	

@@ -56,9 +56,9 @@ void Unit::attack_unit(Unit* const _target) {
 	check_dir(vec2);
 }
 
-void Unit::move_unit(const float _x, const float _y) {
+void Unit::move_unit(const Vec2& _move_pos) {
 	init_frame();
-	move_vec2 = Vec2(_x, _y);
+	move_vec2 = _move_pos;
 	unit_state = unit_state::move;
 }
 
@@ -67,8 +67,10 @@ void Unit::stop_unit() {
 	unit_state = unit_state::idle;
 }
 
-void Unit::patrol_unit() {
+void Unit::patrol_unit(const Vec2& _move_pos) {
 	init_frame();
+	move_vec2 = _move_pos;
+	my_pos_vec2 = this->getPosition();
 	unit_state = unit_state::petrol;
 }
 
@@ -120,8 +122,17 @@ void Unit::run_action_animation(float _dt) {
 		}
 		break;
 	}
-	case petrol:
+	case petrol: {
+		// 捞悼贸府
+		run_action_move();
+		if (unit_state == idle) {
+			unit_state = petrol;
+			std::swap(move_vec2, my_pos_vec2);
+		}
+		// 局聪皋捞记 贸府
+		move_animation->run_action_aniamtion(_dt, unit_dir);
 		break;
+	}
 	case hold:
 		break;
 	case die:
@@ -130,6 +141,9 @@ void Unit::run_action_animation(float _dt) {
 	default:
 		break;
 	}
+
+
+
 	for (UnitWeapon* weapon : bullet_vector) {
 		weapon->run_action_weapon_animation();
 	}

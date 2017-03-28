@@ -77,7 +77,7 @@ void HelloWorld::on_mouse_up(Event *_event) {
 
 	switch (e->getMouseButton()) {
 	case MOUSE_BUTTON_LEFT: {
-		_unit->die_unit();
+		_unit->stop_unit();
 		break;
 	}
 	case MOUSE_BUTTON_RIGHT: {
@@ -86,7 +86,7 @@ void HelloWorld::on_mouse_up(Event *_event) {
 			_unit->attack_unit(_unit2);
 		}
 		else {
-			_unit->move_unit(location.x, location.y);
+			_unit->patrol_unit(location);
 		}
 		break;
 	}
