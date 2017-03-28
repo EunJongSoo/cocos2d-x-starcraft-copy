@@ -93,9 +93,9 @@ private:
 	float production_time;						// 현재 생산 시간
 	special_effects unit_effects;				// 현재 특수이팩트
 	
-	UnitAnimation* move_animation;
-	UnitAnimation* attack_animation;
-	UnitAnimation* die_animation;
+	UnitAnimation* unit_animation;
+	//UnitAnimation* attack_animation;
+	//UnitAnimation* die_animation;
 	
 	UnitWeapon* weapon;
 	std::vector<UnitWeapon*> bullet_vector;

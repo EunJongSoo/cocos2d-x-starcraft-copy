@@ -1,78 +1,96 @@
 #include "UnitAnimation.h"
 
-UnitAnimation::UnitAnimation() : _parent(nullptr), frame(0), max_frame(0), dt(0.0f) {}
+using namespace cocos2d;
+
+UnitAnimation::UnitAnimation() : frame(0), dt(0.0f) {}
 UnitAnimation::~UnitAnimation() {}
 
-void UnitAnimation::run_action_aniamtion(float _dt, int _dir, int _frame) {
-	dt += _dt;
-	if (0.05f > dt) return;
-	dt = 0;
-	int _tmp_dir;
-	if (sprite_flip_x(_dir > left_check)) {
-		_tmp_dir = _dir - 10;
-	}
-	else {
-		_tmp_dir = _dir;
-	}
-	_parent->setSpriteFrame(animation_vector[frame++ + _tmp_dir * max_frame]);
-	if (frame >= max_frame) {
-		frame = _frame;
-	}
-}
 
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, unit_state _state) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
-	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
-	max_frame = _max_frame;
-	state = _state;
-	char str[16];
-
-	// 모션 수
-	for (int i = 0; i < max_frame; ++i) {
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + i);
-		animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-	}
-
-}
-
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count, unit_state _state) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
-	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
-	max_frame = _max_frame;
-	state = _state;
-	char str[16];
-
-	// 방향 수
-	for (int j = 0; j < 9; ++j) {
-		// 애니메이션 수
-		for (int i = 0; i < _ani_count; ++i) {
-			sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + j * 2 + i * 17);
-			animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		}
+void UnitAnimation::run_action_aniamtion(unit_state _state, Sprite* _sprite, float _dt, int _dir, int _frame) {
+	switch (_state)
+	{
+	case move:
+		clip_aniamtion(move_clip, _sprite, _dt, _dir, _frame);
+		break;
+	case attack:
+		clip_aniamtion(attack_clip, _sprite, _dt, _dir, _frame);
+		break;
+	case petrol:
+		break;
+	case die:
+		clip_aniamtion(die_clip, _sprite, _dt, _dir, _frame);
+		break;
+	default:
+		break;
 	}
 }
 
+//void UnitAnimation::move_aniamtion(Sprite* _sprite, float _dt, int _dir, int _frame) {
+//	dt += _dt;
+//	if (0.05f > dt) return;
+//	dt = 0;
+//
+//	int _tmp_dir = sprite_flipped_x(_sprite, _dir > left_check, _sprite->isFlippedX(), _dir);
+//
+//	_sprite->setSpriteFrame(move_clip.animation_vector[frame++ + _tmp_dir * move_clip.max_frame]);
+//	if (frame >= move_clip.max_frame) {
+//		frame = _frame;
+//	}
+//}
+//
+//void UnitAnimation::attack_aniamtion(cocos2d::Sprite* _sprite, float _dt, int _dir, int _frame) {
+//	dt += _dt;
+//	if (0.05f > dt) return;
+//	dt = 0;
+//
+//	int _tmp_dir = sprite_flipped_x(_sprite, _dir > left_check, _sprite->isFlippedX(), _dir);
+//
+//	_sprite->setSpriteFrame(attack_clip.animation_vector[frame++ + _tmp_dir * attack_clip.max_frame]);
+//	if (frame >= attack_clip.max_frame) {
+//		frame = _frame;
+//	}
+//}
+//
+//void UnitAnimation::die_aniamtion(cocos2d::Sprite* _sprite, float _dt, int _dir, int _frame) {
+//	dt += _dt;
+//	if (0.05f > dt) return;
+//	dt = 0;
+//	
+//	int _tmp_dir = sprite_flipped_x(_sprite, _dir > left_check, _sprite->isFlippedX(), _dir);
+//	
+//	_sprite->setSpriteFrame(die_clip.animation_vector[frame++ + _tmp_dir * die_clip.max_frame]);
+//	if (frame >= die_clip.max_frame) {
+//		frame = _frame;
+//	}
+//}
 
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num, unit_state _state) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
-	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
-	max_frame = _max_frame;
-	state = _state;
-	char str[16];
+void UnitAnimation::init_animation(unit_state _state, char* _str, int _max_frame, int _base) {
+	switch (_state)
+	{
+	case move: 		init_clip(move_clip, _str, _max_frame, _base);		break;
+	case attack:	init_clip(attack_clip, _str, _max_frame, _base);	break;
+	case die:		init_clip(die_clip, _str, _max_frame, _base);		break;
+	default:	break;
+	}
+}
 
-	// 방향 수
-	for (int j = 0; j < 9; ++j) {
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 17 + j * 2);
-		animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 34 + j * 2);
-		animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		for (int k = 0; k < _loop; ++k) {
-			// 애니메이션 수
-			for (int i = 0; i < _ani_count; ++i) {
-				sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + j * 2 + i * _num);
-				animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-			}
-		}
+void UnitAnimation::init_animation(unit_state _state, char* _str, int _max_frame, int _base, int _ani_count) {
+	switch (_state)
+	{
+	case move:		init_clip(move_clip, _str, _max_frame, _base, _ani_count);		break;
+	case attack:	init_clip(attack_clip, _str, _max_frame, _base, _ani_count);	break;
+	case die:		init_clip(die_clip, _str, _max_frame, _base, _ani_count);		break;
+	default:		break;
+	}
+}
+
+void UnitAnimation::init_animation(unit_state _state, char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num) {
+	switch (_state)
+	{
+	case move:		init_clip(move_clip, _str, _max_frame, _base, _ani_count, _loop, _num);		break;
+	case attack:	init_clip(attack_clip, _str, _max_frame, _base, _ani_count, _loop, _num);	break;
+	case die:		init_clip(die_clip, _str, _max_frame, _base, _ani_count, _loop, _num);		break;
+	default:		break;
 	}
 }
 
@@ -81,11 +99,74 @@ void UnitAnimation::init_frame() {
 	dt = 0;
 }
 
-bool UnitAnimation::sprite_flip_x(const bool _b) {
-	cocos2d::Sprite* sprite = static_cast<cocos2d::Sprite*>(this->getParent());
-	if (_b != sprite->isFlippedX())
-		sprite->setFlippedX(_b);
-	return _b;
+void UnitAnimation::sprite_flipped_x(Sprite* _sprite, bool _is_left, bool _is_flipped_x) {
+	if (_is_left != _is_flipped_x) {
+		_sprite->setFlippedX(_is_left);
+	}
+}
+
+
+void UnitAnimation::init_clip(clip& _clip, char* _str, int _max_frame, int _base) {
+	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	_clip.max_frame = _max_frame;
+	char str[16];
+	// 모션 수
+	for (int i = 0; i <_clip.max_frame; ++i) {
+		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + i);
+		_clip.animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+	}
+}
+
+
+void UnitAnimation::init_clip(clip& _clip, char* _str, int _max_frame, int _base, int _ani_count) {
+	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	_clip.max_frame = _max_frame;
+	char str[16];
+	// 방향 수
+	for (int j = 0; j < 9; ++j) {
+		// 애니메이션 수
+		for (int i = 0; i < _ani_count; ++i) {
+			sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + j * 2 + i * 17);
+			_clip.animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+		}
+	}
+}
+
+void UnitAnimation::init_clip(clip& _clip, char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num) {
+	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	_clip.max_frame = _max_frame;
+	char str[16];
+
+	// 방향 수
+	for (int j = 0; j < 9; ++j) {
+		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 17 + j * 2);
+		_clip.animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 34 + j * 2);
+		_clip.animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+		for (int k = 0; k < _loop; ++k) {
+			// 애니메이션 수
+			for (int i = 0; i < _ani_count; ++i) {
+				sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + j * 2 + i * _num);
+				_clip.animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+			}
+		}
+	}
+}
+
+
+void UnitAnimation::clip_aniamtion(const clip& _clip, Sprite* _sprite, float _dt, int _dir, int _frame) {
+	dt += _dt;
+	if (0.05f > dt) return;
+	dt = 0;
+
+	bool is_left = _dir > left_check;
+	int tmp_dir = is_left ? _dir - 10 : _dir;
+	sprite_flipped_x(_sprite, is_left, _sprite->isFlippedX());
+	
+	_sprite->setSpriteFrame(_clip.animation_vector[frame++ + tmp_dir * _clip.max_frame]);
+	if (frame >= _clip.max_frame) {
+		frame = _frame;
+	}
 }
 
 //// init_animation을 하나에 하려면 매개변수가 너무 많아짐

@@ -10,9 +10,9 @@ Unit::Unit() : unit_state(unit_state::idle) {
 }
 
 Unit::~Unit() {
-	delete move_animation;
-	delete attack_animation;
-	delete die_animation;
+	delete unit_animation;
+	//delete attack_animation;
+	//delete die_animation;
 }
 
 bool Unit::init() {
@@ -27,7 +27,12 @@ bool Unit::init() {
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
 
-	move_animation = new UnitAnimation();
+	unit_animation = new UnitAnimation();
+	unit_animation->init_animation(move, "marine", 9, 68, 9);
+	unit_animation->init_animation(attack, "marine", 8, 51, 2, 3, -17);
+	unit_animation->init_animation(die, "marine", 8, 221);
+
+	/*move_animation = new UnitAnimation();
 	this->addChild(move_animation);
 	move_animation->init_animation("marine", 9, 68, 9, move);
 
@@ -37,7 +42,7 @@ bool Unit::init() {
 
 	die_animation = new UnitAnimation();
 	this->addChild(die_animation);
-	die_animation->init_animation("marine", 8, 221, die);
+	die_animation->init_animation("marine", 8, 221, die);*/
 
 	move_speed = 2.0f;
 	attack_speed = 0.3f;
@@ -98,6 +103,9 @@ void Unit::hit(int _dmg) {
 }
 
 void Unit::run_action_animation(float _dt) {
+	unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
+
+
 	switch (unit_state)
 	{
 	case production:
@@ -108,11 +116,11 @@ void Unit::run_action_animation(float _dt) {
 		// 捞悼贸府
 		run_action_move();
 		// 局聪皋捞记 贸府
-		move_animation->run_action_aniamtion(_dt, unit_dir);
+		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);
 		break;
 	case attack: {
 		// 局聪皋捞记 贸府
-		attack_animation->run_action_aniamtion(_dt, unit_dir, 2);
+		unit_animation->run_action_aniamtion(attack, this, _dt, unit_dir, 2);
 		if (fire) {
 			SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
 			weapon = new UnitWeapon();
@@ -130,13 +138,13 @@ void Unit::run_action_animation(float _dt) {
 			std::swap(move_vec2, my_pos_vec2);
 		}
 		// 局聪皋捞记 贸府
-		move_animation->run_action_aniamtion(_dt, unit_dir);
+		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);
 		break;
 	}
 	case hold:
 		break;
 	case die:
-		die_animation->run_action_aniamtion(_dt);
+		unit_animation->run_action_aniamtion(die, this, _dt);
 		break;
 	default:
 		break;
@@ -214,28 +222,7 @@ void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 }
 
 void Unit::init_frame() {
-	switch (unit_state)
-	{
-	case production:
-		break;
-	case idle:
-		break;
-	case move:
-		move_animation->init_frame();
-		break;
-	case attack:
-		attack_animation->init_frame();
-		break;
-	case petrol:
-		break;
-	case hold:
-		break;
-	case die:
-		die_animation->init_frame();
-		break;
-	default:
-		break;
-	}
+	unit_animation->init_frame();
 }
 
 //void Unit::move_run_action_animation(const float __dt) {
