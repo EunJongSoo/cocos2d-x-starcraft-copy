@@ -11,8 +11,6 @@ Unit::Unit() : unit_state(unit_state::idle) {
 
 Unit::~Unit() {
 	delete unit_animation;
-	//delete attack_animation;
-	//delete die_animation;
 }
 
 bool Unit::init() {
@@ -31,18 +29,6 @@ bool Unit::init() {
 	unit_animation->init_animation(move, "marine", 9, 68, 9);
 	unit_animation->init_animation(attack, "marine", 8, 51, 2, 3, -17);
 	unit_animation->init_animation(die, "marine", 8, 221);
-
-	/*move_animation = new UnitAnimation();
-	this->addChild(move_animation);
-	move_animation->init_animation("marine", 9, 68, 9, move);
-
-	attack_animation = new UnitAnimation();
-	this->addChild(attack_animation);
-	attack_animation->init_animation("marine", 8, 51, 2, 3, -17, attack);
-
-	die_animation = new UnitAnimation();
-	this->addChild(die_animation);
-	die_animation->init_animation("marine", 8, 221, die);*/
 
 	move_speed = 2.0f;
 	attack_speed = 0.3f;
@@ -76,7 +62,7 @@ void Unit::patrol_unit(const Vec2& _move_pos) {
 	init_frame();
 	move_vec2 = _move_pos;
 	my_pos_vec2 = this->getPosition();
-	unit_state = unit_state::petrol;
+	unit_state = unit_state::patrol;
 }
 
 void Unit::hold_unit() {
@@ -130,11 +116,11 @@ void Unit::run_action_animation(float _dt) {
 		}
 		break;
 	}
-	case petrol: {
+	case patrol: {
 		// 捞悼贸府
 		run_action_move();
 		if (unit_state == idle) {
-			unit_state = petrol;
+			unit_state = patrol;
 			std::swap(move_vec2, my_pos_vec2);
 		}
 		// 局聪皋捞记 贸府
@@ -167,7 +153,6 @@ void Unit::run_action_animation(float _dt) {
 		delete bullet_vector.at(j);
 		bullet_vector.erase(bullet_vector.begin() + j);
 	}
-		
 }
 
 void Unit::run_action_move() {
@@ -185,6 +170,7 @@ void Unit::run_action_move() {
 	}
 }
 
+// 概流逞滚 惑荐 贸府
 void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 	if (_dir.y > 0.3333333f) {
 		if (_dir.y > 0.99f) {

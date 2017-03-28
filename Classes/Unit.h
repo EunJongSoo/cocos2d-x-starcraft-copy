@@ -18,7 +18,7 @@ public:
 	enum races_type {
 		terran,
 	};
-	
+
 	typedef enum unit_type {
 		marine,
 	} building_type;
@@ -28,17 +28,14 @@ public:
 	enum unit_size_type {
 		small_unit, medium_unit, large_unit, building
 	};
-	
+
 	enum special_effects {
-		none, clockking, 
+		none, clockking,
 	};
 	
 	struct unit_info {
 		unit_info() : killing_count(0), hp(10), mp(0), shield(0), attack(5), armor(1),
 		attack_upgrade_level(0), defence_upgrade_level(0) {}
-		unit_type unit_type;					// 유닛 종류
-		upgrade_type upgrade_type;				// 업그레이드 종류
-		std::string unit_name;					// 유닛 이름
 		unsigned int killing_count;				// 적 유닛 죽인수
 		unsigned int hp;						// 체력
 		unsigned int mp;						// 마력
@@ -47,11 +44,14 @@ public:
 		unsigned int armor;						// 방어력
 		unsigned int attack_upgrade_level;		// 공격 업그레이드 수준
 		unsigned int defence_upgrade_level;		// 방어 업그레이드 수준
+		unit_type unit_type;					// 유닛 종류
+		upgrade_type upgrade_type;				// 업그레이드 종류
+		std::string unit_name;					// 유닛 이름
 	};
 
 	struct production_info {
-		float required_production_time;		// 필요 생산 시간
-		unsigned int required_building;		// 필요 건물
+		float required_production_time;			// 필요 생산 시간
+		unsigned int required_building;			// 필요 건물
 		unsigned int required_mineral;			// 필요 미네랄
 		unsigned int required_gas;				// 필요 가스
 		unsigned int required_supply;			// 필요 인구수
@@ -79,10 +79,10 @@ private:
 	production_info production_info;
 
 	float move_speed;							// 이동속도
-	float attack_speed;						// 공격속도
+	float attack_speed;							// 공격속도
 	float view_range;							// 시야
-	float min_attack_range;					// 최소_사정거리
-	float max_attack_range;					// 최대_사정거리
+	float min_attack_range;						// 최소_사정거리
+	float max_attack_range;						// 최대_사정거리
 	
 	Unit* target_unit;							// 공격 목표
 	cocos2d::Vec2 move_vec2;

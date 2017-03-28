@@ -1,7 +1,7 @@
 #pragma once
 
 enum unit_state {
-	production, idle, move, attack, petrol, hold, die
+	production, idle, move, attack, patrol, hold, die
 };
 
 enum direction {
