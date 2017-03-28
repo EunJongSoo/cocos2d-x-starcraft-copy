@@ -6,70 +6,97 @@
 using namespace cocos2d;
 using namespace CocosDenshion;
 
-Unit::Unit() : _unit_state(unit_state::idle) {
+Unit::Unit() : unit_state(unit_state::idle) {
 }
 
 Unit::~Unit() {
 	delete move_animation;
 	delete attack_animation;
+	delete die_animation;
 }
 
 bool Unit::init() {
 
 	assert(Sprite::init());
 
+	int num = rand() % 17;
+
+	char str[16] = { 0, };
+	sprintf_s(str, sizeof(str), "marine016.bmp");
+
 	auto sprite_cache = SpriteFrameCache::getInstance();
-	this->initWithSpriteFrame(sprite_cache->spriteFrameByName("marine016.bmp"));
+	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
 
 	move_animation = new UnitAnimation();
 	this->addChild(move_animation);
-	move_animation->init_animation("marine", 9, 68, 9);
+	move_animation->init_animation("marine", 9, 68, 9, move);
 
 	attack_animation = new UnitAnimation();
 	this->addChild(attack_animation);
-	attack_animation->init_animation("marine", 8, 51, 2, 3, -17);
+	attack_animation->init_animation("marine", 8, 51, 2, 3, -17, attack);
 
-	_move_speed = 2.0f;
-	_attack_speed = 0.3f;
-	_unit_dir = up;
-	_unit_state = idle;
+	die_animation = new UnitAnimation();
+	this->addChild(die_animation);
+	die_animation->init_animation("marine", 8, 221, die);
+
+	move_speed = 2.0f;
+	attack_speed = 0.3f;
+	unit_dir = up;
+	unit_state = idle;
 	
 	return true;
 }
 
 void Unit::attack_unit(Unit* const _target) {
-	_target_unit = _target;
-	_unit_state = unit_state::attack;
-	Vec2 vec2 = _target_unit->getPosition() - this->getPosition();
+	init_frame();
+	target_unit = _target;
+	unit_state = unit_state::attack;
+	Vec2 vec2 = target_unit->getPosition() - this->getPosition();
 	vec2.normalize();
 	check_dir(vec2);
 }
 
 void Unit::move_unit(const float _x, const float _y) {
+	init_frame();
 	move_vec2 = Vec2(_x, _y);
-	_move_x = _x;
-	_move_y = _y;
-	_unit_state = unit_state::move;
+	unit_state = unit_state::move;
 }
 
 void Unit::stop_unit() {
-	_unit_state = unit_state::idle;
+	init_frame();
+	unit_state = unit_state::idle;
 }
 
 void Unit::patrol_unit() {
-	_unit_state = unit_state::petrol;
+	init_frame();
+	unit_state = unit_state::petrol;
 }
 
 void Unit::hold_unit() {
-	_unit_state = unit_state::hold;
+	init_frame();
+	unit_state = unit_state::hold;
 }
 
 void Unit::die_unit() {
-	_unit_state = unit_state::die;
+	init_frame();
+	unit_state = unit_state::die;
+}
+
+void Unit::hit(int _dmg) {
+	int dmg = _dmg - unit_info.armor;
+	if (dmg <= 0)
+		dmg = 1;
+	unit_info.hp -= dmg;
+	int hp = unit_info.hp;
+
+	if (hp <= 0) {
+		unit_info.hp = 0;
+		die_unit();
+	}
 }
 
 void Unit::run_action_animation(float _dt) {
-	switch (_unit_state)
+	switch (unit_state)
 	{
 	case production:
 		break;
@@ -79,19 +106,18 @@ void Unit::run_action_animation(float _dt) {
 		// 捞悼贸府
 		run_action_move();
 		// 局聪皋捞记 贸府
-		move_animation->run_action_aniamtion(_dt, _unit_dir);
+		move_animation->run_action_aniamtion(_dt, unit_dir);
 		break;
 	case attack: {
 		// 局聪皋捞记 贸府
-		attack_animation->run_action_aniamtion(_dt, _unit_dir, 2);
-		/*if (_fire) {
+		attack_animation->run_action_aniamtion(_dt, unit_dir, 2);
+		if (fire) {
 			SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
-			weapon = UnitWeapon::create();
-			weapon->setPosition(_target_unit->getPosition());
+			weapon = new UnitWeapon();
+			this->getParent()->addChild(weapon);
+			weapon->set_target(target_unit);
 			bullet_vector.push_back(weapon);
-			weapon->retain();
-			this->addChild(weapon);
-		}*/
+		}
 		break;
 	}
 	case petrol:
@@ -99,6 +125,7 @@ void Unit::run_action_animation(float _dt) {
 	case hold:
 		break;
 	case die:
+		die_animation->run_action_aniamtion(_dt);
 		break;
 	default:
 		break;
@@ -106,56 +133,94 @@ void Unit::run_action_animation(float _dt) {
 	for (UnitWeapon* weapon : bullet_vector) {
 		weapon->run_action_weapon_animation();
 	}
+	int i = 0, j = -1;
+	for (UnitWeapon* weapon : bullet_vector) {
+		if (!weapon->isVisible()) {
+			j = i;
+		}
+		++i;
+	}
+	if (j != -1) {
+		this->getParent()->removeChild(bullet_vector.at(j));
+		delete bullet_vector.at(j);
+		bullet_vector.erase(bullet_vector.begin() + j);
+	}
+		
 }
 
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
 	if (bounding.containsPoint(move_vec2)) {
-		_unit_state = idle;
+		unit_state = idle;
 	}
 	else {
 		Vec2 vec2 = this->getPosition();
-		vec2 = move_vec2 - vec2;
-		vec2.normalize();
+		Vec2 dir = move_vec2 - vec2;
+		dir.normalize();
 
-		check_dir(vec2);
-		this->setPosition(_position + (vec2 * _move_speed));
+		check_dir(dir);
+		this->setPosition(vec2 + (dir * move_speed));
 	}
 }
 
 void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 	if (_dir.y > 0.3333333f) {
 		if (_dir.y > 0.99f) {
-			_unit_dir = up;
+			unit_dir = up;
 		}
 		else if (_dir.y > 0.6666666f) {
-			_unit_dir = (_dir.x > 0) ? up_right1 : up_left1;
+			unit_dir = (_dir.x > 0) ? up_right1 : up_left1;
 		}
 		else {
-			_unit_dir = (_dir.x > 0) ? up_right2 : up_left2;
+			unit_dir = (_dir.x > 0) ? up_right2 : up_left2;
 		}
 	}
 	else if (_dir.y > -0.3333333f) {
 		if (_dir.y > 0.1f) {
-			_unit_dir = (_dir.x > 0) ? up_right3 : up_left3;
+			unit_dir = (_dir.x > 0) ? up_right3 : up_left3;
 		}
 		else if (_dir.y > -0.1f) {
-			_unit_dir = (_dir.x > 0) ? right : left;
+			unit_dir = (_dir.x > 0) ? right : left;
 		}
 		else {
-			_unit_dir = (_dir.x > 0) ? down_right1 : down_left1;
+			unit_dir = (_dir.x > 0) ? down_right1 : down_left1;
 		}
 	}
 	else {
 		if (_dir.y > -0.6666666f) {
-			_unit_dir = (_dir.x > 0) ? down_right2 : down_left2;
+			unit_dir = (_dir.x > 0) ? down_right2 : down_left2;
 		}
 		else if (_dir.y > -0.99f) {
-			_unit_dir = (_dir.x > 0) ? down_right3 : down_left3;
+			unit_dir = (_dir.x > 0) ? down_right3 : down_left3;
 		}
 		else {
-			_unit_dir = down;
+			unit_dir = down;
 		}
+	}
+}
+
+void Unit::init_frame() {
+	switch (unit_state)
+	{
+	case production:
+		break;
+	case idle:
+		break;
+	case move:
+		move_animation->init_frame();
+		break;
+	case attack:
+		attack_animation->init_frame();
+		break;
+	case petrol:
+		break;
+	case hold:
+		break;
+	case die:
+		die_animation->init_frame();
+		break;
+	default:
+		break;
 	}
 }
 

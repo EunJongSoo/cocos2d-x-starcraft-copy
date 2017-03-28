@@ -1,21 +1,12 @@
+#include "Unit.h"
 #include "UnitWeapon.h"
 
 using namespace cocos2d;
 
 UnitWeapon::UnitWeapon() {
-}
-
-UnitWeapon::~UnitWeapon()
-{
-}
-
-bool UnitWeapon::init()
-{
-	assert(Sprite::init());
-
-	_attack = 10;
-	_frame = 0;
-	_max_frame = 10;
+	attack = 10;
+	frame = 0;
+	max_frame = 10;
 	char str[16];
 
 	auto sprite_cache = SpriteFrameCache::getInstance();
@@ -24,15 +15,22 @@ bool UnitWeapon::init()
 		animation_vector.push_back(sprite_cache->spriteFrameByName(str));
 	}
 	this->initWithSpriteFrame(animation_vector[0]);
-
-	return true;
 }
 
+UnitWeapon::~UnitWeapon() {
+}
 
 void UnitWeapon::run_action_weapon_animation() {
-	this->setSpriteFrame(animation_vector[_frame++]);
-	if (_frame >= _max_frame) {
-		_frame = 0;
+	if (frame == 0) {
+		target->hit(1);
+	}
+	this->setPosition(target->getPosition());
+	this->setSpriteFrame(animation_vector[frame++]);
+	if (frame >= max_frame) {
 		this->setVisible(false);
 	}
+}
+
+void UnitWeapon::set_target(Unit * _target) {
+	target = _target;
 }

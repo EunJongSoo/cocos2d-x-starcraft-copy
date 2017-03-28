@@ -20,10 +20,11 @@ void UnitAnimation::run_action_aniamtion(float _dt, int _dir, int _frame) {
 	}
 }
 
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base) {
+void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, unit_state _state) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
 	max_frame = _max_frame;
+	state = _state;
 	char str[16];
 
 	// 모션 수
@@ -34,10 +35,11 @@ void UnitAnimation::init_animation(char* _str, int _max_frame, int _base) {
 
 }
 
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count) {
+void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count, unit_state _state) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
 	max_frame = _max_frame;
+	state = _state;
 	char str[16];
 
 	// 방향 수
@@ -51,10 +53,11 @@ void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _a
 }
 
 
-void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num) {
+void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num, unit_state _state) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_parent = static_cast<cocos2d::Sprite*>(this->getParent());
 	max_frame = _max_frame;
+	state = _state;
 	char str[16];
 
 	// 방향 수
@@ -71,6 +74,11 @@ void UnitAnimation::init_animation(char* _str, int _max_frame, int _base, int _a
 			}
 		}
 	}
+}
+
+void UnitAnimation::init_frame() {
+	frame = 0;
+	dt = 0;
 }
 
 bool UnitAnimation::sprite_flip_x(const bool _b) {

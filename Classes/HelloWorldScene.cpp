@@ -77,12 +77,7 @@ void HelloWorld::on_mouse_up(Event *_event) {
 
 	switch (e->getMouseButton()) {
 	case MOUSE_BUTTON_LEFT: {
-		int i = _unit->_unit_dir;
-		++i;
-		if (i == 9) i = 11;
-		if (i == 18) i = 0;
-		_unit->_unit_dir = (direction)i;
-		
+		_unit->die_unit();
 		break;
 	}
 	case MOUSE_BUTTON_RIGHT: {
@@ -117,4 +112,5 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 void HelloWorld::update(float _dt) {
 	_unit->run_action_animation(_dt);
+	_unit2->run_action_animation(_dt);
 }
