@@ -6,21 +6,23 @@
 
 class Unit;
 class WeaponAnimation;
+class UnitAnimation;
 
 class UnitWeapon : public cocos2d::Sprite {
 public:
-	UnitWeapon();
-	virtual ~UnitWeapon();
+	UnitWeapon(Unit* const _target);
+	~UnitWeapon();
 	void run_action_animation(const float _dt);
-	void set_target(Unit* _target);
+	void set_target(Unit* const _target);
 private:
-	std::vector<cocos2d::SpriteFrame*> animation_vector;
+	UnitWeapon() {};
+
 
 	unsigned int attack;
 	int frame;
 	int max_frame;
 	Unit* target;
-	WeaponAnimation* weapon_animation;
+	UnitAnimation* weapon_animation;
 
 };
 

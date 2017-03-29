@@ -1,10 +1,9 @@
 #include "Unit.h"
 #include "UnitAnimation.h"
-#include "SimpleAudioEngine.h"
 #include "UnitWeapon.h"
 
 using namespace cocos2d;
-using namespace CocosDenshion;
+
 
 Unit::Unit() : unit_state(unit_state::idle), unit_dir(direction::up) {
 }
@@ -84,56 +83,48 @@ void Unit::hit(int _dmg) {
 }
 
 void Unit::run_action_animation(float _dt) {
-	//unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
+	// 후처리는 다른 곳에서..
+	// unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
 
 	switch (unit_state)
 	{
-	case production:
-		break;
-	case idle:
-		break;
+	case production: 		break;
+	case idle:				break;
 	case move:
-		// 이동처리
-		run_action_move();
-		// 애니메이션 처리
-		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);
+		run_action_move();														// 이동처리
+		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);		// 애니메이션 처리
 		break;
 	case attack: {
-		// 애니메이션 처리
-		unit_animation->run_action_aniamtion(attack, this, _dt, unit_dir, 2);
-		if (fire) {
-			SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
-			weapon = new UnitWeapon();
+		unit_animation->run_action_aniamtion(attack, this, _dt, unit_dir, 2);	// 애니메이션 처리		
+		{																		// 생성 조건필요한데..
+			weapon = new UnitWeapon(target_unit);
 			this->getParent()->addChild(weapon);
-			weapon->set_target(target_unit);
 			bullet_vector.push_back(weapon);
 		}
 		break;
 	}
 	case patrol: {
-		// 이동처리
-		run_action_move();
+		run_action_move();														// 이동처리, 기능 이관 해야됨
 		if (unit_state == idle) {
 			unit_state = patrol;
 			std::swap(move_vec2, my_pos_vec2);
 		}
-		// 애니메이션 처리
-		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);
+		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);		// 애니메이션 처리
 		break;
 	}
-	case hold:
-		break;
-	case die:
-		unit_animation->run_action_aniamtion(die, this, _dt);
-		break;
+	case hold: 		break;
+	case die: 		unit_animation->run_action_aniamtion(die, this, _dt); 		break;
 	default:
 		break;
 	}
+	weapon_animaiton(_dt);
+}
 
-
-
+// 임시 작성, 기능 이관 해야됨
+void Unit::weapon_animaiton(float _dt) {
+	
 	for (UnitWeapon* weapon : bullet_vector) {
-		weapon->run_action_weapon_animation();
+		weapon->run_action_animation(_dt);
 	}
 	int i = 0, j = -1;
 	for (UnitWeapon* weapon : bullet_vector) {

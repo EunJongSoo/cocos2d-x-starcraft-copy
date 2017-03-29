@@ -1,7 +1,8 @@
 #pragma once
 
+// 임시로 무기도 추가
 enum unit_state {
-	production, idle, move, attack, patrol, hold, die
+	production, idle, move, attack, patrol, hold, die, weapon
 };
 
 enum direction {
@@ -26,5 +27,5 @@ enum direction {
 };
 
 typedef enum unit_type {
-	marine,
+	marine, marine_weapon
 } building_type;

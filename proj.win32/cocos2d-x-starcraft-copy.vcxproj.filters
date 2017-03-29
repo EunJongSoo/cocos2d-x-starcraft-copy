@@ -33,6 +33,9 @@
     <ClCompile Include="..\Classes\UnitWeapon.cpp">
       <Filter>src\Unit</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\WeaponAnimation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UnitWeapon.h">
       <Filter>src\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\WeaponAnimation.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

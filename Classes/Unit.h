@@ -97,7 +97,7 @@ private:
 	UnitWeapon* weapon;
 
 	std::vector<UnitWeapon*> bullet_vector;
-	bool fire;
+	void weapon_animaiton(float _dt);
 
 	const float up =				0.99f;
 	const float up_right_left1 =	0.66666666f;
