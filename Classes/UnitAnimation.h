@@ -10,16 +10,12 @@ public:
 		unsigned int max_frame;
 		std::vector<cocos2d::SpriteFrame*> animation_vector;
 	};
-	UnitAnimation();
+	UnitAnimation(const unit_type _type);
 	~UnitAnimation();
-
-	void run_action_aniamtion(unit_state _state, cocos2d::Sprite* _sprite, float _dt, int _dir = 0, int _frame = 0);
-	void init_animation(unit_state _state, char* _str, int _max_frame, int _base);
-	void init_animation(unit_state _state, char* _str, int _max_frame, int _base, int _ani_count);
-	void init_animation(unit_state _state, char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num);
+	void run_action_aniamtion(const unit_state _state, cocos2d::Sprite* const _sprite, const float _dt, const int _dir = 0, const int _frame = 0);
 	void init_frame();
-
 private:
+	UnitAnimation() {};
 	unsigned int frame;
 	float dt;
 
@@ -27,11 +23,15 @@ private:
 	clip attack_clip;
 	clip die_clip;
 
-	void sprite_flipped_x(cocos2d::Sprite* _sprite, bool _is_left, bool _is_flipped_x);
-	void init_clip(clip& _clip, char* _str, int _max_frame, int _base);
-	void init_clip(clip& _clip, char* _str, int _max_frame, int _base, int _ani_count);
-	void init_clip(clip& _clip, char* _str, int _max_frame, int _base, int _ani_count, int _loop, int _num);
-	void clip_aniamtion(const clip& _clip, cocos2d::Sprite* _sprite, float _dt, int _dir, int _frame);
+	void init_unit_animation(const unit_type _type);
+	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base);
+	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count);
+	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
+	void sprite_flipped_x(cocos2d::Sprite* const _sprite, const bool _is_left, const bool _is_flipped_x);
+	void init_clip(clip& _clip, const char* _str, const int _max_frame, const int _base);
+	void init_clip(clip& _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count);
+	void init_clip(clip& _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
+	void clip_aniamtion(const clip& _clip, cocos2d::Sprite* const _sprite, const float _dt, const int _dir, const int _frame);
 };
 
 #endif

@@ -6,7 +6,7 @@
 using namespace cocos2d;
 using namespace CocosDenshion;
 
-Unit::Unit() : unit_state(unit_state::idle) {
+Unit::Unit() : unit_state(unit_state::idle), unit_dir(direction::up) {
 }
 
 Unit::~Unit() {
@@ -17,23 +17,18 @@ bool Unit::init() {
 
 	assert(Sprite::init());
 
-	int num = rand() % 17;
+	// 유닛 애니메이션 생성
+	unit_animation = new UnitAnimation(unit_type::marine);
 
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine016.bmp");
-
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
 
-	unit_animation = new UnitAnimation();
-	unit_animation->init_animation(move, "marine", 9, 68, 9);
-	unit_animation->init_animation(attack, "marine", 8, 51, 2, 3, -17);
-	unit_animation->init_animation(die, "marine", 8, 221);
-
+	
+	// 유닛 종류에 따라 달라짐
 	move_speed = 2.0f;
 	attack_speed = 0.3f;
-	unit_dir = up;
-	unit_state = idle;
 	
 	return true;
 }
@@ -89,8 +84,7 @@ void Unit::hit(int _dmg) {
 }
 
 void Unit::run_action_animation(float _dt) {
-	unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
-
+	//unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
 
 	switch (unit_state)
 	{
@@ -170,87 +164,24 @@ void Unit::run_action_move() {
 	}
 }
 
-// 매직넘버 상수 처리
 void Unit::check_dir(const cocos2d::Vec2 & _dir) {
-	if (_dir.y > 0.3333333f) {
-		if (_dir.y > 0.99f) {
-			unit_dir = up;
-		}
-		else if (_dir.y > 0.6666666f) {
-			unit_dir = (_dir.x > 0) ? up_right1 : up_left1;
-		}
-		else {
-			unit_dir = (_dir.x > 0) ? up_right2 : up_left2;
-		}
+	if (_dir.y > up_right_left2) {
+		if (_dir.y > up)						unit_dir = direction::up;
+		else if (_dir.y > up_right_left1) 		unit_dir = (_dir.x > 0) ? direction::up_right1 : direction::up_left1;
+		else                         			unit_dir = (_dir.x > 0) ? direction::up_right2 : direction::up_left2;
 	}
-	else if (_dir.y > -0.3333333f) {
-		if (_dir.y > 0.1f) {
-			unit_dir = (_dir.x > 0) ? up_right3 : up_left3;
-		}
-		else if (_dir.y > -0.1f) {
-			unit_dir = (_dir.x > 0) ? right : left;
-		}
-		else {
-			unit_dir = (_dir.x > 0) ? down_right1 : down_left1;
-		}
+	else if (_dir.y > down_right_left1) {
+		if (_dir.y > up_right_left3)			unit_dir = (_dir.x > 0) ? direction::up_right3 : direction::up_left3;
+		else if (_dir.y > right_left)			unit_dir = (_dir.x > 0) ? direction::right : direction::left;
+		else									unit_dir = (_dir.x > 0) ? direction::down_right1 : direction::down_left1;
 	}
 	else {
-		if (_dir.y > -0.6666666f) {
-			unit_dir = (_dir.x > 0) ? down_right2 : down_left2;
-		}
-		else if (_dir.y > -0.99f) {
-			unit_dir = (_dir.x > 0) ? down_right3 : down_left3;
-		}
-		else {
-			unit_dir = down;
-		}
+		if (_dir.y > -down_right_left2)			unit_dir = (_dir.x > 0) ? direction::down_right2 : direction::down_left2;
+		else if (_dir.y > down_right_left3)		unit_dir = (_dir.x > 0) ? direction::down_right3 : direction::down_left3;
+		else                             		unit_dir = direction::down;
 	}
 }
 
 void Unit::init_frame() {
 	unit_animation->init_frame();
 }
-
-//void Unit::move_run_action_animation(const float __dt) {
-//	_dt += __dt;
-//	if (0.05f > _dt) return;
-//	_dt = 0;
-//	if (sprite_flip_x(_unit_dir > left_check)) {
-//		_unit_dir2 = _unit_dir - 10;
-//	}
-//	else {
-//		_unit_dir2 = _unit_dir;
-//	}
-//	this->setSpriteFrame(move_clip.move_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
-//	if (_frame >= _max_frame) {
-//		_frame = 0;
-//
-//	}
-//}
-//
-//void Unit::attack_run_action_animation(const float __dt) {
-//	_dt += __dt;
-//	_dt2 += __dt;
-//	if (0.05f > _dt) return;
-//	if (_attack_speed > _dt2) return;
-//
-//	if (_frame == 2) {
-//		_fire = true;
-//	}
-//	else {
-//		_fire = false;
-//	}
-//
-//	_dt = 0;
-//	if (sprite_flip_x(_unit_dir > left_check)) {
-//		_unit_dir2 = _unit_dir - 10;
-//	}
-//	else {
-//		_unit_dir2 = _unit_dir;
-//	}
-//	this->setSpriteFrame(attack_animation_vector[_frame++ + _unit_dir2 * _max_frame]);
-//	if (_frame >= _max_frame) {
-//		_frame = 2;
-//		_dt2 = 0;
-//	}
-//}

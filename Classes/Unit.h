@@ -9,33 +9,22 @@ class UnitAnimation;
 
 class Unit :public cocos2d::Sprite {
 public:
-	Unit();
-	virtual ~Unit();
-	virtual bool init();
-	CREATE_FUNC(Unit);
-
-public:
 	enum races_type {
 		terran,
 	};
-
-	typedef enum unit_type {
-		marine,
-	} building_type;
 	enum upgrade_type {
 		bionic, mechanic, air_force
 	};
 	enum unit_size_type {
 		small_unit, medium_unit, large_unit, building
 	};
-
 	enum special_effects {
 		none, clockking,
 	};
-	
+
 	struct unit_info {
 		unit_info() : killing_count(0), hp(10), mp(0), shield(0), attack(5), armor(1),
-		attack_upgrade_level(0), defence_upgrade_level(0) {}
+			attack_upgrade_level(0), defence_upgrade_level(0) {}
 		unsigned int killing_count;				// 적 유닛 죽인수
 		unsigned int hp;						// 체력
 		unsigned int mp;						// 마력
@@ -56,6 +45,12 @@ public:
 		unsigned int required_gas;				// 필요 가스
 		unsigned int required_supply;			// 필요 인구수
 	};
+
+public:
+	Unit();
+	virtual ~Unit();
+	virtual bool init();
+	CREATE_FUNC(Unit);
 	
 	void attack_unit(Unit* const _target);
 	void move_unit(const cocos2d::Vec2& _move_pos);
@@ -64,19 +59,24 @@ public:
 	void hold_unit();
 	void die_unit();
 	void hit(int _dmg);
-
 	void run_action_animation(float _dt);
-	
 
 	direction unit_dir;
-	int unit_dir2;
+
 private:
-	races_type races_type;						// 종족
-	unit_state unit_state;						// 유닛의 현재 상태
+	void check_dir(const cocos2d::Vec2 & _dir);
+	void init_frame();
+
+
+	void run_action_move();
 	
+
 
 	unit_info unit_info;
 	production_info production_info;
+
+	races_type races_type;						// enum 종족
+	unit_state unit_state;						// enum 유닛의 현재 상태
 
 	float move_speed;							// 이동속도
 	float attack_speed;							// 공격속도
@@ -94,16 +94,19 @@ private:
 	special_effects unit_effects;				// 현재 특수이팩트
 	
 	UnitAnimation* unit_animation;
-	//UnitAnimation* attack_animation;
-	//UnitAnimation* die_animation;
-	
 	UnitWeapon* weapon;
+
 	std::vector<UnitWeapon*> bullet_vector;
 	bool fire;
 
-	void run_action_move();
-	void check_dir(const cocos2d::Vec2 & _dir);
-	void init_frame();
+	const float up =				0.99f;
+	const float up_right_left1 =	0.66666666f;
+	const float up_right_left2 =	0.33333333f;
+	const float up_right_left3 =	0.1f;
+	const float right_left =	   -0.1f;
+	const float down_right_left1 = -0.33333333f;
+	const float down_right_left2 = -0.66666666f;
+	const float down_right_left3 = -0.99f;
 };
 
 #endif

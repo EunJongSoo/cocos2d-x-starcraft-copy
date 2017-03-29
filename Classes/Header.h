@@ -24,3 +24,7 @@ enum direction {
 	down_left2,
 	down_left3,
 };
+
+typedef enum unit_type {
+	marine,
+} building_type;

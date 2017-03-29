@@ -1,5 +1,6 @@
 #include "Unit.h"
 #include "UnitWeapon.h"
+#include "WeaponAnimation.h"
 
 using namespace cocos2d;
 
@@ -20,11 +21,12 @@ UnitWeapon::UnitWeapon() {
 UnitWeapon::~UnitWeapon() {
 }
 
-void UnitWeapon::run_action_weapon_animation() {
-	if (frame == 0) {
-		target->hit(1);
-	}
+void UnitWeapon::run_action_animation(const float _dt) {
 	this->setPosition(target->getPosition());
+	
+	
+	weapon_animation->run_action_aniamtion(this, _dt);
+
 	this->setSpriteFrame(animation_vector[frame++]);
 	if (frame >= max_frame) {
 		this->setVisible(false);
