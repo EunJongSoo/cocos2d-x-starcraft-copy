@@ -2,13 +2,13 @@
 
 using namespace cocos2d;
 
-UnitAnimation::UnitAnimation(const unit_type _type) : frame(0), dt(0.0f) {
-	init_unit_animation(_type);
+UnitAnimation::UnitAnimation(const unit_type _type, Sprite* const _sprite) : frame(0), dt(0.0f) {
+	init_unit_animation(_type, _sprite);
 }
 
 UnitAnimation::~UnitAnimation() {}
 
-void UnitAnimation::init_unit_animation(const unit_type _type) {
+void UnitAnimation::init_unit_animation(const unit_type _type, Sprite* const _sprite) {
 	// 데이터 불러오는 부분
 	//dataload(_type);
 	/*char str[16];
@@ -28,17 +28,23 @@ void UnitAnimation::init_unit_animation(const unit_type _type) {
 		break;
 	}
 	case marine_weapon: {
-		this->init_animation(weapon, "tspark", 10, 0);
+		this->init_animation(idle, "tspark", 10, 0);
+		for (clip* _clip : clip_vector) {
+			if (_clip->state == idle) {
+				_sprite->initWithSpriteFrame(_clip->animation_vector[0]);
+			}
+		}
 	}
 	default:
 		break;
 	}
+	
 }
 
 bool UnitAnimation::run_action_aniamtion(const unit_state _state, Sprite* const _sprite, const float _dt, const int _dir, const int _frame) {
-	for (Clip* clip : clip_vector) {
-		if (clip->state == _state) {
-			return clip_aniamtion(clip, _sprite, _dt, _dir, _frame);
+	for (clip* _clip : clip_vector) {
+		if (_clip->state == _state) {
+			return clip_aniamtion(_clip, _sprite, _dt, _dir, _frame);
 		}
 	}
 
@@ -50,24 +56,24 @@ void UnitAnimation::init_frame() {
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base) {
-	Clip* clip = new Clip();
-	clip->state = _state;
-	clip_vector.push_back(clip);
-	init_clip(clip, _str, _max_frame, _base);
+	clip* _clip = new clip();
+	_clip->state = _state;
+	clip_vector.push_back(_clip);
+	init_clip(_clip, _str, _max_frame, _base);
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count) {
-	Clip* clip = new Clip();
-	clip->state = _state;
-	clip_vector.push_back(clip);
-	init_clip(clip, _str, _max_frame, _base, _ani_count);
+	clip* _clip = new clip();
+	_clip->state = _state;
+	clip_vector.push_back(_clip);
+	init_clip(_clip, _str, _max_frame, _base, _ani_count);
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
-	Clip* clip = new Clip();
-	clip->state = _state;
-	clip_vector.push_back(clip);
-	init_clip(clip, _str, _max_frame, _base, _ani_count, _loop, _num);
+	clip* _clip = new clip();
+	_clip->state = _state;
+	clip_vector.push_back(_clip);
+	init_clip(_clip, _str, _max_frame, _base, _ani_count, _loop, _num);
 }
 
 void UnitAnimation::sprite_flipped_x(Sprite* const _sprite, const bool _is_left, const bool _is_flipped_x) {
@@ -76,7 +82,7 @@ void UnitAnimation::sprite_flipped_x(Sprite* const _sprite, const bool _is_left,
 	}
 }
 
-void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _max_frame, const int _base) {
+void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_clip->max_frame = _max_frame;
 	char str[16];
@@ -87,7 +93,7 @@ void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _ma
 	}
 }
 
-void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count) {
+void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_clip->max_frame = _max_frame;
 	char str[16];
@@ -101,7 +107,7 @@ void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _ma
 	}
 }
 
-void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
+void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
 	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
 	_clip->max_frame = _max_frame;
 	char str[16];
@@ -122,7 +128,7 @@ void UnitAnimation::init_clip(Clip* const _clip, const char* _str, const int _ma
 	}
 }
 
-bool UnitAnimation::clip_aniamtion(const Clip* const _clip, Sprite* const _sprite, const float _dt, const int _dir, const int _frame) {
+bool UnitAnimation::clip_aniamtion(const clip* const _clip, Sprite* const _sprite, const float _dt, const int _dir, const int _frame) {
 	dt += _dt;
 	if (0.05f > dt) return false;
 	dt = 0;

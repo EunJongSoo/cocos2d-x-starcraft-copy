@@ -13,21 +13,22 @@ Unit::~Unit() {
 }
 
 bool Unit::init() {
-
 	assert(Sprite::init());
 
 	// 유닛 애니메이션 생성
-	unit_animation = new UnitAnimation(unit_type::marine);
+	unit_animation = new UnitAnimation(unit_type::marine, this);
 
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine016.bmp");
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
 
-	
+	_unit_info = new unit_info(1, 1, 1, 1, 1, 1, 1, unit_type::marine, upgrade_type::bionic, "marine");
+	_unit_info2 = new unit_info2(1, 1, 1, 1, 1);
+
 	// 유닛 종류에 따라 달라짐
-	move_speed = 2.0f;
-	attack_speed = 0.3f;
+	_unit_info2->move_speed = 2.0f;
+	_unit_info2->attack_speed = 0.3f;
 	
 	return true;
 }
@@ -70,14 +71,14 @@ void Unit::die_unit() {
 }
 
 void Unit::hit(int _dmg) {
-	int dmg = _dmg - unit_info.armor;
+	int dmg = _dmg - _unit_info->defence;
 	if (dmg <= 0)
 		dmg = 1;
-	unit_info.hp -= dmg;
-	int hp = unit_info.hp;
+	_unit_info->hp -= dmg;
+	int hp = _unit_info->hp;
 
 	if (hp <= 0) {
-		unit_info.hp = 0;
+		_unit_info->hp = 0;
 		die_unit();
 	}
 }
@@ -97,7 +98,7 @@ void Unit::run_action_animation(float _dt) {
 	case attack: {
 		unit_animation->run_action_aniamtion(attack, this, _dt, unit_dir, 2);	// 애니메이션 처리		
 		{																		// 생성 조건필요한데..
-			weapon = new UnitWeapon(target_unit);
+			weapon = new UnitWeapon(target_unit, unit_type::marine_weapon);
 			this->getParent()->addChild(weapon);
 			bullet_vector.push_back(weapon);
 		}
@@ -151,7 +152,7 @@ void Unit::run_action_move() {
 		dir.normalize();
 
 		check_dir(dir);
-		this->setPosition(vec2 + (dir * move_speed));
+		this->setPosition(vec2 + (dir * _unit_info2->move_speed));
 	}
 }
 

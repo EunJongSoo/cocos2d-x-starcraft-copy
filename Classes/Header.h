@@ -2,7 +2,7 @@
 
 // 임시로 무기도 추가
 enum unit_state {
-	production, idle, move, attack, patrol, hold, die, weapon
+	production, idle, move, attack, patrol, hold, die
 };
 
 enum direction {
