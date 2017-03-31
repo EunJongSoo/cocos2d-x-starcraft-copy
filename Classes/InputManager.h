@@ -13,6 +13,18 @@ public:
 		this->addChild(mouse_manager);
 	}
 	~InputManager() {}
+
+	MouseManager::mouse_order get_mouse_order() const {
+		return mouse_manager->_mouse_order;
+	}
+	void mouse_order_init() {
+		mouse_manager->init_mouse_order();
+	}
+
+	inline bool is_mouse_order() const {
+		return mouse_manager->is_order();
+	}
+
 private:
 	KeyboardManager* keyboard_manager;
 	MouseManager* mouse_manager;

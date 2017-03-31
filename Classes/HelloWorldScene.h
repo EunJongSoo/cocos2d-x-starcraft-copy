@@ -21,7 +21,9 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
-	virtual void update(float __dt);
+	virtual void update(float _dt);
+	void input_process();
+	void draw_process(float _dt);
 	Unit* _unit;
 	Unit* _unit2;
 	int unit_state;

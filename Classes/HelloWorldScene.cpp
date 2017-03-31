@@ -79,11 +79,32 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 }
 
 void HelloWorld::update(float _dt) {
-
 	
+	// Á¶ÀÛ
+	input_process();
+	
+	// ??
 
+	// ±×¸®±â
+	draw_process(_dt);
+}
 
+// Â«»Í..
+void HelloWorld::input_process() {
+	if (input_manager->is_mouse_order()) {
+		MouseManager::mouse_order& order = input_manager->get_mouse_order();
+		switch (order.mouse_state) {
+		case MouseManager::mouse_state::R_down: {
+			_unit->patrol_unit(order.start_mouse_pos);
+		}
+		default:
+			break;
+		}
 
+		input_manager->mouse_order_init();
+	}
+}
+void HelloWorld::draw_process(float _dt) {
 	_unit->run_action_animation(_dt);
 	_unit2->run_action_animation(_dt);
 }
