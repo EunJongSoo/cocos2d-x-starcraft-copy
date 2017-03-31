@@ -1,7 +1,9 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "InputManager.h"
+#include "UnitLayer.h"
 
+#include "Unit.h"
 
 using namespace cocos2d;
 
@@ -44,21 +46,16 @@ bool HelloWorld::init()
 
 	auto sprite = Sprite::create("HelloWorld.png");
 	sprite->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-	this->addChild(sprite);
+	this->addChild(sprite, 0);
 
+	// unit layer 추가
+	unit_layer = UnitLayer::create();
+	unit_layer->setPosition(0, 0);
+	this->addChild(unit_layer, 1);
 
-	// 유닛 생성
-	_unit = Unit::create();
-	_unit->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-	this->addChild(_unit);
-    
-	_unit2 = Unit::create();
-	_unit2->setPosition(Vec2(50.0f + visibleSize.width / 2, 50.0f + visibleSize.height / 2));
-	this->addChild(_unit2);
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
-
 
     return true;
 }
@@ -80,7 +77,7 @@ void HelloWorld::input_process() {
 		MouseManager::mouse_order& order = input_manager->get_mouse_order();
 		switch (order.mouse_state) {
 		case MouseManager::mouse_state::R_down: {
-			_unit->patrol_unit(order.start_mouse_pos);
+
 		}
 		default:
 			break;
@@ -90,6 +87,7 @@ void HelloWorld::input_process() {
 	}
 }
 void HelloWorld::draw_process(float _dt) {
-	_unit->run_action_animation(_dt);
-	_unit2->run_action_animation(_dt);
+
+
+
 }

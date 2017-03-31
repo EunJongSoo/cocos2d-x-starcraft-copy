@@ -10,11 +10,14 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Unit">
-      <UniqueIdentifier>{8888cf03-369c-44bb-8b09-4a1eb64f5178}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Input">
       <UniqueIdentifier>{e990ba31-203a-4f12-84ec-00225e63a6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Layer">
+      <UniqueIdentifier>{f75822d6-d4c9-416f-b100-cb8a3d36f880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Unit">
+      <UniqueIdentifier>{8888cf03-369c-44bb-8b09-4a1eb64f5178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +44,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\MouseManager.cpp">
       <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitManager.cpp">
+      <Filter>src\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitLayer.cpp">
+      <Filter>src\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerUnitManager.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +85,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\MouseManager.h">
       <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitManager.h">
+      <Filter>src\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerUnitManager.h">
+      <Filter>src\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitLayer.h">
+      <Filter>src\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

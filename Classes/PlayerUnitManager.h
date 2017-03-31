@@ -18,7 +18,7 @@ public:
 	PlayerUnitManager(player_color _color);
 	~PlayerUnitManager();
 
-	void create_unit(unit_type _type, const float _pos_x, const float _pos_y);
+	Unit* create_unit(unit_type _type, const float _pos_x, const float _pos_y);
 	
 	inline player_color get_color() const { return _color; }
 

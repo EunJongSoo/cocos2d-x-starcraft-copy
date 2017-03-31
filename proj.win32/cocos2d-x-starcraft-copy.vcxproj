@@ -148,8 +148,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
+    <ClCompile Include="..\Classes\PlayerUnitManager.cpp" />
     <ClCompile Include="..\Classes\Unit.cpp" />
     <ClCompile Include="..\Classes\UnitAnimation.cpp" />
+    <ClCompile Include="..\Classes\UnitLayer.cpp" />
+    <ClCompile Include="..\Classes\UnitManager.cpp" />
     <ClCompile Include="..\Classes\UnitWeapon.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -160,8 +163,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\InputManager.h" />
     <ClInclude Include="..\Classes\KeyboardManager.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />
+    <ClInclude Include="..\Classes\PlayerUnitManager.h" />
     <ClInclude Include="..\Classes\Unit.h" />
     <ClInclude Include="..\Classes\UnitAnimation.h" />
+    <ClInclude Include="..\Classes\UnitLayer.h" />
+    <ClInclude Include="..\Classes\UnitManager.h" />
     <ClInclude Include="..\Classes\UnitWeapon.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

@@ -13,6 +13,8 @@ PlayerUnitManager::~PlayerUnitManager()
 {
 }
 
-void PlayerUnitManager::create_unit(unit_type _type, const float _pos_x, const float _pos_y) {
+Unit* PlayerUnitManager::create_unit(unit_type _type, const float _pos_x, const float _pos_y) {
 	Unit* unit = Unit::create(_type, cocos2d::Vec2(_pos_x, _pos_y));
+	unit_vector.push_back(unit);
+	return unit;
 }
