@@ -6,6 +6,8 @@
 
 #include "Header.h"
 
+class InputManager;
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -20,10 +22,14 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	void on_mouse_up(cocos2d::Event *_event);
+	void on_mouse_move(cocos2d::Event *_event);
 	virtual void update(float __dt);
 	Unit* _unit;
 	Unit* _unit2;
 	int unit_state;
+
+private:
+	InputManager* input_manager;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

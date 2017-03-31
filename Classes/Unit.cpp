@@ -10,6 +10,8 @@ Unit::Unit() : unit_state(unit_state::idle), unit_dir(direction::up) {
 
 Unit::~Unit() {
 	delete unit_animation;
+	delete _unit_info;
+	delete _unit_info2;
 }
 
 bool Unit::init() {

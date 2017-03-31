@@ -7,13 +7,20 @@
 class UnitWeapon;
 class UnitAnimation;
 
+//enum upgrade_type;
+//enum special_effects;
+//enum races_type;
+//struct unit_info;
+//struct unit_info2;
+//struct production_info;
+
 class Unit :public cocos2d::Sprite {
 public:
-	enum races_type {
-		terran,
-	};
 	enum upgrade_type {
 		bionic, mechanic, air_force
+	};
+	enum races_type {
+		terran,
 	};
 	enum unit_size_type {
 		small_unit, medium_unit, large_unit, building
@@ -21,13 +28,12 @@ public:
 	enum special_effects {
 		none, clockking,
 	};
-
 	struct unit_info {
-		unit_info(int _hp, int _mp, int _shield, int _attack, 
-					int _defence, int _attack_lv, int _defence_lv, unit_type _unit_type,
-						upgrade_type _up_type, char* _name) : 
-			killing_count(0), 
-			hp(_hp), 
+		unit_info(int _hp, int _mp, int _shield, int _attack,
+			int _defence, int _attack_lv, int _defence_lv, unit_type _unit_type,
+			upgrade_type _up_type, char* _name) :
+			killing_count(0),
+			hp(_hp),
 			mp(_mp),
 			shield(_shield),
 			attack(_attack),
@@ -52,11 +58,10 @@ public:
 	private:
 		unit_info();
 	};
-
 	struct unit_info2 {
-		unit_info2(float _move_speed, float _attack_speed, 
-					float _sight_range, float _min_attack_range,
-					float _max_attack_range) :
+		unit_info2(float _move_speed, float _attack_speed,
+			float _sight_range, float _min_attack_range,
+			float _max_attack_range) :
 			move_speed(_move_speed),
 			attack_speed(_attack_speed),
 			sight_range(_sight_range),
@@ -71,7 +76,6 @@ public:
 	private:
 		unit_info2();
 	};
-
 	struct production_info {
 		float required_production_time;			// 필요 생산 시간
 		unsigned int required_building;			// 필요 건물
@@ -95,7 +99,7 @@ public:
 	void run_action_animation(float _dt);
 
 	direction unit_dir;
-
+	
 private:
 	void check_dir(const cocos2d::Vec2 & _dir);
 	void init_frame();
@@ -108,7 +112,7 @@ private:
 	unit_info* _unit_info;						// 구조체 유닛 능력치 정보
 	unit_info2* _unit_info2;						// 구조체 유닛 능력치 정보2
 
-	production_info production_info;			// 구조체 생성 정보
+	production_info* _production_info;			// 구조체 생성 정보
 
 	races_type races_type;						// enum 종족
 	unit_state unit_state;						// enum 유닛의 현재 상태

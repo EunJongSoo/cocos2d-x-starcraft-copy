@@ -11,7 +11,7 @@ public:
 		unsigned int max_frame;
 		std::vector<cocos2d::SpriteFrame*> animation_vector;
 	};
-	UnitAnimation(const unit_type _type, Sprite* const _sprite);
+	UnitAnimation(const unit_type _type, cocos2d::Sprite* const _sprite);
 	~UnitAnimation();
 	bool run_action_aniamtion(const unit_state _state, cocos2d::Sprite* const _sprite, const float _dt, const int _dir = 0, const int _frame = 0);
 	void init_frame();

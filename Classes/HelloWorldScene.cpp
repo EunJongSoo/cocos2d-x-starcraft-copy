@@ -1,7 +1,9 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+#include "InputManager.h"
 
-USING_NS_CC;
+
+using namespace cocos2d;
 
 Scene* HelloWorld::createScene()
 {
@@ -27,6 +29,11 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+	input_manager = new InputManager();
+	/*this->addChild(input_manager->get_keyboard_manager());
+	this->addChild(input_manager->get_mouse_manager());*/
+
     
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
@@ -54,13 +61,16 @@ bool HelloWorld::init()
 	// 마우스 이벤트 등록
 	auto listener = EventListenerMouse::create();
 	listener->onMouseUp = CC_CALLBACK_1(HelloWorld::on_mouse_up, this);
+	listener->onMouseMove = CC_CALLBACK_1(HelloWorld::on_mouse_move, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-	
-
 
 	unit_state = 1;
 
     return true;
+}
+
+void HelloWorld::on_mouse_move(Event *_event) {
+	CCLOG("dd");
 }
 
 void HelloWorld::on_mouse_up(Event *_event) {

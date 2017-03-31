@@ -3,7 +3,7 @@
 using namespace cocos2d;
 
 UnitAnimation::UnitAnimation(const unit_type _type, Sprite* const _sprite) : frame(0), dt(0.0f) {
-	init_unit_animation(_type, _sprite);
+	this->init_unit_animation(_type, _sprite);
 }
 
 UnitAnimation::~UnitAnimation() {}
