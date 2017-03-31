@@ -33,6 +33,7 @@ bool HelloWorld::init()
 	input_manager = new InputManager();
 	this->addChild(input_manager);
 
+	// 그림 파일 불러오기
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
 	sprite_cache->addSpriteFramesWithFile("img/unit/marine/tspark.plist", "img/unit/marine/tspark.png");
@@ -46,6 +47,7 @@ bool HelloWorld::init()
 	this->addChild(sprite);
 
 
+	// 유닛 생성
 	_unit = Unit::create();
 	_unit->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
 	this->addChild(_unit);
@@ -54,28 +56,11 @@ bool HelloWorld::init()
 	_unit2->setPosition(Vec2(50.0f + visibleSize.width / 2, 50.0f + visibleSize.height / 2));
 	this->addChild(_unit2);
 
+	// 메인 업데이트 시작
 	this->scheduleUpdate();
 
-	unit_state = 1;
 
     return true;
-}
-
-void HelloWorld::menuCloseCallback(Ref* pSender)
-{
-    //Close the cocos2d-x game scene and quit the application
-    Director::getInstance()->end();
-
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
-    
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() and exit(0) as given above,instead trigger a custom event created in RootViewController.mm as below*/
-    
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-    
-    
 }
 
 void HelloWorld::update(float _dt) {

@@ -84,11 +84,10 @@ public:
 		unsigned int required_supply;			// 필요 인구수
 	};
 public:
-	Unit();
 	virtual ~Unit();
-	virtual bool init();
-	CREATE_FUNC(Unit);
-	
+	virtual bool init(const unit_type _type);
+	static Unit* create(const unit_type _type);
+
 	void attack_unit(Unit* const _target);
 	void move_unit(const cocos2d::Vec2& _move_pos);
 	void stop_unit();
@@ -98,38 +97,38 @@ public:
 	void hit(int _dmg);
 	void run_action_animation(float _dt);
 
-	direction unit_dir;
+	direction _unit_dir;
 	
 private:
+	Unit();
 	void check_dir(const cocos2d::Vec2 & _dir);
-	void init_frame();
-
+	void chang_order(const unit_state _state);
 
 	// 분리해야되는 기능
 	void run_action_move();
 
 	// 유닛 기본 정보들
-	unit_info* _unit_info;						// 구조체 유닛 능력치 정보
-	unit_info2* _unit_info2;						// 구조체 유닛 능력치 정보2
+	unit_info * _unit_info;						// 구조체 유닛 능력치 정보
+	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
 
-	production_info* _production_info;			// 구조체 생성 정보
+	production_info * _production_info;			// 구조체 생성 정보
 
-	races_type races_type;						// enum 종족
-	unit_state unit_state;						// enum 유닛의 현재 상태
+	races_type _races_type;						// enum 종족
+	unit_state _unit_state;						// enum 유닛의 현재 상태
 	
-	Unit* target_unit;							// 공격 목표
-	cocos2d::Vec2 move_vec2;					// 이동 목표
-	cocos2d::Vec2 my_pos_vec2;					// 시작위치, 정찰 명령시 사용
-	unsigned int tile_x;						// 타일 위치_x
-	unsigned int tile_y;						// 타일 위치_y
+	Unit * _target_unit;							// 공격 목표
+	cocos2d::Vec2 _move_vec2;					// 이동 목표
+	cocos2d::Vec2 _my_pos_vec2;					// 시작위치, 정찰 명령시 사용
+	unsigned int _tile_x;						// 타일 위치_x
+	unsigned int _tile_y;						// 타일 위치_y
 	
-	float production_time;						// 현재 생산 시간
-	special_effects unit_effects;				// 현재 특수이팩트
+	float _production_time;						// 현재 생산 시간
+	special_effects _unit_effects;				// 현재 특수이팩트
 	
-	UnitAnimation* unit_animation;
-	UnitWeapon* weapon;
+	UnitAnimation * _unit_animation;
+	UnitWeapon * _weapon;
 
-	std::vector<UnitWeapon*> bullet_vector;
+	std::vector<UnitWeapon*> _bullet_vector;
 	void weapon_animaiton(float _dt);
 
 	const float up =				0.99f;

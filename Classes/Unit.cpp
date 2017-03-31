@@ -5,20 +5,39 @@
 using namespace cocos2d;
 
 
-Unit::Unit() : unit_state(unit_state::idle), unit_dir(direction::up) {
+Unit::Unit() : _unit_state(unit_state::idle), _unit_dir(direction::up) {
 }
 
 Unit::~Unit() {
-	delete unit_animation;
+	delete _unit_animation;
 	delete _unit_info;
 	delete _unit_info2;
 }
 
-bool Unit::init() {
+Unit * Unit::create(const unit_type _type) {
+	Unit * pRet = new Unit();
+	if (pRet && pRet->init(_type)) {
+		pRet->autorelease();
+		return pRet;
+	}
+	else {
+		delete pRet;
+		return (pRet = nullptr);
+	}
+}
+
+bool Unit::init(unit_type _type) {
 	assert(Sprite::init());
 
 	// 유닛 애니메이션 생성
-	unit_animation = new UnitAnimation(unit_type::marine, this);
+	_unit_animation = new UnitAnimation(_type, this);
+
+
+	// 데이터 로드 ~~~~~~
+	// 데이터 로드 ~~~~~~
+	// 데이터 로드 ~~~~~~
+	// 데이터 로드 ~~~~~~
+	// 데이터 로드 ~~~~~~
 
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine016.bmp");
@@ -36,40 +55,35 @@ bool Unit::init() {
 }
 
 void Unit::attack_unit(Unit* const _target) {
-	init_frame();
-	target_unit = _target;
-	unit_state = unit_state::attack;
-	Vec2 vec2 = target_unit->getPosition() - this->getPosition();
+	chang_order(unit_state::attack);
+	_target_unit = _target;
+
+	Vec2 vec2 = _target_unit->getPosition() - this->getPosition();
 	vec2.normalize();
 	check_dir(vec2);
 }
 
 void Unit::move_unit(const Vec2& _move_pos) {
-	init_frame();
-	move_vec2 = _move_pos;
-	unit_state = unit_state::move;
+	chang_order(unit_state::move);
+	_move_vec2 = _move_pos;
 }
 
 void Unit::stop_unit() {
-	init_frame();
-	unit_state = unit_state::idle;
+	chang_order(unit_state::idle);
 }
 
 void Unit::patrol_unit(const Vec2& _move_pos) {
-	init_frame();
-	move_vec2 = _move_pos;
-	my_pos_vec2 = this->getPosition();
-	unit_state = unit_state::patrol;
+	chang_order(unit_state::patrol);
+	_move_vec2 = _move_pos;
+	_my_pos_vec2 = this->getPosition();
 }
 
 void Unit::hold_unit() {
-	init_frame();
-	unit_state = unit_state::hold;
+	chang_order(unit_state::hold);
 }
 
 void Unit::die_unit() {
-	init_frame();
-	unit_state = unit_state::die;
+	chang_order(unit_state::die);
 }
 
 void Unit::hit(int _dmg) {
@@ -89,34 +103,34 @@ void Unit::run_action_animation(float _dt) {
 	// 후처리는 다른 곳에서..
 	// unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
 
-	switch (unit_state)
+	switch (_unit_state)
 	{
 	case production: 		break;
 	case idle:				break;
 	case move:
 		run_action_move();														// 이동처리
-		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);		// 애니메이션 처리
+		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
 	case attack: {
-		unit_animation->run_action_aniamtion(attack, this, _dt, unit_dir, 2);	// 애니메이션 처리		
+		_unit_animation->run_action_aniamtion(attack, this, _dt, _unit_dir, 2);	// 애니메이션 처리		
 		{																		// 생성 조건필요한데..
-			weapon = new UnitWeapon(target_unit, unit_type::marine_weapon);
-			this->getParent()->addChild(weapon);
-			bullet_vector.push_back(weapon);
+			_weapon = new UnitWeapon(_target_unit, unit_type::marine_weapon);
+			this->getParent()->addChild(_weapon);
+			_bullet_vector.push_back(_weapon);
 		}
 		break;
 	}
 	case patrol: {
 		run_action_move();														// 이동처리, 기능 이관 해야됨
-		if (unit_state == idle) {
-			unit_state = patrol;
-			std::swap(move_vec2, my_pos_vec2);
+		if (_unit_state == idle) {
+			_unit_state = patrol;
+			std::swap(_move_vec2, _my_pos_vec2);
 		}
-		unit_animation->run_action_aniamtion(move, this, _dt, unit_dir);		// 애니메이션 처리
+		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
 	}
 	case hold: 		break;
-	case die: 		unit_animation->run_action_aniamtion(die, this, _dt); 		break;
+	case die: 		_unit_animation->run_action_aniamtion(die, this, _dt); 		break;
 	default:
 		break;
 	}
@@ -126,31 +140,31 @@ void Unit::run_action_animation(float _dt) {
 // 임시 작성, 기능 이관 해야됨
 void Unit::weapon_animaiton(float _dt) {
 	
-	for (UnitWeapon* weapon : bullet_vector) {
+	for (UnitWeapon* weapon : _bullet_vector) {
 		weapon->run_action_animation(_dt);
 	}
 	int i = 0, j = -1;
-	for (UnitWeapon* weapon : bullet_vector) {
+	for (UnitWeapon* weapon : _bullet_vector) {
 		if (!weapon->isVisible()) {
 			j = i;
 		}
 		++i;
 	}
 	if (j != -1) {
-		this->getParent()->removeChild(bullet_vector.at(j));
-		delete bullet_vector.at(j);
-		bullet_vector.erase(bullet_vector.begin() + j);
+		this->getParent()->removeChild(_bullet_vector.at(j));
+		delete _bullet_vector.at(j);
+		_bullet_vector.erase(_bullet_vector.begin() + j);
 	}
 }
 
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
-	if (bounding.containsPoint(move_vec2)) {
-		unit_state = idle;
+	if (bounding.containsPoint(_move_vec2)) {
+		_unit_state = idle;
 	}
 	else {
 		Vec2 vec2 = this->getPosition();
-		Vec2 dir = move_vec2 - vec2;
+		Vec2 dir = _move_vec2 - vec2;
 		dir.normalize();
 
 		check_dir(dir);
@@ -160,22 +174,23 @@ void Unit::run_action_move() {
 
 void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 	if (_dir.y > up_right_left2) {
-		if (_dir.y > up)						unit_dir = direction::up;
-		else if (_dir.y > up_right_left1) 		unit_dir = (_dir.x > 0) ? direction::up_right1 : direction::up_left1;
-		else                         			unit_dir = (_dir.x > 0) ? direction::up_right2 : direction::up_left2;
+		if (_dir.y > up)						_unit_dir = direction::up;
+		else if (_dir.y > up_right_left1) 		_unit_dir = (_dir.x > 0) ? direction::up_right1 : direction::up_left1;
+		else                         			_unit_dir = (_dir.x > 0) ? direction::up_right2 : direction::up_left2;
 	}
 	else if (_dir.y > down_right_left1) {
-		if (_dir.y > up_right_left3)			unit_dir = (_dir.x > 0) ? direction::up_right3 : direction::up_left3;
-		else if (_dir.y > right_left)			unit_dir = (_dir.x > 0) ? direction::right : direction::left;
-		else									unit_dir = (_dir.x > 0) ? direction::down_right1 : direction::down_left1;
+		if (_dir.y > up_right_left3)			_unit_dir = (_dir.x > 0) ? direction::up_right3 : direction::up_left3;
+		else if (_dir.y > right_left)			_unit_dir = (_dir.x > 0) ? direction::right : direction::left;
+		else									_unit_dir = (_dir.x > 0) ? direction::down_right1 : direction::down_left1;
 	}
 	else {
-		if (_dir.y > -down_right_left2)			unit_dir = (_dir.x > 0) ? direction::down_right2 : direction::down_left2;
-		else if (_dir.y > down_right_left3)		unit_dir = (_dir.x > 0) ? direction::down_right3 : direction::down_left3;
-		else                             		unit_dir = direction::down;
+		if (_dir.y > -down_right_left2)			_unit_dir = (_dir.x > 0) ? direction::down_right2 : direction::down_left2;
+		else if (_dir.y > down_right_left3)		_unit_dir = (_dir.x > 0) ? direction::down_right3 : direction::down_left3;
+		else                             		_unit_dir = direction::down;
 	}
 }
 
-void Unit::init_frame() {
-	unit_animation->init_frame();
+void Unit::chang_order(const unit_state _state) {
+	_unit_animation->init_frame();
+	_unit_state = _state;
 }
