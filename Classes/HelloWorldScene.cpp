@@ -31,10 +31,8 @@ bool HelloWorld::init()
     }
 
 	input_manager = new InputManager();
-	/*this->addChild(input_manager->get_keyboard_manager());
-	this->addChild(input_manager->get_mouse_manager());*/
+	this->addChild(input_manager);
 
-    
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
 	sprite_cache->addSpriteFramesWithFile("img/unit/marine/tspark.plist", "img/unit/marine/tspark.png");
@@ -58,49 +56,9 @@ bool HelloWorld::init()
 
 	this->scheduleUpdate();
 
-	// 마우스 이벤트 등록
-	auto listener = EventListenerMouse::create();
-	listener->onMouseUp = CC_CALLBACK_1(HelloWorld::on_mouse_up, this);
-	listener->onMouseMove = CC_CALLBACK_1(HelloWorld::on_mouse_move, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
 	unit_state = 1;
 
     return true;
-}
-
-void HelloWorld::on_mouse_move(Event *_event) {
-	CCLOG("dd");
-}
-
-void HelloWorld::on_mouse_up(Event *_event) {
-	// 마우스 좌우 버튼 구분을 위해서 형변환
-	EventMouse* e = static_cast<EventMouse*>(_event);
-
-	// EventMouse에서 좌표를 받아오면 y좌표값이 위에서 아래 쪽으로 커지기 때문에 
-	// y 좌표 값에서 세로 길이 만큼 빼줘서 클릭한 위치를 찾는다
-	auto win_size = Director::getInstance()->getWinSize();
-	Vec2 location = e->getLocation();
-	location.y = win_size.height - location.y;
-
-	static int i = 0;
-
-	switch (e->getMouseButton()) {
-	case MOUSE_BUTTON_LEFT: {
-		_unit->stop_unit();
-		break;
-	}
-	case MOUSE_BUTTON_RIGHT: {
-		
-		if (_unit2->getBoundingBox().containsPoint(location)) {
-			_unit->attack_unit(_unit2);
-		}
-		else {
-			_unit->patrol_unit(location);
-		}
-		break;
-	}
-	}
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
@@ -121,6 +79,11 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 }
 
 void HelloWorld::update(float _dt) {
+
+	
+
+
+
 	_unit->run_action_animation(_dt);
 	_unit2->run_action_animation(_dt);
 }

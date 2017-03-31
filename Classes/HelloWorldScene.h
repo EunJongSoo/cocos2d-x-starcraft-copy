@@ -21,8 +21,6 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
-	void on_mouse_up(cocos2d::Event *_event);
-	void on_mouse_move(cocos2d::Event *_event);
 	virtual void update(float __dt);
 	Unit* _unit;
 	Unit* _unit2;

@@ -13,6 +13,9 @@
     <Filter Include="src\Unit">
       <UniqueIdentifier>{8888cf03-369c-44bb-8b09-4a1eb64f5178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Input">
+      <UniqueIdentifier>{e990ba31-203a-4f12-84ec-00225e63a6d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -32,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\UnitWeapon.cpp">
       <Filter>src\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\KeyboardManager.cpp">
+      <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MouseManager.cpp">
+      <Filter>src\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,13 +66,13 @@
       <Filter>src\Unit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\InputManager.h">
-      <Filter>src</Filter>
+      <Filter>src\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\KeyboardManager.h">
-      <Filter>src</Filter>
+      <Filter>src\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MouseManager.h">
-      <Filter>src</Filter>
+      <Filter>src\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

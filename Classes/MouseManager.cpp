@@ -18,6 +18,8 @@ bool MouseManager::init() {
 	listener->onMouseUp = CC_CALLBACK_1(MouseManager::on_mouse_up, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
+	_win_size = Director::getInstance()->getWinSize();
+
 	return true;
 }
 
@@ -28,8 +30,14 @@ void MouseManager::on_mouse_down(Event * _event) {
 	
 	switch (mouse->getMouseButton())
 	{
-	case MOUSE_BUTTON_LEFT:		_mouse_state = mouse_state::L_down; break;
-	case MOUSE_BUTTON_RIGHT:	_mouse_state = mouse_state::R_down;	break;
+	case MOUSE_BUTTON_LEFT:
+		_mouse_state = mouse_state::L_down; 
+		_start_mouse_pos = mouse_location_y(mouse->getLocation());
+		break;
+	case MOUSE_BUTTON_RIGHT:
+		_mouse_state = mouse_state::R_down;	
+		_start_mouse_pos = mouse_location_y(mouse->getLocation());
+		break;
 	default:	break;
 	}
 }
@@ -41,11 +49,11 @@ void MouseManager::on_mouse_move(Event * _event) {
 	
 	switch (_mouse_state) {
 	case mouse_state::L_down:
-		_mouse_state = mouse_state::L_drag;
-		_start_mouse_pos = mouse->getLocation();
+		if (mouse_distance_check(mouse->getLocation()) > mouse_drag_distance)
+			_mouse_state = mouse_state::L_drag;
 		break;
 	case mouse_state::L_drag:
-		_end_mouse_pos = mouse->getLocation();
+		_end_mouse_pos = mouse_location_y(mouse->getLocation());
 		break;
 	default:
 		break;
@@ -63,4 +71,14 @@ void MouseManager::on_mouse_up(Event * _event) {
 		break;
 	}
 	}
+}
+
+Vec2 MouseManager::mouse_location_y(const Vec2& _location) {
+	Vec2 location = _location;
+	location.y = _win_size.height - location.y;
+	return location;
+}
+
+float MouseManager::mouse_distance_check(const Vec2& _location) {
+	return _start_mouse_pos.distance(_location);
 }

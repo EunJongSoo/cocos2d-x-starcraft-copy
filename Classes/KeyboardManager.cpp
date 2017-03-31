@@ -1,13 +1,24 @@
 #include "KeyboardManager.h"
 
-void KeyboardManager::on_mouse_down(cocos2d::Event * _event)
-{
+using namespace cocos2d;
+
+KeyboardManager::KeyboardManager() {}
+
+KeyboardManager::~KeyboardManager() {}
+
+bool KeyboardManager::init() {
+	if (!cocos2d::Node::init())
+		return false;
+
+	auto listener = EventListenerKeyboard::create();
+	listener->onKeyPressed = CC_CALLBACK_2(KeyboardManager::on_key_pressed, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+	return true;
 }
 
-void KeyboardManager::on_mouse_move(cocos2d::Event * _event)
-{
-}
+void KeyboardManager::on_key_pressed(EventKeyboard::KeyCode _key, Event* _event) {
+	_last_key = _key;
 
-void KeyboardManager::on_mouse_up(cocos2d::Event * _event)
-{
+	CCLOG("%d", _key);
 }

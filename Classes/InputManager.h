@@ -4,13 +4,15 @@
 #include "KeyboardManager.h"
 #include "MouseManager.h"
 
-class InputManager {
+class InputManager : public cocos2d::Node {
 public:
-	InputManager() {}
+	InputManager() {
+		keyboard_manager = KeyboardManager::create();
+		mouse_manager = MouseManager::create();
+		this->addChild(keyboard_manager);
+		this->addChild(mouse_manager);
+	}
 	~InputManager() {}
-
-	KeyboardManager* get_keyboard_manager() const { return keyboard_manager; }
-	MouseManager* get_mouse_manager() const { return mouse_manager; }
 private:
 	KeyboardManager* keyboard_manager;
 	MouseManager* mouse_manager;
