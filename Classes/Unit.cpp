@@ -14,9 +14,9 @@ Unit::~Unit() {
 	delete _unit_info2;
 }
 
-Unit * Unit::create(const unit_type _type) {
+Unit * Unit::create(const unit_type _type, const Vec2& _pos) {
 	Unit * pRet = new Unit();
-	if (pRet && pRet->init(_type)) {
+	if (pRet && pRet->init(_type, _pos)) {
 		pRet->autorelease();
 		return pRet;
 	}
@@ -26,12 +26,12 @@ Unit * Unit::create(const unit_type _type) {
 	}
 }
 
-bool Unit::init(unit_type _type) {
+bool Unit::init(unit_type _type, const Vec2& _pos) {
 	assert(Sprite::init());
 
 	// 유닛 애니메이션 생성
 	_unit_animation = new UnitAnimation(_type, this);
-
+	this->setPosition(_pos);
 
 	// 데이터 로드 ~~~~~~
 	// 데이터 로드 ~~~~~~

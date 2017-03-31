@@ -8,14 +8,14 @@ class Unit;
 class PlayerUnitManager {
 public:
 	enum player_color {
-		red, blue,
+		red, blue, max
 	};
 	enum player_type {
 		user, ai,
 	};
 
 public:
-	PlayerUnitManager();
+	PlayerUnitManager(player_color _color);
 	~PlayerUnitManager();
 
 	void create_unit(unit_type _type, const float _pos_x, const float _pos_y);
@@ -23,6 +23,7 @@ public:
 	inline player_color get_color() const { return _color; }
 
 private:
+	PlayerUnitManager();
 	std::vector<Unit*> unit_vector;
 	
 	// 플레이어 구분

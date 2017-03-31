@@ -15,6 +15,7 @@ public:
 	UnitManager();
 	~UnitManager();
 
+	bool add_player();
 	void create_unit(const unit_type _type, const player_color _color, const float _pos_x, const float _pos_y);
 
 private:

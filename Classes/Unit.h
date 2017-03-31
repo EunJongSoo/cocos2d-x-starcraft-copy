@@ -85,8 +85,8 @@ public:
 	};
 public:
 	virtual ~Unit();
-	virtual bool init(const unit_type _type);
-	static Unit* create(const unit_type _type);
+	virtual bool init(const unit_type _type, const cocos2d::Vec2& _pos);
+	static Unit* create(const unit_type _type, const cocos2d::Vec2& _pos);
 
 	void attack_unit(Unit* const _target);
 	void move_unit(const cocos2d::Vec2& _move_pos);
