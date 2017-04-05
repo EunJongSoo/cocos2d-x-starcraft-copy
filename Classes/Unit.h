@@ -97,6 +97,9 @@ public:
 	void hit(int _dmg);
 	void run_action_animation(float _dt);
 
+	inline bool is_selete_unit() { return _selete_unit; }
+	inline void set_selete_unit(bool _selete) { _selete_unit = _selete; }
+
 	direction _unit_dir;
 	
 private:
