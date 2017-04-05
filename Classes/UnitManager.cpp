@@ -28,10 +28,10 @@ Unit* UnitManager::create_unit(const unit_type _type, const player_color _color,
 	}
 	return nullptr;
 }
-std::vector<Unit*>& UnitManager::get_unit_array() const {
-	std::vector<Unit*> unit_vector;
+std::vector<Unit*>& UnitManager::get_unit_array() {
+	player_unit_vector.clear();
 	for (PlayerUnitManager* player : player_unit_manager_vector) {
-		unit_vector.insert(unit_vector.end(), player->get_unit_vector().begin(), player->get_unit_vector().end());
+		player_unit_vector.insert(player_unit_vector.end(), player->get_unit_vector().begin(), player->get_unit_vector().end());
 	}
-	return unit_vector;
+	return player_unit_vector;
 }

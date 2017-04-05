@@ -2,6 +2,7 @@
 #include "KeyboardManager.h"
 #include "MouseManager.h"
 #include "InputInfo.h"
+#include "MouseInfo.h"
 
 InputManager::InputManager() : 
 	input_order(false), 

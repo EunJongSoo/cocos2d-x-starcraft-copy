@@ -15,6 +15,10 @@ public:
 	inline MouseInfo * get_mouse_info() const { return mouse; }
 	inline void set_mouse_order(const bool _order) { mouse_order = _order; }
 	inline void set_mouse_info(MouseInfo * const _mouse) {	mouse = _mouse;	}
+	inline void init_input_info() {
+		mouse_order = false;
+		mouse = nullptr;
+	}
 
 private:
 	bool mouse_order;

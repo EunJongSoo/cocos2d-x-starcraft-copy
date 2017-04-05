@@ -5,10 +5,27 @@
 #include "InputInfo.h"
 #include "MouseInfo.h"
 
+#include "PickingManager.h"
+
 #include "UnitLayer.h"
 #include "Unit.h"
 
+
 using namespace cocos2d;
+
+HelloWorld::HelloWorld() :
+	input_manager(nullptr),
+	picking_manager(nullptr),
+	unit_layer(nullptr)
+{
+}
+
+HelloWorld::~HelloWorld()
+{
+	this->removeAllChildren();
+	CC_SAFE_DELETE(input_manager);
+	CC_SAFE_DELETE(picking_manager);
+}
 
 Scene* HelloWorld::createScene()
 {
@@ -35,8 +52,13 @@ bool HelloWorld::init()
         return false;
     }
 
+	
+
 	input_manager = new InputManager();
 	this->addChild(input_manager);
+
+	picking_manager = new PickingManager();
+
 
 	// 그림 파일 불러오기
 	auto sprite_cache = SpriteFrameCache::getInstance();
@@ -55,7 +77,6 @@ bool HelloWorld::init()
 	unit_layer = UnitLayer::create();
 	unit_layer->setPosition(0, 0);
 	this->addChild(unit_layer, 1);
-
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
@@ -77,18 +98,14 @@ void HelloWorld::update(float _dt) {
 	draw_process(_dt);
 }
 
-void HelloWorld::main_process(const InputInfo * const _input, const std::vector<Unit*>& _unit_array, const float _dt) {
+void HelloWorld::main_process(InputInfo * const _input, const std::vector<Unit*>& _unit_array, const float _dt) {
 	
 	// 조작된 유닛 움직이기
 	if (_input->get_mouse_order()) {
-		MouseInfo* mouse = _input->get_mouse_info();
-		//
-
+		picking_manager->picking_unit(_input, _unit_array);
 	}
 
-
-
-	// 조작 안된 유닛 움직이기
+	// 전체 유닛 현재 명령 수행하기
 	for (Unit* unit : _unit_array) {
 		unit->run_action_animation(_dt);
 	}
@@ -97,10 +114,10 @@ void HelloWorld::main_process(const InputInfo * const _input, const std::vector<
 void HelloWorld::draw_process(float _dt) {
 
 }
-
-mouse_info = input_manager->input_process();
-unit_array = player_manager->get_unit_array();
-unit pick_unit = picking(mouse_info, unit_array);
-game_manager->main_process(pick_unit);
-
-mouse_info = input_manager->input_process(player_manager->get_unit_array());
+//
+//mouse_info = input_manager->input_process();
+//unit_array = player_manager->get_unit_array();
+//unit pick_unit = picking(mouse_info, unit_array);
+//game_manager->main_process(pick_unit);
+//
+//mouse_info = input_manager->input_process(player_manager->get_unit_array());

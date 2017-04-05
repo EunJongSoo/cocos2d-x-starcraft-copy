@@ -3,7 +3,7 @@
 
 using namespace cocos2d;
 
-MouseManager::MouseManager() : order(false), win_size(NULL), mouse_info(nullptr) {
+MouseManager::MouseManager() : order(false), mouse_info(nullptr) {
 	mouse_info = new MouseInfo();
 }
 
@@ -65,8 +65,6 @@ void MouseManager::on_mouse_move(Event * _event) {
 		Vec2& location = mouse->getLocation();
 		correction_mouse_location_y(location);
 		mouse_info->set_end_pos(location.x, location.y);
-		break;
-	default:
 		break;
 	}
 }

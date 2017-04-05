@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 
 class InputInfo;
+class MouseInfo;
 class KeyboardManager;
 class MouseManager;
 
