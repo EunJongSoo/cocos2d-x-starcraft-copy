@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 
 class UnitManager;
+class Unit;
+
 class UnitLayer : public cocos2d::Layer {
 public:
 	UnitLayer();
@@ -12,7 +14,7 @@ public:
 	CREATE_FUNC(UnitLayer);
 
 	void create_unit();
-
+	std::vector<Unit*>& get_unit_array() const;
 private:
 	UnitManager* unit_manager;
 

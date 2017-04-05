@@ -28,7 +28,10 @@ bool UnitLayer::init()
 	return true;
 }
 
-void UnitLayer::create_unit()
-{
+void UnitLayer::create_unit() {
 
+}
+
+std::vector<Unit*>& UnitLayer::get_unit_array() const{
+	return unit_manager->get_unit_array();
 }

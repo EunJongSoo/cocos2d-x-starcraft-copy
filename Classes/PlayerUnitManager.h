@@ -19,8 +19,11 @@ public:
 	~PlayerUnitManager();
 
 	Unit* create_unit(unit_type _type, const float _pos_x, const float _pos_y);
-	
+
 	inline player_color get_color() const { return _color; }
+	inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector() {
+		return unit_vector;
+	}
 
 private:
 	PlayerUnitManager();

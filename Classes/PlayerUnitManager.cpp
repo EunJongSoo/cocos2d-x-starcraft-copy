@@ -18,3 +18,4 @@ Unit* PlayerUnitManager::create_unit(unit_type _type, const float _pos_x, const 
 	unit_vector.push_back(unit);
 	return unit;
 }
+
