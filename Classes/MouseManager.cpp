@@ -41,12 +41,11 @@ void MouseManager::on_mouse_down(Event * _event) {
 	switch (mouse->getMouseButton())
 	{
 	case MOUSE_BUTTON_LEFT:
-		set_mouse_order(MouseInfo::mouse_state::L_down, mouse->getLocation());
+		set_mouse_order(MouseInfo::mouse_state::L_down, mouse->getLocation(), set_pos::start);
 		break;
 	case MOUSE_BUTTON_RIGHT:
-		set_mouse_order(MouseInfo::mouse_state::R_down, mouse->getLocation());
+		set_mouse_order(MouseInfo::mouse_state::R_down, mouse->getLocation(), set_pos::start);
 		break;
-	default:	break;
 	}
 }
 
@@ -55,16 +54,15 @@ void MouseManager::on_mouse_move(Event * _event) {
 	
 	auto mouse = static_cast<EventMouse*>(_event);
 	
-	switch (mouse_info->state) {
+	switch (mouse_info->get_mouse_state()) {
 	case MouseInfo::mouse_state::L_down: {
-		if (mouse_distance_check(mouse->getLocation()) > mouse_drag_distance)
-			set_mouse_order(MouseInfo::mouse_state::L_drag);
+		if (mouse_distance_check(mouse->getLocation()) > mouse_drag_distance) {
+			set_mouse_order(MouseInfo::mouse_state::L_dragging, mouse->getLocation(), set_pos::end);
+		}
 		break;
 	}
-	case MouseInfo::mouse_state::L_drag:
-		Vec2& location = mouse->getLocation();
-		correction_mouse_location_y(location);
-		mouse_info->set_end_pos(location.x, location.y);
+	case MouseInfo::mouse_state::L_dragging:
+		set_mouse_order(MouseInfo::mouse_state::L_dragging, mouse->getLocation(), set_pos::end);
 		break;
 	}
 }
@@ -76,7 +74,12 @@ void MouseManager::on_mouse_up(Event * _event) {
 	
 	switch (mouse->getMouseButton()) {
 	case MOUSE_BUTTON_LEFT: {
-		mouse_info->set_mouse_state(MouseInfo::mouse_state::L_up);
+		if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_down) {
+			set_mouse_order(MouseInfo::mouse_state::L_up);
+		}
+		else if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_dragging) {
+			set_mouse_order(MouseInfo::mouse_state::L_drag);
+		}
 		break;
 	}
 	}
@@ -93,12 +96,16 @@ float MouseManager::mouse_distance_check(const Vec2& _location) {
 }
 
 void MouseManager::set_mouse_order(const int _state) {
-	order = true;
 	mouse_info->set_mouse_state(_state);
+	order = true;
 }
 
-void MouseManager::set_mouse_order(const int _state, Vec2& _pos) {
+void MouseManager::set_mouse_order(const int _state, Vec2& _pos, set_pos _start_end) {
 	this->set_mouse_order(_state);
 	correction_mouse_location_y(_pos);
-	mouse_info->set_start_pos(_pos.x, _pos.y);
+	switch (_start_end)
+	{
+	case MouseManager::start:	mouse_info->set_start_pos(_pos.x, _pos.y);	break;
+	case MouseManager::end:		mouse_info->set_end_pos(_pos.x, _pos.y);	break;
+	}
 }

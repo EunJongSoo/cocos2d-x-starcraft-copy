@@ -18,6 +18,9 @@ public:
 	inline bool is_order() const { 	return order; }
 
 private:
+	enum set_pos {
+		start, end
+	};
 	void on_mouse_down(cocos2d::Event* _event);
 	void on_mouse_move(cocos2d::Event* _event);
 	void on_mouse_up(cocos2d::Event* _event);
@@ -25,7 +28,7 @@ private:
 	void correction_mouse_location_y(cocos2d::Vec2& _location);
 	float mouse_distance_check(const cocos2d::Vec2& _location);
 	void set_mouse_order(const int _state);
-	void set_mouse_order(const int _state, cocos2d::Vec2& _pos);
+	void set_mouse_order(const int _state, cocos2d::Vec2& _pos, set_pos _start_end);
 
 private:
 	bool order;

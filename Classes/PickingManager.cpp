@@ -18,43 +18,47 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Un
 	if (_input->get_mouse_order()) {
 		MouseInfo* info = _input->get_mouse_info();
 
-		MouseInfo::mouse_state state = info->get_mouse_state();
-		float x = info->get_start_pos_x();
-		float y = info->get_start_pos_y();
-
-		switch (state)
+		switch (info->get_mouse_state())
 		{
 		case MouseInfo::R_down: {
-
-			run_action_mouse_R_down(x, y, _unit_array);
+			run_action_mouse_R_down(info, _unit_array);
 			break;
 		}
 		case MouseInfo::L_down: {
 			
-			run_action_mouse_L_down(x, y, _unit_array);
 			break;
 		}
-		case MouseInfo::L_drag:		break;
+		case MouseInfo::L_dragging: {
+
+			break;
+		}
+		case MouseInfo::L_drag: {
+			run_action_mouse_L_drag(info, _unit_array);
+			break;
+		}
 		case MouseInfo::L_double:	break;
-		case MouseInfo::L_up:		break;
+		case MouseInfo::L_up: {
+			run_action_mouse_L_up(info, _unit_array);
+			break;
+		}
 		case MouseInfo::R_up:		break;
 		}
 		_input->init_input_info();
 	}
 }
 
-void PickingManager::run_action_mouse_L_down(float _x, float _y, const std::vector<Unit*>& _unit_array)
+void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
 {
 	unselect_unit(_unit_array);
-	Unit* unit = selected_unit(_x, _y, _unit_array);
+	Unit* unit = click_selected_unit(_info, _unit_array);
 	if (unit != nullptr) {
 		unit->set_selete_unit(true);
 	}
 }
 
-void PickingManager::run_action_mouse_R_down(float _x, float _y, const std::vector<Unit*>& _unit_array)
+void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
 {
-	Unit* unit = selected_unit(_x, _y, _unit_array);
+	Unit* unit = click_selected_unit(_info, _unit_array);
 	if (unit != nullptr) {
 		Unit* selete_unit = get_selete_unit(_unit_array);
 		selete_unit->attack_unit(unit);
@@ -62,8 +66,22 @@ void PickingManager::run_action_mouse_R_down(float _x, float _y, const std::vect
 	else {
 		Unit* selete_unit = get_selete_unit(_unit_array);
 		if (selete_unit != nullptr) {
-			selete_unit->move_unit(cocos2d::Vec2(_x, _y));
+			// ÇÔ¼öÈ­ °í¹Î
+			// ÇÔ¼öÈ­ °í¹Î
+			// ÇÔ¼öÈ­ °í¹Î
+			float x = _info->get_start_pos_x();
+			float y = _info->get_start_pos_y();
+			selete_unit->move_unit(cocos2d::Vec2(x, y));
 		}
+	}
+}
+
+void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+{
+	unselect_unit(_unit_array);
+	Unit* unit = drag_selected_unit(_info, _unit_array);
+	if (unit != nullptr) {
+		unit->set_selete_unit(true);
 	}
 }
 
@@ -84,11 +102,38 @@ Unit * PickingManager::get_selete_unit(const std::vector<Unit*>& _unit_array)
 	return nullptr;
 }
 
-Unit * PickingManager::selected_unit(float _x, float _y, const std::vector<Unit*>& _unit_array)
+Unit * PickingManager::click_selected_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
 {
+	float x = _info->get_start_pos_x();
+	float y = _info->get_start_pos_y();
 	for (Unit* unit : _unit_array) {
 		cocos2d::Rect rect = unit->getBoundingBox();
-		if (rect.containsPoint(cocos2d::Vec2(_x, _y))) {
+		if (rect.containsPoint(cocos2d::Vec2(x, y))) {
+			return unit;
+		}
+	}
+	return nullptr;
+}
+
+Unit * PickingManager::drag_selected_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+{
+	float start_x = _info->get_start_pos_x();
+	float start_y = _info->get_start_pos_y();
+	
+	float end_x = _info->get_end_pos_x();
+	float end_y = _info->get_end_pos_y();
+	
+	float min_x = MIN(start_x, end_x);
+	float min_y = MIN(start_y, end_y);
+	
+	float width = fabsf(start_x - end_x);
+	float height = fabsf(start_y - end_y);
+
+	cocos2d::Rect drag_rect = cocos2d::Rect(min_x, min_y, width, height);
+
+	for (Unit* unit : _unit_array) {
+		cocos2d::Rect rect = unit->getBoundingBox();
+		if (rect.intersectsRect(drag_rect)) {
 			return unit;
 		}
 	}

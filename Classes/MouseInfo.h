@@ -4,7 +4,7 @@
 class MouseInfo {
 public:
 	enum mouse_state {
-		none, L_down, L_drag, L_double, L_up, R_down, R_up
+		none, L_down, L_dragging, L_drag, L_double, L_up, R_down, R_up
 	};
 public:
 	MouseInfo() :
