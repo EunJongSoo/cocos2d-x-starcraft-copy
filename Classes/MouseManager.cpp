@@ -1,11 +1,17 @@
 #include "MouseManager.h"
+#include "MouseInfo.h"
 
 using namespace cocos2d;
 
-MouseManager::MouseManager() : _is_order(false) {
+MouseManager::MouseManager() : order(false), win_size(NULL), mouse_info(nullptr) {
+	mouse_info = new MouseInfo();
 }
 
 MouseManager::~MouseManager() {
+	if (mouse_info != nullptr) {
+		delete mouse_info;
+		mouse_info = nullptr;
+	}
 }
 
 bool MouseManager::init() {
@@ -18,13 +24,13 @@ bool MouseManager::init() {
 	listener->onMouseUp = CC_CALLBACK_1(MouseManager::on_mouse_up, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	_win_size = Director::getInstance()->getWinSize();
+	win_size = Director::getInstance()->getWinSize();
 
 	return true;
 }
 
-void MouseManager::init_mouse_order() {
-	_is_order = false;
+void MouseManager::init_mouse_init() {
+	order = false;
 }
 
 void MouseManager::on_mouse_down(Event * _event) {
@@ -35,10 +41,10 @@ void MouseManager::on_mouse_down(Event * _event) {
 	switch (mouse->getMouseButton())
 	{
 	case MOUSE_BUTTON_LEFT:
-		set_mouse_order(mouse_state::L_down, mouse->getLocation());
+		set_mouse_order(MouseInfo::mouse_state::L_down, mouse->getLocation());
 		break;
 	case MOUSE_BUTTON_RIGHT:
-		set_mouse_order(mouse_state::R_down, mouse->getLocation());
+		set_mouse_order(MouseInfo::mouse_state::R_down, mouse->getLocation());
 		break;
 	default:	break;
 	}
@@ -49,13 +55,16 @@ void MouseManager::on_mouse_move(Event * _event) {
 	
 	auto mouse = static_cast<EventMouse*>(_event);
 	
-	switch (_mouse_order.mouse_state) {
-	case mouse_state::L_down:
+	switch (mouse_info->state) {
+	case MouseInfo::mouse_state::L_down: {
 		if (mouse_distance_check(mouse->getLocation()) > mouse_drag_distance)
-			set_mouse_order(mouse_state::L_drag);
+			set_mouse_order(MouseInfo::mouse_state::L_drag);
 		break;
-	case mouse_state::L_drag:
-		_mouse_order.end_mouse_pos = mouse_location_y(mouse->getLocation());
+	}
+	case MouseInfo::mouse_state::L_drag:
+		Vec2& location = mouse->getLocation();
+		correction_mouse_location_y(location);
+		mouse_info->set_end_pos(location.x, location.y);
 		break;
 	default:
 		break;
@@ -69,28 +78,29 @@ void MouseManager::on_mouse_up(Event * _event) {
 	
 	switch (mouse->getMouseButton()) {
 	case MOUSE_BUTTON_LEFT: {
-		_mouse_order.mouse_state = mouse_state::L_up;
+		mouse_info->set_mouse_state(MouseInfo::mouse_state::L_up);
 		break;
 	}
 	}
 }
 
-Vec2 MouseManager::mouse_location_y(const Vec2& _location) {
-	Vec2 location = _location;
-	location.y = _win_size.height - location.y;
-	return location;
+void MouseManager::correction_mouse_location_y(Vec2& _location) {
+	_location.y = win_size.height - _location.y;
 }
 
 float MouseManager::mouse_distance_check(const Vec2& _location) {
-	return _mouse_order.start_mouse_pos.distance(_location);
+	float x = mouse_info->get_start_pos_x();
+	float y = mouse_info->get_start_pos_y();
+	return _location.distance(Vec2(x, y));
 }
 
-void MouseManager::set_mouse_order(mouse_state _state) {
-	_is_order = true;
-	_mouse_order.mouse_state = _state;
+void MouseManager::set_mouse_order(const int _state) {
+	order = true;
+	mouse_info->set_mouse_state(_state);
 }
 
-void MouseManager::set_mouse_order(mouse_state _state, const Vec2& _pos) {
+void MouseManager::set_mouse_order(const int _state, Vec2& _pos) {
 	this->set_mouse_order(_state);
-	_mouse_order.start_mouse_pos = mouse_location_y(_pos);
+	correction_mouse_location_y(_pos);
+	mouse_info->set_start_pos(_pos.x, _pos.y);
 }
