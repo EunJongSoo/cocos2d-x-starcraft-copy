@@ -106,31 +106,30 @@ private:
 
 	// 분리해야되는 기능
 	void run_action_move();
+	void weapon_animaiton(float _dt);
+	
+private:
+	std::vector<UnitWeapon*> _bullet_vector;
 
-	// 유닛 기본 정보들
-	unit_info * _unit_info;						// 구조체 유닛 능력치 정보
-	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
+	cocos2d::Vec2 _move_vec2;					// 이동 목표
+	cocos2d::Vec2 _my_pos_vec2;					// 시작위치, 정찰 명령시 사용
 
-	production_info * _production_info;			// 구조체 생성 정보
+	unsigned int _tile_x;						// 타일 위치_x
+	unsigned int _tile_y;						// 타일 위치_y
+	float _production_time;						// 현재 생산 시간
+	bool _selete_unit;
 
 	races_type _races_type;						// enum 종족
 	unit_state _unit_state;						// enum 유닛의 현재 상태
-	
-	Unit * _target_unit;							// 공격 목표
-	cocos2d::Vec2 _move_vec2;					// 이동 목표
-	cocos2d::Vec2 _my_pos_vec2;					// 시작위치, 정찰 명령시 사용
-	unsigned int _tile_x;						// 타일 위치_x
-	unsigned int _tile_y;						// 타일 위치_y
-	
-	float _production_time;						// 현재 생산 시간
 	special_effects _unit_effects;				// 현재 특수이팩트
-	
+
+	unit_info * _unit_info;						// 구조체 유닛 능력치 정보
+	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
+	production_info * _production_info;			// 구조체 생성 정보
+	Unit * _target_unit;							// 공격 목표
 	UnitAnimation * _unit_animation;
 	UnitWeapon * _weapon;
-
-	std::vector<UnitWeapon*> _bullet_vector;
-	void weapon_animaiton(float _dt);
-
+	
 	const float up =				0.99f;
 	const float up_right_left1 =	0.66666666f;
 	const float up_right_left2 =	0.33333333f;

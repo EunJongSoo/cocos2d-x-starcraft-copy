@@ -5,7 +5,22 @@
 using namespace cocos2d;
 
 
-Unit::Unit() : _unit_state(unit_state::idle), _unit_dir(direction::up) {
+Unit::Unit() :
+	_unit_dir(direction::up),
+	_tile_x(0),
+	_tile_y(0),
+	_production_time(0.0f),
+	_selete_unit(false),
+	_races_type(races_type::terran),
+	_unit_state(unit_state::idle),
+	_unit_effects(special_effects::none),
+	_unit_info(nullptr),
+	_unit_info2(nullptr),
+	_production_info(nullptr),
+	_target_unit(nullptr),
+	_unit_animation(nullptr),
+	_weapon(nullptr)
+{
 }
 
 Unit::~Unit() {
