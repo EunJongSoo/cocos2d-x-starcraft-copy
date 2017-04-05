@@ -1,8 +1,11 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
-#include "InputManager.h"
-#include "UnitLayer.h"
 
+#include "InputManager.h"
+#include "InputInfo.h"
+#include "MouseInfo.h"
+
+#include "UnitLayer.h"
 #include "Unit.h"
 
 using namespace cocos2d;
@@ -63,31 +66,41 @@ bool HelloWorld::init()
 void HelloWorld::update(float _dt) {
 	
 	// 조작
-	input_process();
-	
-	// ??
+	InputInfo * _input_info = input_manager->input_prossce();
+	std::vector<Unit*>& unit_array = unit_layer->get_unit_array();
+
+	// 메인 프로세스
+	main_process(_input_info, unit_array, _dt);
+
 
 	// 그리기
 	draw_process(_dt);
 }
 
-// 짬뽕..
-void HelloWorld::input_process() {
-	if (input_manager->is_mouse_order()) {
-		MouseManager::mouse_order& order = input_manager->get_mouse_order();
-		switch (order.mouse_state) {
-		case MouseManager::mouse_state::R_down: {
+void HelloWorld::main_process(const InputInfo * const _input, const std::vector<Unit*>& _unit_array, const float _dt) {
+	
+	// 조작된 유닛 움직이기
+	if (_input->get_mouse_order()) {
+		MouseInfo* mouse = _input->get_mouse_info();
+		//
 
-		}
-		default:
-			break;
-		}
+	}
 
-		input_manager->mouse_order_init();
+
+
+	// 조작 안된 유닛 움직이기
+	for (Unit* unit : _unit_array) {
+		unit->run_action_animation(_dt);
 	}
 }
+
 void HelloWorld::draw_process(float _dt) {
 
-
-
 }
+
+mouse_info = input_manager->input_process();
+unit_array = player_manager->get_unit_array();
+unit pick_unit = picking(mouse_info, unit_array);
+game_manager->main_process(pick_unit);
+
+mouse_info = input_manager->input_process(player_manager->get_unit_array());
