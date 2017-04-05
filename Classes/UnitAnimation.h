@@ -27,6 +27,7 @@ private:
 	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count);
 	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
 	void sprite_flipped_x(cocos2d::Sprite* const _sprite, const bool _is_left, const bool _is_flipped_x);
+	clip* create_clip(const unit_state _state);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);

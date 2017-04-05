@@ -18,7 +18,7 @@ public:
 	void mouse_order_init();
 	MouseInfo* get_mouse_info() const;
 	bool is_mouse_order() const;
-	
+
 private:
 	bool input_order;
 

@@ -56,30 +56,29 @@ void UnitAnimation::init_frame() {
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base) {
-	clip* _clip = new clip();
-	_clip->state = _state;
-	clip_vector.push_back(_clip);
-	init_clip(_clip, _str, _max_frame, _base);
+	init_clip(create_clip(_state), _str, _max_frame, _base);
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count) {
-	clip* _clip = new clip();
-	_clip->state = _state;
-	clip_vector.push_back(_clip);
-	init_clip(_clip, _str, _max_frame, _base, _ani_count);
+	init_clip(create_clip(_state), _str, _max_frame, _base, _ani_count);
 }
 
 void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
-	clip* _clip = new clip();
-	_clip->state = _state;
-	clip_vector.push_back(_clip);
-	init_clip(_clip, _str, _max_frame, _base, _ani_count, _loop, _num);
+	init_clip(create_clip(_state), _str, _max_frame, _base, _ani_count, _loop, _num);
 }
 
 void UnitAnimation::sprite_flipped_x(Sprite* const _sprite, const bool _is_left, const bool _is_flipped_x) {
 	if (_is_left != _is_flipped_x) {
 		_sprite->setFlippedX(_is_left);
 	}
+}
+
+UnitAnimation::clip * UnitAnimation::create_clip(const unit_state _state)
+{
+	clip* _clip = new clip();
+	_clip->state = _state;
+	clip_vector.push_back(_clip);
+	return _clip;
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base) {

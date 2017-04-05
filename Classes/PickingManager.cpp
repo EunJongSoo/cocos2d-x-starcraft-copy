@@ -6,7 +6,6 @@
 
 PickingManager::PickingManager()
 {
-
 }
 
 PickingManager::~PickingManager()

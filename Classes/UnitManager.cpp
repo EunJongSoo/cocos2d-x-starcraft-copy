@@ -5,6 +5,11 @@ UnitManager::UnitManager() {
 }
 
 UnitManager::~UnitManager() {
+	int size = player_unit_manager_vector.size();
+	for (int i = 0; i < size; ++i) {
+		delete player_unit_manager_vector[i];
+	}
+	player_unit_manager_vector.clear();
 }
 
 bool UnitManager::add_player() {
@@ -35,3 +40,4 @@ std::vector<Unit*>& UnitManager::get_unit_array() {
 	}
 	return player_unit_vector;
 }
+
