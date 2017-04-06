@@ -1,6 +1,7 @@
 #include "Unit.h"
 #include "UnitAnimation.h"
 #include "UnitWeapon.h"
+#include "Point.h"
 
 using namespace cocos2d;
 
@@ -10,7 +11,7 @@ Unit::Unit() :
 	_tile_x(0),
 	_tile_y(0),
 	_production_time(0.0f),
-	_selete_unit(false),
+	_select_unit(false),
 	_races_type(races_type::terran),
 	_unit_state(unit_state::idle),
 	_unit_effects(special_effects::none),
@@ -20,18 +21,20 @@ Unit::Unit() :
 	_target_unit(nullptr),
 	_unit_animation(nullptr),
 	_weapon(nullptr)
-{
-}
+{}
 
 Unit::~Unit() {
-	delete _unit_animation;
-	delete _unit_info;
-	delete _unit_info2;
+	// 멤버 변수 동적할당 안전해제
+	SAFE_DELETE(_unit_animation);
+	SAFE_DELETE(_unit_info);
+	SAFE_DELETE(_unit_info2);
 }
 
-Unit * Unit::create(const unit_type _type, const Vec2& _pos) {
+// cocos2d-x의 create 함수 변경
+// 매개변수로 생성할 유닛의 타입과 위치를 받는다.
+Unit * Unit::create(const unit_type _type, const eun::Point& _point) {
 	Unit * pRet = new Unit();
-	if (pRet && pRet->init(_type, _pos)) {
+	if (pRet && pRet->init(_type, _point)) {
 		pRet->autorelease();
 		return pRet;
 	}
@@ -41,12 +44,14 @@ Unit * Unit::create(const unit_type _type, const Vec2& _pos) {
 	}
 }
 
-bool Unit::init(unit_type _type, const Vec2& _pos) {
+// cocos2d-x의 init 함수 변경
+// 매개변수로 생성할 유닛의 타입과 위치를 받는다.
+bool Unit::init(unit_type _type, const eun::Point& _point) {
 	assert(Sprite::init());
 
 	// 유닛 애니메이션 생성
 	_unit_animation = new UnitAnimation(_type, this);
-	this->setPosition(_pos);
+	this->setPosition(Vec2(_point.x, _point.y));
 
 	// 데이터 로드 ~~~~~~
 	// 데이터 로드 ~~~~~~
@@ -54,14 +59,19 @@ bool Unit::init(unit_type _type, const Vec2& _pos) {
 	// 데이터 로드 ~~~~~~
 	// 데이터 로드 ~~~~~~
 
+	// 임시작성
+	// 마린의 이미지로 초기화한다.
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine016.bmp");
 	auto sprite_cache = SpriteFrameCache::getInstance();
 	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
 
+	// 임시작성
+	// 유닛 정보를 생성한다.
 	_unit_info = new unit_info(1, 1, 1, 1, 1, 1, 1, unit_type::marine, upgrade_type::bionic, "marine");
 	_unit_info2 = new unit_info2(1, 1, 1, 1, 1);
 
+	// 임시작성
 	// 유닛 종류에 따라 달라짐
 	_unit_info2->move_speed = 2.0f;
 	_unit_info2->attack_speed = 0.3f;
@@ -69,47 +79,102 @@ bool Unit::init(unit_type _type, const Vec2& _pos) {
 	return true;
 }
 
+// 유닛 공격 명령
 void Unit::attack_unit(Unit* const _target) {
-	chang_order(unit_state::attack);
+	// 유닛의 현재 상태를 설정한다.
+	set_state(unit_state::attack);
+	
+	// 타겟을 설정한다.
 	_target_unit = _target;
 
+	// 타겟의 위치와 유닛의 위치를 빼서 저장한다.
 	Vec2 vec2 = _target_unit->getPosition() - this->getPosition();
-	vec2.normalize();
-	check_dir(vec2);
+	
+	// 굳이 Point로 바꿔준다.
+	eun::Point point(vec2.x, vec2.y);
+	// 정규화 한다.
+	point.normalize();
+	// 방향을 확인한다.
+	check_dir(point);
 }
 
-void Unit::move_unit(const Vec2& _move_pos) {
-	chang_order(unit_state::move);
-	_move_vec2 = _move_pos;
+// 유닛 이동 명령
+void Unit::move_unit(const eun::Point& move_point) {
+	set_state(unit_state::move);
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	_move_point = new eun::Point(move_point);
 }
 
+// 유닛 정지 명령
 void Unit::stop_unit() {
-	chang_order(unit_state::idle);
+	set_state(unit_state::idle);
 }
 
-void Unit::patrol_unit(const Vec2& _move_pos) {
-	chang_order(unit_state::patrol);
-	_move_vec2 = _move_pos;
-	_my_pos_vec2 = this->getPosition();
+// 유닛 순찰 명령
+void Unit::patrol_unit(const eun::Point& move_point) {
+	set_state(unit_state::patrol);
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	_move_point = new eun::Point(move_point);
+	
+	// 또 굳이 바꾼다.
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	// 스마트 포인터를 사용해서 처리할것
+	Vec2 vec2 = this->getPosition();
+	_my_pos_point = new eun::Point(vec2.x, vec2.y);
 }
 
+// 유닛 고정 명령
 void Unit::hold_unit() {
-	chang_order(unit_state::hold);
+	set_state(unit_state::hold);
 }
 
+// 유닛이 죽으면 호출
 void Unit::die_unit() {
-	chang_order(unit_state::die);
+	set_state(unit_state::die);
 }
 
+// 공격 당할때 호출된다.
 void Unit::hit(int _dmg) {
+	// 공격력에서 방어력을 뺀다.
 	int dmg = _dmg - _unit_info->defence;
+	// 공격력이 0이하이면 1로 만든다.
 	if (dmg <= 0)
 		dmg = 1;
+	// 데미지 만큼 체력을 깍는다.
 	_unit_info->hp -= dmg;
-	int hp = _unit_info->hp;
 
+	// 체력이 0이하인지 확인한다.
+	int hp = _unit_info->hp;
 	if (hp <= 0) {
+		// 체력을 0으로 만든다.
 		_unit_info->hp = 0;
+		// 유닛이 죽는다.
 		die_unit();
 	}
 }
@@ -139,7 +204,7 @@ void Unit::run_action_animation(float _dt) {
 		run_action_move();														// 이동처리, 기능 이관 해야됨
 		if (_unit_state == idle) {
 			_unit_state = patrol;
-			std::swap(_move_vec2, _my_pos_vec2);
+			std::swap(_move_point, _my_pos_point);
 		}
 		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
@@ -172,40 +237,60 @@ void Unit::weapon_animaiton(float _dt) {
 	}
 }
 
+// 임시 작성, 기능 이관 해야된다.
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
-	if (bounding.containsPoint(_move_vec2)) {
+	if (bounding.containsPoint(Vec2(_move_point->x, _move_point->y))) {
 		_unit_state = idle;
 	}
 	else {
-		Vec2 vec2 = this->getPosition();
-		Vec2 dir = _move_vec2 - vec2;
+		eun::Point point(this->getPosition().x, this->getPosition().y);
+		eun::Point dir = (*_move_point) - point;
 		dir.normalize();
 
 		check_dir(dir);
-		this->setPosition(vec2 + (dir * _unit_info2->move_speed));
+		eun::Point tmp = point + (dir * _unit_info2->move_speed);
+		this->setPosition(Vec2(tmp.x, tmp.y));
 	}
 }
 
-void Unit::check_dir(const cocos2d::Vec2 & _dir) {
+// 방향을 확인한다.
+void Unit::check_dir(const eun::Point & _dir) {
+	// 정규화된 값을 받아야한다.
+
+	// y값이 0.33f보다 높은지 확인한다.
 	if (_dir.y > up_right_left2) {
+		// y값이 0.99f 보다 높은지 확인한다.
 		if (_dir.y > up)						_unit_dir = direction::up;
+		// y값이 0.66f 보다 높은지 확인한다.
 		else if (_dir.y > up_right_left1) 		_unit_dir = (_dir.x > 0) ? direction::up_right1 : direction::up_left1;
+		// 나머지는 0.33f보다 높고 0.66f보다 낮다.
 		else                         			_unit_dir = (_dir.x > 0) ? direction::up_right2 : direction::up_left2;
 	}
+	// y값이 -0.33f보다 높은지 확인한다.
 	else if (_dir.y > down_right_left1) {
+		// y값이 0.1f보다 높은지 확인한다.
 		if (_dir.y > up_right_left3)			_unit_dir = (_dir.x > 0) ? direction::up_right3 : direction::up_left3;
+		// y값이 -0.1f 보다 높은지 확인한다.
 		else if (_dir.y > right_left)			_unit_dir = (_dir.x > 0) ? direction::right : direction::left;
+		// 나머지는 -0.33보다 높고 -0.1f보다 낮다.
 		else									_unit_dir = (_dir.x > 0) ? direction::down_right1 : direction::down_left1;
 	}
+	// 나머지는 -0.33보다 낮다.
 	else {
+		// y값이 -0.66f보다 높은지 확인한다.
 		if (_dir.y > -down_right_left2)			_unit_dir = (_dir.x > 0) ? direction::down_right2 : direction::down_left2;
+		// y값이 -0.99f보다 높은지 확인한다.
 		else if (_dir.y > down_right_left3)		_unit_dir = (_dir.x > 0) ? direction::down_right3 : direction::down_left3;
+		// 나머지는 -0.99보다 낮다.
 		else                             		_unit_dir = direction::down;
 	}
 }
 
-void Unit::chang_order(const unit_state _state) {
+// 상태를 설정한다.
+void Unit::set_state(const unit_state _state) {
+	// 애니메이션 프레임을 초기화한다.
 	_unit_animation->init_frame();
+	// 상태를 설정한다.
 	_unit_state = _state;
 }
