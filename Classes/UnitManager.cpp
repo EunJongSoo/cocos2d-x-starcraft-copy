@@ -7,10 +7,11 @@
 UnitManager::UnitManager() {}
 
 UnitManager::~UnitManager() {
-	int size = player_unit_manager_vector.size();
-	for (int i = 0; i < size; ++i) {
-		delete player_unit_manager_vector[i];
+	// 매니저 동적할당 해제
+	for (PlayerUnitManager* manager : player_unit_manager_vector) {
+		SAFE_DELETE(manager);
 	}
+	// 벡터 비우기
 	player_unit_manager_vector.clear();
 }
 
