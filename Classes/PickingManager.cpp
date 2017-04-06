@@ -1,8 +1,11 @@
+#include <vector>
 #include "PickingManager.h"
 #include "InputInfo.h"
 #include "MouseInfo.h"
 #include "Unit.h"
 #include "cocos2d.h"
+
+using namespace std;
 
 PickingManager::PickingManager()
 {
@@ -12,15 +15,18 @@ PickingManager::~PickingManager()
 {
 }
 
-void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Unit*>& _unit_array)
+// input 정보를 확인하여 관련 이벤트를 동작
+void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Unit*>& _unit_vector)
 {
+	// 마우스 명령 확인
 	if (_input->get_mouse_order()) {
 		MouseInfo* info = _input->get_mouse_info();
 
+		// 마우스 명령 종류에 따라 해당 이벤트를 동작
 		switch (info->get_mouse_state())
 		{
 		case MouseInfo::R_down: {
-			run_action_mouse_R_down(info, _unit_array);
+			run_action_mouse_R_down(info, _unit_vector);
 			break;
 		}
 		case MouseInfo::L_down: {
@@ -32,109 +38,190 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Un
 			break;
 		}
 		case MouseInfo::L_drag: {
-			run_action_mouse_L_drag(info, _unit_array);
+			run_action_mouse_L_drag(info, _unit_vector);
 			break;
 		}
 		case MouseInfo::L_double:	break;
 		case MouseInfo::L_up: {
-			run_action_mouse_L_up(info, _unit_array);
+			run_action_mouse_L_up(info, _unit_vector);
 			break;
 		}
 		case MouseInfo::R_up:		break;
 		}
+		
+		// 확인한 명령 초기화
 		_input->init_input_info();
 	}
 }
 
-void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+// 마우스 왼클릭 끝날때 이벤트
+void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	unselect_unit(_unit_array);
-	Unit* unit = click_selected_unit(_info, _unit_array);
-	if (unit != nullptr) {
-		unit->set_selete_unit(true);
+	// 모든 선택된 유닛을 취소한다.
+	select_unit(_unit_vector, false);
+	
+	// 클릭된 유닛을 찾는다.
+	Unit* unit = find_click_unit(_info, _unit_vector);
+	
+	// 선택된 유닛이 있는지 확인한다.
+	if (is_unit(unit)) {
+		// 유닛을 선택한다.
+		select_unit(unit, true);
 	}
 }
 
-void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+// 마우스 오른클릭 시작할때 이벤트
+void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	Unit* unit = click_selected_unit(_info, _unit_array);
-	if (unit != nullptr) {
-		Unit* selete_unit = get_selete_unit(_unit_array);
-		selete_unit->attack_unit(unit);
+	// 클릭한 유닛을 찾는다.
+	Unit* unit = find_click_unit(_info, _unit_vector);
+	if (is_unit(unit)) 
+	{
+		// 현재 선택된 유닛을 찾는다.
+		// 반환되는 값을 복사해서 임시로 지역변수로 저장하여 사용
+		std::vector<Unit*> unit_vector = find_select_unit(_unit_vector);
+		if (is_unit(unit_vector)) {
+			// 선택된 유닛에게 공격을 명령한다.
+			
+			// 유닛의 소속팀에 따라 명령이 달라져야함
+			// 유닛 행동을 지시하는 클래스가 만들어지면 상세 정의 필요
+			attack_unit(unit, unit_vector);
+		}
 	}
 	else {
-		Unit* selete_unit = get_selete_unit(_unit_array);
-		if (selete_unit != nullptr) {
-			// 함수화 고민
-			// 함수화 고민
-			// 함수화 고민
-			float x = _info->get_start_pos_x();
-			float y = _info->get_start_pos_y();
-			selete_unit->move_unit(cocos2d::Vec2(x, y));
+		std::vector<Unit*> unit_vector = find_select_unit(_unit_vector);
+		if (is_unit(unit_vector)) {
+			// 선택된 유닛에게 이동을 명령한다.
+			move_unit(_info->get_start_pos(), unit_vector);
 		}
 	}
 }
 
-void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+// 마우스 왼클릭 드래그 끝날때 이벤트
+void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	unselect_unit(_unit_array);
-	Unit* unit = drag_selected_unit(_info, _unit_array);
-	if (unit != nullptr) {
-		unit->set_selete_unit(true);
+	// 유닛을 선택을 취소한다.
+	select_unit(_unit_vector, false);
+	// 드래그한 유닛을 찾는다.
+	std::vector<Unit*> unit_vector = find_drag_unit(_info, _unit_vector);
+	if (is_unit(unit_vector)) {
+		select_unit(unit_vector, true);
 	}
 }
 
-void PickingManager::unselect_unit(const std::vector<Unit*>& _unit_array)
+// 선택한 유닛의 bool 상태값 변경
+void PickingManager::select_unit(Unit* const _unit, bool _b)
 {
-	for (Unit* unit : _unit_array) {
-		unit->set_selete_unit(false);
+	_unit->set_select_unit(_b);
+}
+
+// 선택한 유닛들의 bool 상태값 변경
+void PickingManager::select_unit(const std::vector<Unit*>& _unit_vector, bool _b)
+{
+	// 전체 유닛대상으로 검색
+	for (Unit* unit : _unit_vector) {
+		// 유닛의 bool 값 변경
+		unit->set_select_unit(_b);
 	}
 }
 
-Unit * PickingManager::get_selete_unit(const std::vector<Unit*>& _unit_array)
+// 클릭한 유닛을 찾는다.
+Unit * PickingManager::find_click_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	for (Unit* unit : _unit_array) {
-		if (unit->get_selete_unit()) {
+	// 위치 정보 임시저장
+	eun::Point point = _info->get_start_pos();
+	for (Unit* unit : _unit_vector) {
+		// 유닛의 바운딩 박스 저장
+		cocos2d::Rect rect = unit->getBoundingBox();
+		// 바운딩 박스와 위치가 겹치는지 확인
+		if (rect.containsPoint(cocos2d::Vec2(point.x, point.y))) {
+			// 겹친 유닛 반환
 			return unit;
 		}
 	}
+	// 겹친 유닛이 없으면 nullptr 반환
 	return nullptr;
 }
 
-Unit * PickingManager::click_selected_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
+// 드래그한 유닛을 찾는다.
+std::vector<Unit*> PickingManager::find_drag_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	float x = _info->get_start_pos_x();
-	float y = _info->get_start_pos_y();
-	for (Unit* unit : _unit_array) {
+	std::vector<Unit*> select_unit_vector;
+
+	// 마우스 클릭한 첫 포인트 임시 저장
+	eun::Point start_point = _info->get_start_pos();
+	// 마우스 클릭땐 마지막 포인트 임시 저장
+	eun::Point end_point = _info->get_end_pos();
+	
+	// 마우스 클릭한 두 점으로 생긴 사각형의 왼쪽 아래값을 찾는다.
+	// cocos2d-x의 좌표계는 왼쪽 아래가 0, 0
+	eun::Point min_point = start_point.min_point(end_point);
+	
+	// 드래그한 크기를 계산한다.
+	// 첫 포인트에서 마지막 포인트를 빼고 절대값으로 변경
+	float width = fabsf(start_point.x - end_point.x);
+	float height = fabsf(start_point.y - end_point.y);
+
+	// 왼쪽 아래 점부터 가로 세로 크기를 사용해서 Rect 변수를 만든다.
+	cocos2d::Rect drag_rect = cocos2d::Rect(min_point.x, min_point.y, width, height);
+
+	for (Unit* unit : _unit_vector) {
 		cocos2d::Rect rect = unit->getBoundingBox();
-		if (rect.containsPoint(cocos2d::Vec2(x, y))) {
-			return unit;
-		}
-	}
-	return nullptr;
-}
-
-Unit * PickingManager::drag_selected_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_array)
-{
-	float start_x = _info->get_start_pos_x();
-	float start_y = _info->get_start_pos_y();
-	
-	float end_x = _info->get_end_pos_x();
-	float end_y = _info->get_end_pos_y();
-	
-	float min_x = MIN(start_x, end_x);
-	float min_y = MIN(start_y, end_y);
-	
-	float width = fabsf(start_x - end_x);
-	float height = fabsf(start_y - end_y);
-
-	cocos2d::Rect drag_rect = cocos2d::Rect(min_x, min_y, width, height);
-
-	for (Unit* unit : _unit_array) {
-		cocos2d::Rect rect = unit->getBoundingBox();
+		// 유닛의 바운딩 박스와 드래그로 만든 박스가 겹치는지 검사
 		if (rect.intersectsRect(drag_rect)) {
-			return unit;
+			// 저장한 유닛이 12개가 되면 검색을 중지한다.
+			if (select_unit_vector.size() == 12) {
+				break;
+			}
+			// 겹친 유닛을 vector에 저장
+			select_unit_vector.push_back(unit);
 		}
 	}
-	return nullptr;
+	return select_unit_vector;
+}
+
+// 현재 선택된 유닛을 찾는다.
+std::vector<Unit*> PickingManager::find_select_unit(const std::vector<Unit*>& _unit_vector)
+{
+	// 선택된 유닛을 저장할 벡터
+	std::vector<Unit*> select_unit_vector;
+	for (Unit* unit : _unit_vector) {
+		// 유닛이 선택되었는지 확인
+		if (unit->is_select()) {
+			// 선택된 유닛을 저장
+			select_unit_vector.push_back(unit);
+		}
+	}
+	// 반환시 복사되어 반환
+	return select_unit_vector;
+}
+
+// 유닛을 공격한다.
+// 유닛 행동 함수에 따라 내용이 변경될수 있다.
+void PickingManager::attack_unit(Unit* const _unit, const std::vector<Unit*>& _unit_vector)
+{
+	for (Unit* unit : _unit_vector) {
+		unit->attack_unit(_unit);
+	}
+}
+
+// 유닛을 이동한다.
+// 유닛 행동 함수에 따라 내용이 변경될수 있다.
+void PickingManager::move_unit(eun::Point _point, const std::vector<Unit*>& _unit_vector)
+{
+	for (Unit* unit : _unit_vector) {
+		unit->move_unit(_point);
+	}
+}
+
+// 유닛이 있는지 확인한다.
+inline bool PickingManager::is_unit(Unit * _unit)
+{
+	return (_unit != nullptr); 
+}
+
+// 유닛이 있는지 확인한다.
+inline bool PickingManager::is_unit(const std::vector<Unit*>& _unit_vector)
+{
+	return (_unit_vector.size() > 0);
 }
