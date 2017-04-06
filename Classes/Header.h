@@ -4,7 +4,7 @@
 #define SAFE_DELETE(p)           do { if(p) { delete (p); (p) = nullptr; } } while(0)
 #define SAFE_DELETE_ARRAY(p)     do { if(p) { delete[] (p); (p) = nullptr; } } while(0)
 #define BREAK_IF(cond)           if(cond) break
-// UnitManager;
+// UnitManager, MouseManager
 
 // 임시로 무기도 추가
 enum unit_state {
@@ -35,7 +35,7 @@ enum direction {
 typedef enum unit_type {
 	marine, marine_weapon
 } building_type;
-// UnitLayer, 
+// UnitLayer, Unit
 
 
 // 플레이어 색상 지정 열거체
