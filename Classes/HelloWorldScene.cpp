@@ -101,7 +101,7 @@ void HelloWorld::update(float _dt) {
 	// 그리기
 	draw_process(_input_info, unit_manager_vector, _dt);
 
-	// 확인되면 초기화
+	// 마우스 명령 초기화
 	_input_info->init_input_info();
 }
 

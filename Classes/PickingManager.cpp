@@ -41,9 +41,6 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Pl
 		}
 		case MouseInfo::R_up:		break;
 		}
-		
-		// 확인한 명령 초기화
-		//_input->init_input_info();
 	}
 }
 
