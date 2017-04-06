@@ -4,7 +4,7 @@
 #include "Point.h"
 
 // 매니저 생성시 색상과 컴퓨터인지 유저인지 매개변수를 받는다.
-PlayerUnitManager::PlayerUnitManager(player_color _color, player_type _type) : 
+PlayerUnitManager::PlayerUnitManager(const player_color _color, const player_type _type) : 
 	color(_color), 
 	type(_type)
 {}
@@ -13,7 +13,7 @@ PlayerUnitManager::PlayerUnitManager() {}
 PlayerUnitManager::~PlayerUnitManager() {}
 
 // 유닛을 생선한다.
-Unit* PlayerUnitManager::create_unit(unit_type _type, const eun::Point& _point) {
+Unit* PlayerUnitManager::create_unit(const unit_type _type, const eun::Point& _point) {
 	// 유닛의 종류와 위치를 받아서 생성한다.
 	Unit* unit = Unit::create(_type, _point);
 	// 벡터에 저장한다.

@@ -17,10 +17,10 @@ namespace eun {
 
 class PlayerUnitManager {
 public:
-	PlayerUnitManager(player_color _color, player_type _type);
+	PlayerUnitManager(const player_color _color, const player_type _type);
 	~PlayerUnitManager();
 
-	Unit* create_unit(unit_type _type, const eun::Point& _point);
+	Unit* create_unit(const unit_type _type, const eun::Point& _point);
 
 	inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector();
 	inline player_color get_color() const;
