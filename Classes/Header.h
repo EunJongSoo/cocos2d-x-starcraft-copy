@@ -1,5 +1,11 @@
 #pragma once
 
+// 안전 해제 전처리기
+#define SAFE_DELETE(p)           do { if(p) { delete (p); (p) = nullptr; } } while(0)
+#define SAFE_DELETE_ARRAY(p)     do { if(p) { delete[] (p); (p) = nullptr; } } while(0)
+#define BREAK_IF(cond)           if(cond) break
+// UnitManager;
+
 // 임시로 무기도 추가
 enum unit_state {
 	production, idle, move, attack, patrol, hold, die
