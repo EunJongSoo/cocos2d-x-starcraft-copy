@@ -28,7 +28,6 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Pl
 			break;
 		}
 		case MouseInfo::L_dragging: {
-
 			break;
 		}
 		case MouseInfo::L_drag: {
@@ -44,7 +43,7 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Pl
 		}
 		
 		// 확인한 명령 초기화
-		_input->init_input_info();
+		//_input->init_input_info();
 	}
 }
 

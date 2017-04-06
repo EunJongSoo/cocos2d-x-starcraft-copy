@@ -66,6 +66,9 @@
     <ClCompile Include="..\Classes\UnitManager.cpp">
       <Filter>src\Unit\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\DebugDraw.cpp">
+      <Filter>src\etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UnitManager.h">
       <Filter>src\Unit\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DebugDraw.h">
+      <Filter>src\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

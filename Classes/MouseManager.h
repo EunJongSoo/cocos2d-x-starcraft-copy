@@ -36,9 +36,7 @@ private:
 	float mouse_distance_check(const cocos2d::Vec2& _vec2);
 	void set_mouse_order(const int _state);
 	void set_mouse_order(const int _state, const cocos2d::Vec2& _vec2, set_pos _start_end);
-
-	bool is_mouse_info();
-
+	
 private:
 	bool order;
 	cocos2d::Size win_size;

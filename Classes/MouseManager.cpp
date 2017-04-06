@@ -8,9 +8,14 @@ using namespace cocos2d;
 MouseManager::MouseManager() : 
 	order(false), 
 	mouse_info(nullptr) 
-{}
+{
+	mouse_info = new MouseInfo();
+}
 
-MouseManager::~MouseManager() {}
+MouseManager::~MouseManager() {
+	// 멤버 변수 동적할당 안전해제
+	SAFE_DELETE(mouse_info);
+}
 
 bool MouseManager::init() {
 	if (!Node::init())
@@ -30,13 +35,9 @@ bool MouseManager::init() {
 }
 
 // 마우스 정보 초기화
-// 해당 함수가 호출 될때마다 멤버 변수의 동적할당을 해제하고
-// 다시 명령이 내려질때마다 동적할당을 한다면 횟수가 너무 빈번하다
-// 어떻게 하는게 좋을지 질문할것
 void MouseManager::init_mouse_info() {
+	// 마우스 오더가 없다고 설정하여 접근하지 않도록 한다.
 	order = false;
-	// 멤버 변수 동적할당 안전해제
-	SAFE_DELETE(mouse_info);
 }
 
 // 마우스 클릭 되었을때 이벤트
@@ -73,11 +74,6 @@ void MouseManager::on_mouse_move(Event * _event) {
 	auto mouse = static_cast<EventMouse*>(_event);
 	Vec2 vec2 = mouse->getLocation();
 
-	// 마우스 정보가 있는지 확인한다.
-	if (is_mouse_info()) {
-		return;
-	}
-
 	// 마우스의 현재 상태를 확인한다.
 	switch (mouse_info->get_mouse_state()) {
 		// 마우스의 상태가 L_down 일때의 처리를 한다.
@@ -101,12 +97,6 @@ void MouseManager::on_mouse_up(Event * _event) {
 	if (_event->getType() != Event::Type::MOUSE) return;
 	
 	auto mouse = static_cast<EventMouse*>(_event);
-	
-	// 마우스 정보가 있는지 확인한다.
-	if (is_mouse_info()) {
-		return;
-	}
-
 	// 마우스 버튼을 확인한다.
 	switch (mouse->getMouseButton()) {
 		// 마우스 왼쪽 버튼일때 처리를 한다.
@@ -140,12 +130,6 @@ float MouseManager::mouse_distance_check(const Vec2& _vec2) {
 
 // 마우스 명령을 설정한다.
 void MouseManager::set_mouse_order(const int _state) {
-	// 마우스 정보가 있는지 확인한다.
-	if (!is_mouse_info()) {
-		// 정보가 없으면 동적할당
-		mouse_info = new MouseInfo();
-	}
-	
 	// 마우스의 상태값을 설정한다.
 	mouse_info->set_mouse_state(_state);
 	// 마우스 명령여부를 설정한다.
@@ -170,10 +154,4 @@ void MouseManager::set_mouse_order(const int _state, const Vec2& _vec2, set_pos 
 		// 마지막 좌표에 설정한다.
 	case MouseManager::end:		mouse_info->set_end_pos(point);	break;
 	}
-}
-
-// 마우스 정보가 있는지 확인한다.
-bool MouseManager::is_mouse_info()
-{
-	return (mouse_info != nullptr);
 }

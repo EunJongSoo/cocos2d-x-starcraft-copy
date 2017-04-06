@@ -16,7 +16,7 @@ bool UnitLayer::init()
 	unit_manager->add_player();
 	unit_manager->add_player();
 	this->create_unit(unit_type::marine, player_color::red, eun::Point(100.0f, 100.0f));
-	this->create_unit(unit_type::marine, player_color::blue, eun::Point(100.0f, 100.0f));
+	this->create_unit(unit_type::marine, player_color::blue, eun::Point(100.0f, 150.0f));
 	
 	return true;
 }
