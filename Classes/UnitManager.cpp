@@ -16,29 +16,20 @@ UnitManager::~UnitManager() {
 }
 
 // 플레이어 추가
-// 함수 내용이 좀 지저분해서 개선이 필요하다.
 bool UnitManager::add_player() {
 	// 플레이어 색상은 플레이어의 숫자로 결정한다.
+	// 플레이어 색상(팀)을 관리하는 클래스의 작성 필요
+	// 플레이어 색상(팀)을 관리하는 클래스의 작성 필요
+	// 플레이어 색상(팀)을 관리하는 클래스의 작성 필요
+	// 플레이어 색상(팀)을 관리하는 클래스의 작성 필요
+	// 플레이어 색상(팀)을 관리하는 클래스의 작성 필요
 	player_color color = (player_color)(player_unit_manager_vector.size());
 	
+	int manager_count = player_unit_manager_vector.size();
 	// 색상이 열거체 값이 max 인지 확인한다.
-	bool is_max = (color == player_color::max);
-
-	// max가 아니면 매니저를 추가한다.
-	if (!is_max) {
-		PlayerUnitManager* manager = new PlayerUnitManager(color, player_type::user);
-		player_unit_manager_vector.push_back(manager);
-	}
-	
-	// 플레이어 추가 여부를 반환한다.
-	// max가 되면 생성을 실패하기 때문에 !를 붙여준다.
-	return !is_max;
-
-	// 필요기능
-	// 플레이어 숫자가 최대가 아니면 플레이어를 추가하고
-	// 최대면 플레이어를 추가 하지 않는다.
-	// 플레이어 추가 여부를 반환한다.
+	return add_player_manager(max_player_manager == manager_count, color);
 }
+
 
 // 유닛 생성하기
 Unit* UnitManager::create_unit(const unit_type _type, const player_color _color, const eun::Point& _point) {
@@ -59,5 +50,17 @@ Unit* UnitManager::create_unit(const unit_type _type, const player_color _color,
 // 유닛 벡터를 받환한다.
 std::vector<PlayerUnitManager*>& UnitManager::get_unit_manager_vector() {
 	return player_unit_manager_vector;
+}
+
+// 현재 플레이어 매니저 숫자를 확인 후 플레이어 매니저를 추가한다.
+bool UnitManager::add_player_manager(const bool _b, const player_color color)
+{
+	if (!_b) {
+		// max가 아니면 매니저를 추가한다.
+		PlayerUnitManager* manager = new PlayerUnitManager(color, player_type::user);
+		player_unit_manager_vector.push_back(manager);
+	}
+	// 플레이어 추가 여부를 반환한다.
+	return !_b;
 }
 

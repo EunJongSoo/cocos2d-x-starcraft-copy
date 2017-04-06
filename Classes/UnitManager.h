@@ -27,7 +27,10 @@ public:
 
 private:
 	std::vector<PlayerUnitManager*> player_unit_manager_vector;
+	bool add_player_manager(const bool _b, const player_color color);
 
+	// 최대 매니저 숫자
+	const int max_player_manager = 8;
 };
 
 #endif // !UNIT_MANAGER_H_
