@@ -47,7 +47,6 @@ bool UnitAnimation::run_action_aniamtion(const unit_state _state, Sprite* const 
 			return clip_aniamtion(_clip, _sprite, _dt, _dir, _frame);
 		}
 	}
-
 }
 
 void UnitAnimation::init_frame() {
@@ -98,9 +97,10 @@ void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _ma
 	char str[16];
 	// 방향 수
 	for (int dir = 0; dir < 9; ++dir) {
+		int dir2 = dir * 2;
 		// 애니메이션 수
 		for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
-			sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + (dir * 2) + (ani_count * 17));
+			sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + dir2 + (ani_count * 17));
 			_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
 		}
 	}
@@ -113,14 +113,17 @@ void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _ma
 
 	// 방향 수
 	for (int dir = 0; dir < 9; ++dir) {
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 17 + dir * 2);
+		int dir2 = dir * 2;
+		int img_num1 = dir2 + 17;
+		int img_num2 = dir2 + 34;
+		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, img_num1);
 		_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, 34 + dir * 2);
+		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, img_num2);
 		_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
 		for (int loop = 0; loop < _loop; ++loop) {
 			// 애니메이션 수
 			for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
-				sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + (dir * 2) + (ani_count * _num));
+				sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + dir2 + (ani_count * _num));
 				_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
 			}
 		}
