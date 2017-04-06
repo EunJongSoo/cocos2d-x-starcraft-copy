@@ -37,7 +37,7 @@ InputInfo * InputManager::input_prossce()
 
 inline void InputManager::mouse_order_init()
 { 
-	mouse_manager->init_mouse_init(); 
+	mouse_manager->init_mouse_info(); 
 }
 
 MouseInfo* InputManager::get_mouse_info() const 
