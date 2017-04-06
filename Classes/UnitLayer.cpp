@@ -3,8 +3,6 @@
 #include "Unit.h"
 #include "Point.h"
 
-using namespace cocos2d;
-
 UnitLayer::UnitLayer() {}
 UnitLayer::~UnitLayer() {}
 
