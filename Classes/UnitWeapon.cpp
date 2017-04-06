@@ -25,8 +25,9 @@ UnitWeapon::UnitWeapon(Unit* const _target, const unit_type _unit_tpye) {
 	SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
 }
 
+// 동적할당 안전해제
 UnitWeapon::~UnitWeapon() {
-	delete weapon_animation;
+	SAFE_DELETE(weapon_animation);
 }
 
 void UnitWeapon::run_action_animation(const float _dt) {

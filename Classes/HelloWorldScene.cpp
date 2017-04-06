@@ -9,6 +9,7 @@
 
 #include "UnitLayer.h"
 #include "Unit.h"
+#include "PlayerUnitManager.h"
 
 
 using namespace cocos2d;
@@ -88,31 +89,32 @@ void HelloWorld::update(float _dt) {
 	
 	// 조작
 	InputInfo * _input_info = input_manager->input_prossce();
-	std::vector<Unit*>& unit_array = unit_layer->get_unit_array();
+	std::vector<PlayerUnitManager*>& unit_manager_vector = unit_layer->get_unit_manager_vector();
 
 	// 메인 프로세스
-	main_process(_input_info, unit_array, _dt);
-
+	main_process(_input_info, unit_manager_vector, _dt);
 
 	// 그리기
-	draw_process(_dt);
+	draw_process(unit_manager_vector, _dt);
 }
 
-void HelloWorld::main_process(InputInfo * const _input, const std::vector<Unit*>& _unit_array, const float _dt) {
+void HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	
 	// 조작된 유닛 움직이기
 	if (_input->get_mouse_order()) {
-		picking_manager->picking_unit(_input, _unit_array);
-	}
-
-	// 전체 유닛 현재 명령 수행하기
-	for (Unit* unit : _unit_array) {
-		unit->run_action_animation(_dt);
+		picking_manager->picking_unit(_input, _unit_vector);
 	}
 }
 
-void HelloWorld::draw_process(float _dt) {
+void HelloWorld::draw_process(const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 
+	// 전체 유닛 애니메이션 변경하기
+	for (PlayerUnitManager* manager : _unit_vector) {
+		std::vector<Unit*> unit_vector = manager->get_unit_vector();
+		for (Unit* unit : unit_vector) {
+			unit->run_action_animation(_dt);
+		}
+	}
 }
 //
 //mouse_info = input_manager->input_process();

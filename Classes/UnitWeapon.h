@@ -2,7 +2,9 @@
 #define UNIT_WEAPON_H_
 
 #include "cocos2d.h"
+#include "Header.h"
 
+// class 전방선언
 class Unit;
 class UnitAnimation;
 

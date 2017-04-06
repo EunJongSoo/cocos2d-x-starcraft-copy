@@ -19,16 +19,16 @@
     <Filter Include="src\Unit">
       <UniqueIdentifier>{8888cf03-369c-44bb-8b09-4a1eb64f5178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\etc">
+      <UniqueIdentifier>{764f7fb4-b3e6-4990-b3d9-6386b17ae7df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Unit\Manager">
+      <UniqueIdentifier>{51ef6538-e7c9-478b-a9ec-0a90eee01445}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Unit.cpp">
       <Filter>src\Unit</Filter>
@@ -45,34 +45,31 @@
     <ClCompile Include="..\Classes\MouseManager.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\UnitManager.cpp">
-      <Filter>src\Unit</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\UnitLayer.cpp">
       <Filter>src\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PlayerUnitManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\PickingManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\InputManager.cpp">
       <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>src\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PickingManager.cpp">
+      <Filter>src\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
+      <Filter>src\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PlayerUnitManager.cpp">
+      <Filter>src\Unit\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UnitManager.cpp">
+      <Filter>src\Unit\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Header.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Unit.h">
       <Filter>src\Unit</Filter>
@@ -92,23 +89,35 @@
     <ClInclude Include="..\Classes\MouseManager.h">
       <Filter>src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\UnitManager.h">
-      <Filter>src\Unit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PlayerUnitManager.h">
-      <Filter>src\Unit</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\UnitLayer.h">
       <Filter>src\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PickingManager.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\InputInfo.h">
       <Filter>src\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MouseInfo.h">
       <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PickingManager.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Header.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HelloWorldScene.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Point.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PlayerUnitManager.h">
+      <Filter>src\Unit\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UnitManager.h">
+      <Filter>src\Unit\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
