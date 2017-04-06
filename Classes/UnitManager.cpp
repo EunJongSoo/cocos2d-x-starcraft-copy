@@ -57,7 +57,7 @@ Unit* UnitManager::create_unit(const unit_type _type, const player_color _color,
 }
 
 // ¿Ø¥÷ ∫§≈Õ∏¶ πﬁ»Ø«—¥Ÿ.
-std::vector<PlayerUnitManager*>& UnitManager::get_unit_vector() {
+std::vector<PlayerUnitManager*>& UnitManager::get_unit_manager_vector() {
 	return player_unit_manager_vector;
 }
 

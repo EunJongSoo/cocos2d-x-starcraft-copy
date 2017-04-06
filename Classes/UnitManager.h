@@ -23,7 +23,7 @@ public:
 
 	bool add_player();
 	Unit* create_unit(const unit_type _type, const player_color _color, const eun::Point& _point);
-	std::vector<PlayerUnitManager*>& get_unit_vector();
+	std::vector<PlayerUnitManager*>& get_unit_manager_vector();
 
 private:
 	std::vector<PlayerUnitManager*> player_unit_manager_vector;
