@@ -3,20 +3,14 @@
 #include "InputInfo.h"
 #include "MouseInfo.h"
 #include "Unit.h"
+#include "PlayerUnitManager.h"
 #include "cocos2d.h"
 
-using namespace std;
-
-PickingManager::PickingManager()
-{
-}
-
-PickingManager::~PickingManager()
-{
-}
+PickingManager::PickingManager() {}
+PickingManager::~PickingManager() {}
 
 // input 정보를 확인하여 관련 이벤트를 동작
-void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Unit*>& _unit_vector)
+void PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 마우스 명령 확인
 	if (_input->get_mouse_order()) {
@@ -26,7 +20,7 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Un
 		switch (info->get_mouse_state())
 		{
 		case MouseInfo::R_down: {
-			run_action_mouse_R_down(info, _unit_vector);
+			run_action_mouse_R_down(info, _manager_vector);
 			break;
 		}
 		case MouseInfo::L_down: {
@@ -38,12 +32,12 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Un
 			break;
 		}
 		case MouseInfo::L_drag: {
-			run_action_mouse_L_drag(info, _unit_vector);
+			run_action_mouse_L_drag(info, _manager_vector);
 			break;
 		}
 		case MouseInfo::L_double:	break;
 		case MouseInfo::L_up: {
-			run_action_mouse_L_up(info, _unit_vector);
+			run_action_mouse_L_up(info, _manager_vector);
 			break;
 		}
 		case MouseInfo::R_up:		break;
@@ -55,14 +49,42 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Un
 }
 
 // 마우스 왼클릭 끝날때 이벤트
-void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
+{
+	// 유닛이 클릭 되었을때의 처리를 한다.
+	for (PlayerUnitManager* manager : _manager_vector) {
+		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
+		mouse_L_up_process(_info, unit_vector);
+	}
+}
+
+// 마우스 왼클릭 드래그 끝날때 이벤트
+void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 모든 선택된 유닛을 취소한다.
+	for (PlayerUnitManager* manager : _manager_vector) {
+		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
+		mouse_L_drag_process(_info, unit_vector);
+	}
+}
+
+// 마우스 오른클릭 시작할때 이벤트
+void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
+{
+	for (PlayerUnitManager* manager : _manager_vector) {
+		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
+		mouse_R_down_process(_info, unit_vector, _manager_vector);
+	}
+}
+
+void PickingManager::mouse_L_up_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+{
+	// 유닛을 선택을 취소한다.
 	select_unit(_unit_vector, false);
-	
+
 	// 클릭된 유닛을 찾는다.
 	Unit* unit = find_click_unit(_info, _unit_vector);
-	
+
 	// 선택된 유닛이 있는지 확인한다.
 	if (is_unit(unit)) {
 		// 유닛을 선택한다.
@@ -70,35 +92,7 @@ void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::v
 	}
 }
 
-// 마우스 오른클릭 시작할때 이벤트
-void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
-{
-	// 클릭한 유닛을 찾는다.
-	Unit* unit = find_click_unit(_info, _unit_vector);
-	if (is_unit(unit)) 
-	{
-		// 현재 선택된 유닛을 찾는다.
-		// 반환되는 값을 복사해서 임시로 지역변수로 저장하여 사용
-		std::vector<Unit*> unit_vector = find_select_unit(_unit_vector);
-		if (is_unit(unit_vector)) {
-			// 선택된 유닛에게 공격을 명령한다.
-			
-			// 유닛의 소속팀에 따라 명령이 달라져야함
-			// 유닛 행동을 지시하는 클래스가 만들어지면 상세 정의 필요
-			attack_unit(unit, unit_vector);
-		}
-	}
-	else {
-		std::vector<Unit*> unit_vector = find_select_unit(_unit_vector);
-		if (is_unit(unit_vector)) {
-			// 선택된 유닛에게 이동을 명령한다.
-			move_unit(_info->get_start_pos(), unit_vector);
-		}
-	}
-}
-
-// 마우스 왼클릭 드래그 끝날때 이벤트
-void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+void PickingManager::mouse_L_drag_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
 	// 유닛을 선택을 취소한다.
 	select_unit(_unit_vector, false);
@@ -107,6 +101,58 @@ void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std:
 	if (is_unit(unit_vector)) {
 		select_unit(unit_vector, true);
 	}
+}
+
+void PickingManager::mouse_R_down_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector, const std::vector<PlayerUnitManager*>& _manager_vector)
+{
+	// 선택된 유닛을 찾는다.
+	std::vector<Unit*> select_unit_vector = find_select_unit(_unit_vector);
+
+	// 선택된 유닛이 있는지 확인한다.
+	if (!is_unit(select_unit_vector)) {
+		// 없으면 빠져나간다.
+		return;
+	}
+
+	// 선택한 유닛의 색상의 확인한다.
+	// 이후 추가되어야 하는부분
+	// 이후 추가되어야 하는부분
+	// 이후 추가되어야 하는부분
+
+
+	// 클릭한 지점의 유닛을 찾는다.
+	// 전체 유닛 목록에서 찾아야한다.
+	std::vector<Unit*> manager_unit_vector;
+	for (PlayerUnitManager* manager : _manager_vector) {
+		manager_unit_vector = manager->get_unit_vector();
+		Unit* unit = find_click_unit(_info, manager_unit_vector);
+
+		// 유닛이 있는지 확인한다.
+		if (is_unit(unit))
+		{
+			// 있을때의 처리를 한다.
+			R_click_unit_process(unit, select_unit_vector);
+			break;
+		}
+		else
+		{
+			// 없을때의 처리를 한다.
+			R_click_not_unit_process(_info, select_unit_vector);
+			break;
+		}
+	}
+}
+
+void PickingManager::R_click_unit_process(Unit* _unit, const std::vector<Unit*>& _unit_vector)
+{
+	// 유닛의 소속팀에 따라 명령이 달라져야함
+	// 유닛 행동을 지시하는 클래스가 만들어지면 상세 정의 필요
+	attack_unit(_unit, _unit_vector);
+}
+
+void PickingManager::R_click_not_unit_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+{
+	move_unit(_info->get_start_pos(), _unit_vector);
 }
 
 // 선택한 유닛의 bool 상태값 변경
