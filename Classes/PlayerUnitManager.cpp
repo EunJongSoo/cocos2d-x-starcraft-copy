@@ -22,13 +22,13 @@ Unit* PlayerUnitManager::create_unit(unit_type _type, const eun::Point& _point) 
 	return unit;
 }
 
-inline PlayerUnitManager::player_color PlayerUnitManager::get_color() const
+inline player_color PlayerUnitManager::get_color() const
 {
 	// 매니저가 담당하는 플레이어 색상을 반환한다.
 	 return color;
 }
 
-inline PlayerUnitManager::player_type PlayerUnitManager::get_player_type() const
+inline player_type PlayerUnitManager::get_player_type() const
 {
 	// 매니저가 담당하는 플레이어 타입을 반환한다.
 	return type;

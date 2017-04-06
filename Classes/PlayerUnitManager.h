@@ -17,17 +17,6 @@ namespace eun {
 
 class PlayerUnitManager {
 public:
-	// 플레이어 색상 지정 열거체
-	enum player_color {
-		red, blue, max
-	};
-	
-	// 플레이어 타입 지정 열거체
-	enum player_type {
-		user, ai,
-	};
-
-public:
 	PlayerUnitManager(player_color _color, player_type _type);
 	~PlayerUnitManager();
 

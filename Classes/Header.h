@@ -29,3 +29,17 @@ enum direction {
 typedef enum unit_type {
 	marine, marine_weapon
 } building_type;
+
+
+// 플레이어 색상 지정 열거체
+enum player_color {
+	red, blue, max
+};
+// PlayerUnitManager, UnitManager
+
+
+// 플레이어 타입 지정 열거체
+enum player_type {
+	user, ai,
+};
+// PlayerUnitManager, UnitManager
