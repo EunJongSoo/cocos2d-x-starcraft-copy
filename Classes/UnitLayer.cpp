@@ -1,37 +1,37 @@
 #include "UnitLayer.h"
 #include "UnitManager.h"
 #include "Unit.h"
+#include "Point.h"
 
 using namespace cocos2d;
 
-UnitLayer::UnitLayer()
-{
-}
-
-UnitLayer::~UnitLayer()
-{
-}
+UnitLayer::UnitLayer() {}
+UnitLayer::~UnitLayer() {}
 
 bool UnitLayer::init()
 {
 	if (!Layer::init()) return false;
 
-
 	unit_manager = new UnitManager();
 
+	// 임시 작성 부분
 	unit_manager->add_player();
 	unit_manager->add_player();
-	Unit* unit1 = unit_manager->create_unit(unit_type::marine, PlayerUnitManager::player_color::red, 100.0f, 100.0f);
-	this->addChild(unit1);
-	this->addChild(unit_manager->create_unit(unit_type::marine, PlayerUnitManager::player_color::blue, 100.0f, 150.0f));
-
+	this->create_unit(unit_type::marine, player_color::red, eun::Point(100.0f, 100.0f));
+	this->create_unit(unit_type::marine, player_color::blue, eun::Point(100.0f, 100.0f));
+	
 	return true;
 }
 
-void UnitLayer::create_unit() {
-
+// 유닛 생성 한다.
+void UnitLayer::create_unit(const unit_type _type, const player_color _color, const eun::Point& _point) {
+	// 매개변수로 유닛을 생성한다. 
+	Unit* unit = unit_manager->create_unit(_type, _color, _point);
+	// 레이어 자식으로 추가한다.
+	this->addChild(unit);
 }
 
-std::vector<Unit*>& UnitLayer::get_unit_array() const{
-	return unit_manager->get_unit_array();
+// 플레이어 유닛 매니저 반환
+std::vector<PlayerUnitManager*>& UnitLayer::get_unit_manager_vector() const{
+	return unit_manager->get_unit_manager_vector();
 }
