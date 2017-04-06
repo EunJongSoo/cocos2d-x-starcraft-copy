@@ -22,9 +22,6 @@
     <Filter Include="src\etc">
       <UniqueIdentifier>{764f7fb4-b3e6-4990-b3d9-6386b17ae7df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Unit\Manager">
-      <UniqueIdentifier>{51ef6538-e7c9-478b-a9ec-0a90eee01445}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,9 +39,6 @@
     <ClCompile Include="..\Classes\KeyboardManager.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\MouseManager.cpp">
-      <Filter>src\Input</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\UnitLayer.cpp">
       <Filter>src\Layer</Filter>
     </ClCompile>
@@ -60,14 +54,14 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src\etc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MouseManager.cpp">
+      <Filter>src\Input</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\PlayerUnitManager.cpp">
-      <Filter>src\Unit\Manager</Filter>
+      <Filter>src\Unit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\UnitManager.cpp">
-      <Filter>src\Unit\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\DebugDraw.cpp">
-      <Filter>src\etc</Filter>
+      <Filter>src\Unit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +81,6 @@
       <Filter>src\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\KeyboardManager.h">
-      <Filter>src\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MouseManager.h">
       <Filter>src\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\UnitLayer.h">
@@ -116,14 +107,14 @@
     <ClInclude Include="..\Classes\Point.h">
       <Filter>src\etc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\MouseManager.h">
+      <Filter>src\Input</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\PlayerUnitManager.h">
-      <Filter>src\Unit\Manager</Filter>
+      <Filter>src\Unit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\UnitManager.h">
-      <Filter>src\Unit\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\DebugDraw.h">
-      <Filter>src\etc</Filter>
+      <Filter>src\Unit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -118,24 +118,26 @@ void PickingManager::mouse_R_down_process(MouseInfo * const _info, const std::ve
 
 	// 클릭한 지점의 유닛을 찾는다.
 	// 전체 유닛 목록에서 찾아야한다.
+	Unit* unit = nullptr;
 	std::vector<Unit*> manager_unit_vector;
 	for (PlayerUnitManager* manager : _manager_vector) {
 		manager_unit_vector = manager->get_unit_vector();
-		Unit* unit = find_click_unit(_info, manager_unit_vector);
-
-		// 유닛이 있는지 확인한다.
-		if (is_unit(unit))
-		{
-			// 있을때의 처리를 한다.
-			R_click_unit_process(unit, select_unit_vector);
+		unit = find_click_unit(_info, manager_unit_vector);
+		// 유닛을 찾으면 검색을 중단한다.
+		if (unit != nullptr) {
 			break;
 		}
-		else
-		{
-			// 없을때의 처리를 한다.
-			R_click_not_unit_process(_info, select_unit_vector);
-			break;
-		}
+	}
+	// 유닛이 있는지 확인한다.
+	if (is_unit(unit))
+	{
+		// 있을때의 처리를 한다.
+		R_click_unit_process(unit, select_unit_vector);
+	}
+	else
+	{
+		// 없을때의 처리를 한다.
+		R_click_not_unit_process(_info, select_unit_vector);
 	}
 }
 
