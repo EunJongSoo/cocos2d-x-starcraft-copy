@@ -22,10 +22,9 @@ public:
 
 	Unit* create_unit(const unit_type _type, const eun::Point& _point);
 
-	inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector();
-	inline player_color get_color() const;
-	inline player_type get_player_type() const;
-	
+	inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector() { return unit_vector; }
+	inline player_color get_color() const { return color; }
+	inline player_type get_player_type() const { return type; }
 
 private:
 	PlayerUnitManager();

@@ -21,22 +21,3 @@ Unit* PlayerUnitManager::create_unit(const unit_type _type, const eun::Point& _p
 	// 저장한 유닛의 포인터를 반환한다.
 	return unit;
 }
-
-inline player_color PlayerUnitManager::get_color() const
-{
-	// 매니저가 담당하는 플레이어 색상을 반환한다.
-	 return color;
-}
-
-inline player_type PlayerUnitManager::get_player_type() const
-{
-	// 매니저가 담당하는 플레이어 타입을 반환한다.
-	return type;
-}
-
-inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector()
-{
-	// 플레이어의 유닛 벡터를 반환한다.
-	return unit_vector;
-}
-
