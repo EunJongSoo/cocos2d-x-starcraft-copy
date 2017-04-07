@@ -90,7 +90,7 @@ void PickingManager::mouse_L_up_process(MouseInfo * const _info, const std::vect
 
 void PickingManager::mouse_L_drag_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
-	// 유닛을 선택을 취소한다.
+	// 유닛 선택을 취소한다.
 	select_unit(_unit_vector, false);
 	// 드래그한 유닛을 찾는다.
 	std::vector<Unit*> unit_vector = find_drag_unit(_info, _unit_vector);
@@ -173,12 +173,12 @@ void PickingManager::select_unit(const std::vector<Unit*>& _unit_vector, bool _b
 Unit * PickingManager::find_click_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
 {
 	// 위치 정보 임시저장
-	eun::Point point = _info->get_start_pos();
+	cocos2d::Vec2 start_pos = _info->get_start_pos();
 	for (Unit* unit : _unit_vector) {
 		// 유닛의 바운딩 박스 저장
 		cocos2d::Rect rect = unit->getBoundingBox();
 		// 바운딩 박스와 위치가 겹치는지 확인
-		if (rect.containsPoint(cocos2d::Vec2(point.x, point.y))) {
+		if (rect.containsPoint(start_pos)) {
 			// 겹친 유닛 반환
 			return unit;
 		}
@@ -193,21 +193,20 @@ std::vector<Unit*> PickingManager::find_drag_unit(MouseInfo * const _info, const
 	std::vector<Unit*> select_unit_vector;
 
 	// 마우스 클릭한 첫 포인트 임시 저장
-	eun::Point start_point = _info->get_start_pos();
+	cocos2d::Vec2 start_pos = _info->get_start_pos();
 	// 마우스 클릭땐 마지막 포인트 임시 저장
-	eun::Point end_point = _info->get_end_pos();
+	cocos2d::Vec2 end_pos = _info->get_end_pos();
 	
 	// 마우스 클릭한 두 점으로 생긴 사각형의 왼쪽 아래값을 찾는다.
 	// cocos2d-x의 좌표계는 왼쪽 아래가 0, 0
-	eun::Point min_point = start_point.min_point(end_point);
+	cocos2d::Vec2 min_pos(MIN(start_pos.x, end_pos.x), MIN(start_pos.y, end_pos.y));
 	
 	// 드래그한 크기를 계산한다.
 	// 첫 포인트에서 마지막 포인트를 빼고 절대값으로 변경
-	float width = fabsf(start_point.x - end_point.x);
-	float height = fabsf(start_point.y - end_point.y);
+	cocos2d::Size size(fabsf(start_pos.x - end_pos.x), fabsf(start_pos.y - end_pos.y));
 
 	// 왼쪽 아래 점부터 가로 세로 크기를 사용해서 Rect 변수를 만든다.
-	cocos2d::Rect drag_rect = cocos2d::Rect(min_point.x, min_point.y, width, height);
+	cocos2d::Rect drag_rect = cocos2d::Rect(min_pos, size);
 
 	for (Unit* unit : _unit_vector) {
 		cocos2d::Rect rect = unit->getBoundingBox();
@@ -251,10 +250,10 @@ void PickingManager::attack_unit(Unit* const _unit, const std::vector<Unit*>& _u
 
 // 유닛을 이동한다.
 // 유닛 행동 함수에 따라 내용이 변경될수 있다.
-void PickingManager::move_unit(eun::Point _point, const std::vector<Unit*>& _unit_vector)
+void PickingManager::move_unit(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
 {
 	for (Unit* unit : _unit_vector) {
-		unit->move_unit(_point);
+		unit->move_unit(_vec2);
 	}
 }
 

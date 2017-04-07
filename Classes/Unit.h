@@ -8,11 +8,6 @@
 class UnitWeapon;
 class UnitAnimation;
 
-// namespace class 전방선언
-namespace eun {
-	class Point;
-}
-
 class Unit :public cocos2d::Sprite {
 public:
 	enum upgrade_type {
@@ -84,13 +79,13 @@ public:
 	};
 public:
 	virtual ~Unit();
-	virtual bool init(const unit_type _type, const eun::Point& _point);
-	static Unit* create(const unit_type _type, const eun::Point& _point);
+	virtual bool init(const unit_type _type, const cocos2d::Vec2& _vec2);
+	static Unit* create(const unit_type _type, const cocos2d::Vec2& _vec2);
 
 	void attack_unit(Unit* const _target);
-	void move_unit(const eun::Point& _move_point);
+	void move_unit(const cocos2d::Vec2& _move_vec2);
 	void stop_unit();
-	void patrol_unit(const eun::Point& _move_point);
+	void patrol_unit(const cocos2d::Vec2& _move_vec2);
 	void hold_unit();
 	void die_unit();
 	void hit(int _dmg);
@@ -103,7 +98,7 @@ public:
 	
 private:
 	Unit();
-	void check_dir(const eun::Point& _dir);
+	void check_dir(const cocos2d::Vec2& _dir);
 	void set_state(const unit_state _state);
 
 	// 분리해야되는 기능
@@ -113,8 +108,16 @@ private:
 private:
 	std::vector<UnitWeapon*> _bullet_vector;
 
-	unsigned int _tile_x;						// 타일 위치_x
-	unsigned int _tile_y;						// 타일 위치_y
+	struct Point {
+		Point(int _x = 0, int _y = 0) :
+			x(_x),
+			y(_y)
+		{}
+		unsigned int x;
+		unsigned int y;
+	};
+
+	Point tile_point;							// 타일 위치_x
 	float _production_time;						// 현재 생산 시간
 	bool _select_unit;
 
@@ -122,8 +125,8 @@ private:
 	unit_state _unit_state;						// enum 유닛의 현재 상태
 	special_effects _unit_effects;				// 현재 특수이팩트
 
-	eun::Point * _move_point;						// 이동 목표
-	eun::Point * _my_pos_point;					// 시작위치, 정찰 명령시 사용
+	cocos2d::Vec2 _move_vec2;						// 이동 목표
+	cocos2d::Vec2 _my_pos_vec2;					// 시작위치, 정찰 명령시 사용
 	unit_info * _unit_info;						// 구조체 유닛 능력치 정보
 	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
 	production_info * _production_info;			// 구조체 생성 정보

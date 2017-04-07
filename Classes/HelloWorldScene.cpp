@@ -107,10 +107,13 @@ void HelloWorld::update(float _dt) {
 
 void HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	
-	// 조작된 유닛 움직이기
+	// 조작된 유닛 에게 명령 내리기
 	if (_input->get_mouse_order()) {
 		picking_manager->picking_unit(_input, _unit_vector);
 	}
+
+	// 모든 유닛을 움직이기
+
 }
 
 void HelloWorld::draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
@@ -137,11 +140,8 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 		// 마우스 상태가 드래그 중인지 확인한다.
 		if (mouse_info->get_mouse_state() == MouseInfo::L_dragging) {
 			// 마우스 클릭 시작점과 끝점의 값을 저장한다.
-			eun::Point start_point = mouse_info->get_start_pos();
-			eun::Point end_point = mouse_info->get_end_pos();
-
-			Vec2 start_vec2(start_point.x, start_point.y);
-			Vec2 end_vec2(end_point.x, end_point.y);
+			Vec2 start_vec2(mouse_info->get_start_pos());
+			Vec2 end_vec2(mouse_info->get_end_pos());
 
 			// 사각형을 그린다.
 			draw_node->drawRect(start_vec2, end_vec2, Color4F(10, 20, 30, 100));

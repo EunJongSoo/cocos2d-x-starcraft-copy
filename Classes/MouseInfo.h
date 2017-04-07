@@ -1,7 +1,7 @@
 #ifndef MOUSE_INFO_H_
 #define MOUSE_INFO_H_
 
-#include "Point.h"
+#include "cocos2d.h"
 
 class MouseInfo {
 public:
@@ -14,26 +14,17 @@ public:
 	{}
 	~MouseInfo() {}
 
-	inline void set_mouse_state(const int _state) {
-		state = (mouse_state)(_state);
-	}
-
-	inline void set_start_pos(const eun::Point& _start_pos) {
-		start_pos = _start_pos;
-	}
-	inline void set_end_pos(const eun::Point& _end_pos) {
-		end_pos = _end_pos;
-	}
-
-	// 간접 접근
+	inline void set_mouse_state(const int _state) { state = (mouse_state)(_state); }
+	inline void set_start_pos(const cocos2d::Vec2& _start_pos) { start_pos = _start_pos; }
+	inline void set_end_pos(const cocos2d::Vec2& _end_pos) { end_pos = _end_pos; }
 	inline mouse_state get_mouse_state() const { return state; }
-	inline eun::Point get_start_pos() const { return start_pos; }
-	inline eun::Point get_end_pos() const { return end_pos; }
+	inline cocos2d::Vec2 get_start_pos() const { return start_pos; }
+	inline cocos2d::Vec2 get_end_pos() const { return end_pos; }
 
 private:
 	mouse_state state;
-	eun::Point start_pos;
-	eun::Point end_pos;
+	cocos2d::Vec2 start_pos;
+	cocos2d::Vec2 end_pos;
 };
 
 #endif // !MOUSE_INFO_H_

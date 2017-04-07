@@ -1,15 +1,11 @@
 #include "Unit.h"
 #include "UnitAnimation.h"
 #include "UnitWeapon.h"
-#include "Point.h"
 
 using namespace cocos2d;
 
-
 Unit::Unit() :
 	_unit_dir(direction::up),
-	_tile_x(0),
-	_tile_y(0),
 	_production_time(0.0f),
 	_select_unit(false),
 	_races_type(races_type::terran),
@@ -32,9 +28,9 @@ Unit::~Unit() {
 
 // cocos2d-x의 create 함수 변경
 // 매개변수로 생성할 유닛의 타입과 위치를 받는다.
-Unit * Unit::create(const unit_type _type, const eun::Point& _point) {
+Unit * Unit::create(const unit_type _type, const cocos2d::Vec2& _vec2) {
 	Unit * pRet = new Unit();
-	if (pRet && pRet->init(_type, _point)) {
+	if (pRet && pRet->init(_type, _vec2)) {
 		pRet->autorelease();
 		return pRet;
 	}
@@ -46,12 +42,12 @@ Unit * Unit::create(const unit_type _type, const eun::Point& _point) {
 
 // cocos2d-x의 init 함수 변경
 // 매개변수로 생성할 유닛의 타입과 위치를 받는다.
-bool Unit::init(unit_type _type, const eun::Point& _point) {
+bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2) {
 	assert(Sprite::init());
 
 	// 유닛 애니메이션 생성
 	_unit_animation = new UnitAnimation(_type, this);
-	this->setPosition(Vec2(_point.x, _point.y));
+	this->setPosition(_vec2);
 
 	// 데이터 로드 ~~~~~~
 	// 데이터 로드 ~~~~~~
@@ -89,29 +85,16 @@ void Unit::attack_unit(Unit* const _target) {
 
 	// 타겟의 위치와 유닛의 위치를 빼서 저장한다.
 	Vec2 vec2 = _target_unit->getPosition() - this->getPosition();
-	
-	// 굳이 Point로 바꿔준다.
-	eun::Point point(vec2.x, vec2.y);
 	// 정규화 한다.
-	point.normalize();
+	vec2.normalize();
 	// 방향을 확인한다.
-	check_dir(point);
+	check_dir(vec2);
 }
 
 // 유닛 이동 명령
-void Unit::move_unit(const eun::Point& move_point) {
+void Unit::move_unit(const cocos2d::Vec2& _vec2) {
 	set_state(unit_state::move);
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	_move_point = new eun::Point(move_point);
+	_move_vec2 = _vec2;
 }
 
 // 유닛 정지 명령
@@ -120,33 +103,10 @@ void Unit::stop_unit() {
 }
 
 // 유닛 순찰 명령
-void Unit::patrol_unit(const eun::Point& move_point) {
+void Unit::patrol_unit(const cocos2d::Vec2& _vec2) {
 	set_state(unit_state::patrol);
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	_move_point = new eun::Point(move_point);
-	
-	// 또 굳이 바꾼다.
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	// 스마트 포인터를 사용해서 처리할것
-	Vec2 vec2 = this->getPosition();
-	_my_pos_point = new eun::Point(vec2.x, vec2.y);
+	_move_vec2 = _vec2;
+	_my_pos_vec2 = this->getPosition();
 }
 
 // 유닛 고정 명령
@@ -204,7 +164,7 @@ void Unit::run_action_animation(float _dt) {
 		run_action_move();														// 이동처리, 기능 이관 해야됨
 		if (_unit_state == idle) {
 			_unit_state = patrol;
-			std::swap(_move_point, _my_pos_point);
+			std::swap(_move_vec2, _my_pos_vec2);
 		}
 		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
@@ -240,22 +200,28 @@ void Unit::weapon_animaiton(float _dt) {
 // 임시 작성, 기능 이관 해야된다.
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
-	if (bounding.containsPoint(Vec2(_move_point->x, _move_point->y))) {
+	if (bounding.containsPoint(_move_vec2)) {
 		_unit_state = idle;
 	}
 	else {
-		eun::Point point(this->getPosition().x, this->getPosition().y);
-		eun::Point dir = (*_move_point) - point;
+		// 현재 유닛 위치를 저장
+		Vec2 unit_position = this->getPosition();
+		// 목표 위치에서 유닛 위치를 뺀다
+		Vec2 dir = _move_vec2 - unit_position;
+		// 결과값을 정규화한다.
 		dir.normalize();
-
+		// 정규화 후 방향을 확인한다.
 		check_dir(dir);
-		eun::Point tmp = point + (dir * _unit_info2->move_speed);
-		this->setPosition(Vec2(tmp.x, tmp.y));
+
+		// 방향에 이동속도를 곱한 후 현재 위치에 더한다.
+		Vec2 tmp = unit_position + (dir * _unit_info2->move_speed);
+		// 위치를 변경한다.
+		this->setPosition(tmp);
 	}
 }
 
 // 방향을 확인한다.
-void Unit::check_dir(const eun::Point & _dir) {
+void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 	// 정규화된 값을 받아야한다.
 
 	// y값이 0.33f보다 높은지 확인한다.

@@ -104,9 +104,6 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src\etc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Point.h">
-      <Filter>src\etc</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\MouseManager.h">
       <Filter>src\Input</Filter>
     </ClInclude>

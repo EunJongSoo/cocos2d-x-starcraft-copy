@@ -115,7 +115,7 @@ void MouseManager::on_mouse_up(Event * _event) {
 }
 
 // 마우스 좌표를 보정한다.
-void MouseManager::correction_mouse_location_y(eun::Point& _point) {
+void MouseManager::correction_mouse_location_y(cocos2d::Vec2& _point) {
 	// 마우스 Y좌표 반전되어 있어서 화면의 세로 크기를 빼서 보정한다.
 	_point.y = win_size.height - _point.y;
 }
@@ -123,9 +123,9 @@ void MouseManager::correction_mouse_location_y(eun::Point& _point) {
 // 마우스 거리를 확인한다.
 float MouseManager::mouse_distance_check(const Vec2& _vec2) {
 	// 마우스 처음 좌표를 저장한다.
-	eun::Point point = mouse_info->get_start_pos();
+	cocos2d::Vec2 vec2 = mouse_info->get_start_pos();
 	// 처음 좌표와 현재 좌표의 차이를 반환한다.
-	return _vec2.distance(Vec2(point.x, point.y));
+	return _vec2.distance(vec2);
 }
 
 // 마우스 명령을 설정한다.
@@ -137,21 +137,18 @@ void MouseManager::set_mouse_order(const int _state) {
 }
 
 // 마우스 명령을 설정한다.
-void MouseManager::set_mouse_order(const int _state, const Vec2& _vec2, set_pos _start_end) {
-	// 마우스 좌표를 Point 개체에 저장한다.
-	eun::Point point(_vec2.x, _vec2.y);
-
+void MouseManager::set_mouse_order(const int _state, Vec2& _vec2, set_pos _start_end) {
 	// 마우스 명령을 설정한다.
 	this->set_mouse_order(_state);
 	// 마우스 좌표를 보정한다.
-	correction_mouse_location_y(point);
+	correction_mouse_location_y(_vec2);
 
 	// 마우스 좌표가 어딘지 확인한다.
 	switch (_start_end)
 	{
 		// 처음 좌표에 설정한다.
-	case MouseManager::start:	mouse_info->set_start_pos(point);	break;
+	case MouseManager::start:	mouse_info->set_start_pos(_vec2);	break;
 		// 마지막 좌표에 설정한다.
-	case MouseManager::end:		mouse_info->set_end_pos(point);	break;
+	case MouseManager::end:		mouse_info->set_end_pos(_vec2);	break;
 	}
 }

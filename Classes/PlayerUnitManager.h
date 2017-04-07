@@ -11,8 +11,8 @@ namespace std {
 	template < typename T, typename A> class vector;
 }
 
-namespace eun {
-	class Point;
+namespace cocos2d {
+	class Vec2;
 }
 
 class PlayerUnitManager {
@@ -20,7 +20,7 @@ public:
 	PlayerUnitManager(const player_color _color, const player_type _type);
 	~PlayerUnitManager();
 
-	Unit* create_unit(const unit_type _type, const eun::Point& _point);
+	Unit* create_unit(const unit_type _type, const cocos2d::Vec2& _point);
 
 	inline std::vector<Unit*>& PlayerUnitManager::get_unit_vector() { return unit_vector; }
 	inline player_color get_color() const { return color; }

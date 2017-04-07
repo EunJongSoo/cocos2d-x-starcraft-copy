@@ -12,8 +12,8 @@ namespace std {
 	template < typename T, typename A> class vector;
 }
 
-namespace eun {
-	class Point;
+namespace cocos2d {
+	class Vec2;
 }
 
 class PickingManager {
@@ -40,7 +40,7 @@ private:
 	std::vector<Unit*> find_drag_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector);
 	std::vector<Unit*> find_select_unit(const std::vector<Unit*>& _unit_vector);
 	void attack_unit(Unit* const _unit, const std::vector<Unit*>& _unit_vector);
-	void move_unit(eun::Point _point, const std::vector<Unit*>& _unit_vector);
+	void move_unit(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector);
 	
 
 	inline bool is_unit(Unit* _unit);

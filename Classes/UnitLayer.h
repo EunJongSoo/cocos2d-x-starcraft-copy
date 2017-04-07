@@ -8,11 +8,6 @@
 class UnitManager;
 class PlayerUnitManager;
 
-// namespace class 전방선언
-namespace eun {
-	class Point;
-}
-
 class UnitLayer : public cocos2d::Layer {
 public:
 	UnitLayer();
@@ -20,7 +15,7 @@ public:
 	virtual bool init();
 	CREATE_FUNC(UnitLayer);
 
-	void create_unit(const unit_type _type, const player_color _color, const eun::Point& _point);
+	void create_unit(const unit_type _type, const player_color _color, const cocos2d::Vec2& _point);
 	std::vector<PlayerUnitManager*>& get_unit_manager_vector() const;
 
 private:

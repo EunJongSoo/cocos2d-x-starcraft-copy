@@ -6,11 +6,6 @@
 // class 穿号識情
 class MouseInfo;
 
-// namespace class 穿号識情
-namespace eun {
-	class Point;
-}
-
 class MouseManager : public cocos2d::Node {
 public:
 	MouseManager();
@@ -32,10 +27,10 @@ private:
 	void on_mouse_move(cocos2d::Event* _event);
 	void on_mouse_up(cocos2d::Event* _event);
 	
-	void correction_mouse_location_y(eun::Point& _point);
+	void correction_mouse_location_y(cocos2d::Vec2& _point);
 	float mouse_distance_check(const cocos2d::Vec2& _vec2);
 	void set_mouse_order(const int _state);
-	void set_mouse_order(const int _state, const cocos2d::Vec2& _vec2, set_pos _start_end);
+	void set_mouse_order(const int _state, cocos2d::Vec2& _vec2, set_pos _start_end);
 	
 private:
 	bool order;

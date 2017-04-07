@@ -169,7 +169,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\MouseManager.h" />
     <ClInclude Include="..\Classes\PickingManager.h" />
     <ClInclude Include="..\Classes\PlayerUnitManager.h" />
-    <ClInclude Include="..\Classes\Point.h" />
     <ClInclude Include="..\Classes\Unit.h" />
     <ClInclude Include="..\Classes\UnitAnimation.h" />
     <ClInclude Include="..\Classes\UnitLayer.h" />
