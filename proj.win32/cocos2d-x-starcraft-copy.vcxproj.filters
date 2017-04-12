@@ -71,6 +71,7 @@
     </ClCompile>
     <ClCompile Include="..\Classes\MapManager.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
+    <ClCompile Include="..\Classes\Bitmap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -144,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\VF4Info.h">
       <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MapFileInfo.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bitmap.h">
+      <Filter>src\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

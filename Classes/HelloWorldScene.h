@@ -11,6 +11,9 @@ class UnitLayer;
 class PlayerUnitManager;
 
 
+class BitmapManager;
+
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -31,6 +34,9 @@ private:
 	cocos2d::DrawNode* draw_node;
 
 	void create_drag_rect(InputInfo * const _input);
+
+
+	BitmapManager* bitmap_manager;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

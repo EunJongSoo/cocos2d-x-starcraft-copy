@@ -1,4 +1,5 @@
 #include "BitmapManager.h"
+#include "Bitmap.h"
 #include <iostream>
 #include <Windows.h>
 
@@ -11,13 +12,15 @@ BitmapManager::~BitmapManager()
 }
 
 
-unsigned char* BitmapManager::load_bitmap(char* filename)
+Bitmap* BitmapManager::load_bitmap(char* filename)
 {
+	BITMAPFILEHEADER bf;
 	BITMAPINFOHEADER bi;
 	FILE* f = fopen(filename, "rb");
 	
+	fread(&bf, sizeof(unsigned char), sizeof(BITMAPFILEHEADER), f);// 사이중 헤더에 사이즈 14바이트..
 	// BITMAPFILEHEADER 파일 14바이트 만큼 이동
-	fseek(f, 14, SEEK_SET);											
+	//fseek(f, 14, SEEK_SET);											
 	// 나머지 정보 BITMAPINFOHEADER 40바이트 저장
 	fread(&bi, sizeof(unsigned char), sizeof(BITMAPINFOHEADER), f);	
 
@@ -36,16 +39,30 @@ unsigned char* BitmapManager::load_bitmap(char* filename)
 	// int width = bi.biWidth;
 	// int height = bi.biHeight;
 
+	Bitmap* bit = new Bitmap;
 	// 헤더 파일 사이즈 54바이트를 더해준다.
-	int size = bi.biSize + 54;
+	bit->size_image = bi.biSizeImage;
+	int size = bi.biSizeImage;
+	//int size = bi.biSizeImage + 54;
 
+
+	
+	//bit->data = new unsigned char[size];
+	//bit->data = new unsigned char[bit->size_image];
+	//memset(bit->data, 0, sizeof(bit->data));
 	unsigned char* data = new unsigned char[size]; // allocate 3 bytes per pixel
 
 	// 위치 지시자를 처음으로 돌려보내서
-	fseek(f, 0, SEEK_SET);
+	//fseek(f, 0, SEEK_SET);
 	// 헤더파일까지 모두 읽는다.
-	fread(data, sizeof(unsigned char), size, f); // read the rest of the data at once
+	fread(data, size, 1, f); // read the rest of the data at once
+	//fread(bit->data, sizeof(unsigned char), bit->size_image, f); // read the rest of the data at once
+	//fread_s(bit->data, sizeof(unsigned char), bit->size_image, 1, f);
+	//fread_s(data, sizeof(unsigned char), size, 1, f);
 	fclose(f);
+
+
+	
 
 	 // b,g,r 배치를 r,g,b로 변경
 	/*for (int i = 0; i < size; i += 3)
@@ -54,7 +71,7 @@ unsigned char* BitmapManager::load_bitmap(char* filename)
 		data[i] = data[i + 2];
 		data[i + 2] = tmp;
 	}*/
-	return data;
+	return bit;
 }
 //
 //// c

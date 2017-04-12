@@ -146,6 +146,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\BackGroundLayer.cpp" />
+    <ClCompile Include="..\Classes\Bitmap.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\InputManager.cpp" />
@@ -164,6 +165,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\BackGroundLayer.h" />
+    <ClInclude Include="..\Classes\Bitmap.h" />
     <ClInclude Include="..\Classes\BitmapManager.h" />
     <ClInclude Include="..\Classes\Header.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
@@ -171,6 +173,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\InputInfo.h" />
     <ClInclude Include="..\Classes\InputManager.h" />
     <ClInclude Include="..\Classes\KeyboardManager.h" />
+    <ClInclude Include="..\Classes\MapFileInfo.h" />
     <ClInclude Include="..\Classes\MapManager.h" />
     <ClInclude Include="..\Classes\MouseInfo.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />

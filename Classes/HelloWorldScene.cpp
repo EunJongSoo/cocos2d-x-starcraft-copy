@@ -13,6 +13,10 @@
 #include "Unit.h"
 #include "PlayerUnitManager.h"
 
+
+#include "BitmapManager.h"
+#include "Bitmap.h"
+
 using namespace cocos2d;
 
 HelloWorld::HelloWorld() :
@@ -87,6 +91,21 @@ bool HelloWorld::init()
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
+
+
+
+	bitmap_manager = new BitmapManager;
+	Bitmap* bitmap = bitmap_manager->load_bitmap("marine000.bmp");
+
+	Image* img = new Image;
+	img->initWithImageData(bitmap->data,bitmap->size_image);
+
+
+	Texture2D texture;
+	texture.initWithImage(img);
+
+	auto texturecache = Director::getInstance()->getTextureCache();
+	sprite->setTexture(texturecache->addImage(img, "marine000.bmp"));
 
     return true;
 }
