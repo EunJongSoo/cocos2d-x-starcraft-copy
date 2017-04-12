@@ -22,6 +22,9 @@
     <Filter Include="src\etc">
       <UniqueIdentifier>{764f7fb4-b3e6-4990-b3d9-6386b17ae7df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Map">
+      <UniqueIdentifier>{3f8e27bc-a16c-4cdb-9e4d-10d3770d239d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +66,11 @@
     <ClCompile Include="..\Classes\UnitManager.cpp">
       <Filter>src\Unit</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BackGroundLayer.cpp">
+      <Filter>src\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MapManager.cpp" />
+    <ClCompile Include="..\Classes\BitmapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -112,6 +120,30 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UnitManager.h">
       <Filter>src\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BackGroundLayer.h">
+      <Filter>src\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MapManager.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BitmapManager.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CV5Info.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\VX4Info.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\VR4Info.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\WPEInfo.h">
+      <Filter>src\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\VF4Info.h">
+      <Filter>src\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

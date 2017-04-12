@@ -7,6 +7,8 @@
 
 #include "PickingManager.h"
 
+#include "BackGroundLayer.h"
+
 #include "UnitLayer.h"
 #include "Unit.h"
 #include "PlayerUnitManager.h"
@@ -24,8 +26,8 @@ HelloWorld::HelloWorld() :
 HelloWorld::~HelloWorld()
 {
 	this->removeAllChildren();
-	CC_SAFE_DELETE(input_manager);
-	CC_SAFE_DELETE(picking_manager);
+	SAFE_DELETE(input_manager);
+	SAFE_DELETE(picking_manager);
 }
 
 Scene* HelloWorld::createScene()

@@ -1,4 +1,5 @@
 #include "BitmapManager.h"
+#include <iostream>
 #include <Windows.h>
 
 BitmapManager::BitmapManager()
