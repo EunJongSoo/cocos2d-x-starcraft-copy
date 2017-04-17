@@ -22,6 +22,7 @@ public:
 private:
 	void operator=(Bitmap& _other) {};
 	void operator=(const Bitmap& _other) {};
+	bool check_bg(unsigned char r, unsigned char g, unsigned char b) const;
 	bool check_colorkey(unsigned char r, unsigned char g, unsigned char b) const;
 	unsigned long get_player_color(player_color _color) const;
 

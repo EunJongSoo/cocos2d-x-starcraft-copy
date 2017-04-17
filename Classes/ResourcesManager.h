@@ -22,7 +22,6 @@ public:
 	~ResourcesManager();
 
 	// 리소스를 불러오는 함수
-	cocos2d::Texture2D* load_resources(const std::string& _str);
 	cocos2d::Texture2D* load_resources(player_color color, const std::string& _str);
 
 private:

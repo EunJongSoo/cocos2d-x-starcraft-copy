@@ -97,7 +97,7 @@ cocos2d::Texture2D * ResourcesManager::create_texture(const Bitmap* const _bitma
 	texture->initWithData(
 		_bitmap->get_data(),
 		_bitmap->get_size(),
-		cocos2d::Texture2D::PixelFormat::RGB888,
+		cocos2d::Texture2D::PixelFormat::RGBA8888,
 		_bitmap->get_width(),
 		_bitmap->get_height(),
 		cocos2d::Size(_bitmap->get_width(), _bitmap->get_height()));

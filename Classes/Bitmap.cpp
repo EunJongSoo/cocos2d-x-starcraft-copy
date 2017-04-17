@@ -114,11 +114,11 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 	file.read(read_bitmap_data, width * height);
 	file.close();
 
-	// 사이즈 저장
-	size = width * height * 3;
-	// 24bit로 변환할 데이터 저장 공간 할당
+	// 사이즈 저장, 24비트 3, 32비트 4
+	size = width * height * 4;
+	// 변환할 데이터 저장 공간 할당
 	data = (char*)malloc(size);
-
+	memset(data, 0, size);
 	// BPS 계산
 	int image_BPS_8bit = (width % 4) ? (width + (4 - (width % 4))) : width;
 
@@ -129,7 +129,7 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 	// COLORREF == unsigned long
 	// 실제 찍힐 색상
 	COLORREF putColor = 0;			
-
+	BYTE r = 0, g = 0, b = 0, a = 255;			// 최종 RGB
 	int index = 0;
 	for (int h = 0; h < height; ++h) {
 		for (int w = 0; w < width; ++w) {
@@ -137,13 +137,20 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 			color_index = read_bitmap_data[image_BPS_8bit * h + w];
 			// 이미지 정보에서 색상값 추출
 			putColor = color_palette[color_index];
-
-			// 24bit 버퍼에 RGB 기록
-			// 이미지가 뒤집히기 때문에 반대쪽 부터 색상을 입력
-			index = (w + (height - 1 - h) * width) * 3;
-			data[index] = GetRValue(putColor);
-			data[index + 1] = GetGValue(putColor);
-			data[index + 2] = GetBValue(putColor);
+			r = GetRValue(putColor);
+			g = GetGValue(putColor);
+			b = GetBValue(putColor);
+			
+			// 배경인지 검사
+			if (!check_bg(r, g, b)){
+				// 32bit 버퍼에 RGB 기록
+				// 이미지가 뒤집히기 때문에 반대쪽 부터 색상을 입력
+				index = (w + (height - 1 - h) * width) * 4;
+				data[index] = r;
+				data[index + 1] = g;
+				data[index + 2] = b;
+				data[index + 3] = a;
+			}
 		}
 	}
 
@@ -159,7 +166,7 @@ void Bitmap::converter_color(player_color _color)
 	COLORREF player_color = 0;			// 플레이어 색상	
 	BYTE tr = 0, tg = 0, tb = 0;		// 팀컬러 RGB
 	BYTE pr = 0, pg = 0, pb = 0;		// 팔레트 RGB
-	BYTE r = 0, g = 0, b = 0;			// 최종 RGB
+	BYTE r = 0, g = 0, b = 0, a = 0;			// 최종 RGB
 	
 	
 	int tmp = 0;					// 계산용 임시변수
@@ -167,7 +174,7 @@ void Bitmap::converter_color(player_color _color)
 
 	for (int h = 0; h < height; ++h) {
 		for (int w = 0; w < width; ++w) {
-			index = (h * width + w) * 3;
+			index = (h * width + w) * 4;
 			// 데이터에 순서대로 접근한다.
 			// 비트맵에는 b, g, r순서로 저장되어 있다.
 
@@ -212,6 +219,10 @@ void Bitmap::converter_color(player_color _color)
 			}
 		}
 	}
+}
+
+bool Bitmap::check_bg(unsigned char r, unsigned char g, unsigned char b) const {
+	return (r == 0 && g == 0 && b == 0);
 }
 
 //
