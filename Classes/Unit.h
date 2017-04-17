@@ -38,17 +38,17 @@ public:
 			upgrade_type(_up_type),
 			unit_name(_name) {}
 
-		unsigned int killing_count;				// 적 유닛 죽인수
-		unsigned int hp;						// 체력
-		unsigned int mp;						// 마력
-		unsigned int shield;					// 쉴드
-		unsigned int attack;					// 공격력
+		unsigned int killing_count;					// 적 유닛 죽인수
+		unsigned int hp;							// 체력
+		unsigned int mp;							// 마력
+		unsigned int shield;						// 쉴드
+		unsigned int attack;						// 공격력
 		unsigned int defence;						// 방어력
-		unsigned int attack_upgrade_level;		// 공격 업그레이드 수준
-		unsigned int defence_upgrade_level;		// 방어 업그레이드 수준
-		unit_type unit_type;					// 유닛 종류
-		upgrade_type upgrade_type;				// 업그레이드 종류
-		std::string unit_name;					// 유닛 이름
+		unsigned int attack_upgrade_level;			// 공격 업그레이드 수준
+		unsigned int defence_upgrade_level;			// 방어 업그레이드 수준
+		unit_type unit_type;						// 유닛 종류
+		upgrade_type upgrade_type;					// 업그레이드 종류
+		std::string unit_name;						// 유닛 이름
 	private:
 		unit_info();
 	};
@@ -62,25 +62,25 @@ public:
 			min_attack_range(_min_attack_range),
 			max_attack_range(_max_attack_range)
 		{}
-		float move_speed;						// 이동속도
-		float attack_speed;						// 공격속도
-		float sight_range;						// 시야
-		float min_attack_range;					// 최소_사정거리
-		float max_attack_range;					// 최대_사정거리
+		float move_speed;							// 이동속도
+		float attack_speed;							// 공격속도
+		float sight_range;							// 시야
+		float min_attack_range;						// 최소_사정거리
+		float max_attack_range;						// 최대_사정거리
 	private:
 		unit_info2();
 	};
 	struct production_info {
-		float required_production_time;			// 필요 생산 시간
-		unsigned int required_building;			// 필요 건물
-		unsigned int required_mineral;			// 필요 미네랄
-		unsigned int required_gas;				// 필요 가스
-		unsigned int required_supply;			// 필요 인구수
+		float required_production_time;				// 필요 생산 시간
+		unsigned int required_building;				// 필요 건물
+		unsigned int required_mineral;				// 필요 미네랄
+		unsigned int required_gas;					// 필요 가스
+		unsigned int required_supply;				// 필요 인구수
 	};
 public:
 	virtual ~Unit();
-	virtual bool init(const unit_type _type, const cocos2d::Vec2& _vec2);
-	static Unit* create(const unit_type _type, const cocos2d::Vec2& _vec2);
+	virtual bool init(const unit_type _type, const cocos2d::Vec2& _vec2, player_color _color);
+	static Unit* create(const unit_type _type, const cocos2d::Vec2& _vec2, player_color _color);
 
 	void attack_unit(Unit* const _target);
 	void move_unit(const cocos2d::Vec2& _move_vec2);
@@ -117,19 +117,20 @@ private:
 		unsigned int y;
 	};
 
-	Point tile_point;							// 타일 위치_x
-	float _production_time;						// 현재 생산 시간
+	Point tile_point;								// 타일 위치_x
+	float _production_time;							// 현재 생산 시간
 	bool _select_unit;
 
-	races_type _races_type;						// enum 종족
-	unit_state _unit_state;						// enum 유닛의 현재 상태
-	special_effects _unit_effects;				// 현재 특수이팩트
+	player_color _player_color;						// 플레이어 색상
+	races_type _races_type;							// enum 종족
+	unit_state _unit_state;							// enum 유닛의 현재 상태
+	special_effects _unit_effects;					// 현재 특수이팩트
 
 	cocos2d::Vec2 _move_vec2;						// 이동 목표
-	cocos2d::Vec2 _my_pos_vec2;					// 시작위치, 정찰 명령시 사용
-	unit_info * _unit_info;						// 구조체 유닛 능력치 정보
+	cocos2d::Vec2 _my_pos_vec2;						// 시작위치, 정찰 명령시 사용
+	unit_info * _unit_info;							// 구조체 유닛 능력치 정보
 	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
-	production_info * _production_info;			// 구조체 생성 정보
+	production_info * _production_info;				// 구조체 생성 정보
 	Unit * _target_unit;							// 공격 목표
 	UnitAnimation * _unit_animation;
 	UnitWeapon * _weapon;

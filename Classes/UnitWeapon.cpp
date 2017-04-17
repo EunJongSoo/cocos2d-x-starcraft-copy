@@ -3,6 +3,9 @@
 #include "UnitAnimation.h"
 #include "SimpleAudioEngine.h"
 
+#include "TemplateSingleton.h"
+#include "ResourcesManager.h"
+
 using namespace cocos2d;
 using namespace CocosDenshion;
 
@@ -15,13 +18,13 @@ UnitWeapon::UnitWeapon(Unit* const _target, const unit_type _unit_tpye) {
 	
 	// 애니메이션 초기화
 	weapon_animation = new UnitAnimation(_unit_tpye, this);
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
 
 	// 데이터 필요
 	// 초기 이미지 세팅
 	char str[16];
-	auto sprite_cache = SpriteFrameCache::getInstance();
-	sprintf_s(str, sizeof(str), "tspark000.bmp");
-	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
+	sprintf_s(str, sizeof(str), "tspark0000.bmp");
+	this->initWithTexture(resources_manager->load_resources(player_color::none, str));
 	SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
 }
 

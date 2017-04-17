@@ -139,12 +139,11 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 			putColor = color_palette[color_index];
 
 			// 24bit 버퍼에 RGB 기록
-			// RGB를 뒤집어 넣어야 제대로된 색상
 			// 이미지가 뒤집히기 때문에 반대쪽 부터 색상을 입력
 			index = (w + (height - 1 - h) * width) * 3;
-			data[index] = GetBValue(putColor);
+			data[index] = GetRValue(putColor);
 			data[index + 1] = GetGValue(putColor);
-			data[index + 2] = GetRValue(putColor);
+			data[index + 2] = GetBValue(putColor);
 		}
 	}
 
@@ -155,6 +154,8 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 
 void Bitmap::converter_color(player_color _color)
 {
+	if (_color == none) return;
+
 	COLORREF player_color = 0;			// 플레이어 색상	
 	BYTE tr = 0, tg = 0, tb = 0;		// 팀컬러 RGB
 	BYTE pr = 0, pg = 0, pb = 0;		// 팔레트 RGB
@@ -170,9 +171,9 @@ void Bitmap::converter_color(player_color _color)
 			// 데이터에 순서대로 접근한다.
 			// 비트맵에는 b, g, r순서로 저장되어 있다.
 
-			b = data[index];
+			r = data[index];
 			g = data[index + 1];
-			r = data[index + 2];
+			b = data[index + 2];
 			
 			//
 			// 컬러키값인지 확인
@@ -184,9 +185,9 @@ void Bitmap::converter_color(player_color _color)
 
 				// !비트맵에 BGR 순서로 들어가 있기때문에 RGB였던 팀컬러는 B-R을 바꿔서 사용
 				// 팀컬러 RGB
-				tb = GetRValue(player_color);
+				tr = GetRValue(player_color);
 				tg = GetGValue(player_color);
-				tr = GetBValue(player_color);
+				tb = GetBValue(player_color);
 
 				// 팔레트 RGB
 				// !RGB(255, 0, 255)를 기준으로 값이 적어질수록 색이 어두워짐
@@ -205,9 +206,9 @@ void Bitmap::converter_color(player_color _color)
 				g = (tmp > 0) ? tmp : 0;
 				b = (tb - pb > 0) ? tb - pb : 0;
 
-				data[index] = b;
+				data[index] = r;
 				data[index + 1] = g;
-				data[index + 2] = r;
+				data[index + 2] = b;
 			}
 		}
 	}

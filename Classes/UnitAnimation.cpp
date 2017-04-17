@@ -1,8 +1,22 @@
 #include "UnitAnimation.h"
+#include "TemplateSingleton.h"
+#include "ResourcesManager.h"
 
 using namespace cocos2d;
 
-UnitAnimation::UnitAnimation(const unit_type _type, Sprite* const _sprite) : frame(0), dt(0.0f) {
+UnitAnimation::UnitAnimation(const unit_type _type, cocos2d::Sprite * const _sprite):
+	frame(0),
+	dt(0.0f),
+	color(none)
+{
+	this->init_unit_animation(_type, _sprite);
+}
+
+UnitAnimation::UnitAnimation(const unit_type _type, player_color _color, Sprite* const _sprite) :
+	frame(0), 
+	dt(0.0f),
+	color(_color)
+{
 	this->init_unit_animation(_type, _sprite);
 }
 
@@ -28,10 +42,10 @@ void UnitAnimation::init_unit_animation(const unit_type _type, Sprite* const _sp
 		break;
 	}
 	case marine_weapon: {
-		this->init_animation(idle, "tspark", 10, 0);
+		this->init_animation(idle, "tspark", 15, 0);
 		for (clip* _clip : clip_vector) {
 			if (_clip->state == idle) {
-				_sprite->initWithSpriteFrame(_clip->animation_vector[0]);
+				_sprite->setTexture(_clip->animation_vector[0]);
 			}
 		}
 	}
@@ -81,18 +95,18 @@ UnitAnimation::clip * UnitAnimation::create_clip(const unit_state _state)
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
 	_clip->max_frame = _max_frame;
 	char str[16];
 	// 모션 수
 	for (int ani_count = 0; ani_count <_clip->max_frame; ++ani_count) {
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + ani_count);
-		_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + ani_count);
+		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
 	}
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
 	_clip->max_frame = _max_frame;
 	char str[16];
 	// 방향 수
@@ -100,14 +114,14 @@ void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _ma
 		int dir2 = dir * 2;
 		// 애니메이션 수
 		for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
-			sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + dir2 + (ani_count * 17));
-			_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+			sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + dir2 + (ani_count * 17));
+			_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
 		}
 	}
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
-	auto sprite_cache = cocos2d::SpriteFrameCache::getInstance();
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
 	_clip->max_frame = _max_frame;
 	char str[16];
 
@@ -116,15 +130,15 @@ void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _ma
 		int dir2 = dir * 2;
 		int img_num1 = dir2 + 17;
 		int img_num2 = dir2 + 34;
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, img_num1);
-		_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
-		sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, img_num2);
-		_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, img_num1);
+		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, img_num2);
+		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
 		for (int loop = 0; loop < _loop; ++loop) {
 			// 애니메이션 수
 			for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
-				sprintf_s(str, sizeof(str), "%s%03d.bmp", _str, _base + dir2 + (ani_count * _num));
-				_clip->animation_vector.push_back(sprite_cache->spriteFrameByName(str));
+				sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + dir2 + (ani_count * _num));
+				_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
 			}
 		}
 	}
@@ -139,7 +153,7 @@ bool UnitAnimation::clip_aniamtion(const clip* const _clip, Sprite* const _sprit
 	int tmp_dir = is_left ? _dir - 10 : _dir;
 	sprite_flipped_x(_sprite, is_left, _sprite->isFlippedX());
 	
-	_sprite->setSpriteFrame(_clip->animation_vector[frame++ + tmp_dir * _clip->max_frame]);
+	_sprite->setTexture(_clip->animation_vector[frame++ + tmp_dir * _clip->max_frame]);
 	bool b = frame >= _clip->max_frame;
 	if (b) {
 		frame = _frame;

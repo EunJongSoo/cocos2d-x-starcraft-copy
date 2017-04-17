@@ -15,7 +15,7 @@ PlayerUnitManager::~PlayerUnitManager() {}
 // 유닛을 생선한다.
 Unit* PlayerUnitManager::create_unit(const unit_type _type, const cocos2d::Vec2& _vec2) {
 	// 유닛의 종류와 위치를 받아서 생성한다.
-	Unit* unit = Unit::create(_type, _vec2);
+	Unit* unit = Unit::create(_type, _vec2, color);
 	// 벡터에 저장한다.
 	unit_vector.push_back(unit);
 	// 저장한 유닛의 포인터를 반환한다.

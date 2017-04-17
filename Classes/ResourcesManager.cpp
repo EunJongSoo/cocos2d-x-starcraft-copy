@@ -50,20 +50,7 @@ cocos2d::Texture2D* ResourcesManager::load_resources(player_color color, const s
 	}
 
 	assert(bitmap);
-	
-	// 비트맵 이미지로 텍스쳐2D를 만들어서 반환한다.
-	cocos2d::Texture2D* texture = nullptr;
-	texture = new cocos2d::Texture2D;
-	texture->initWithData(
-		bitmap->get_data(),
-		bitmap->get_size(),
-		cocos2d::Texture2D::PixelFormat::RGB888,
-		bitmap->get_width(),
-		bitmap->get_height(),
-		cocos2d::Size(bitmap->get_width(), bitmap->get_height()));
-
-	// 반환한다.
-	return texture;
+	return create_texture(bitmap);
 }
 
 // 색상별로 이미지를 저장해둔다.
@@ -101,4 +88,20 @@ Bitmap* ResourcesManager::load_bitmap(const std::string& _str) {
 		//bitmap_map.insert(std::pair<std::string, Bitmap*>(_str, bitmap));
 	}
 	return bitmap;
+}
+
+cocos2d::Texture2D * ResourcesManager::create_texture(const Bitmap* const _bitmap) {
+	// 비트맵 이미지로 텍스쳐2D를 만들어서 반환한다.
+	cocos2d::Texture2D* texture = nullptr;
+	texture = new cocos2d::Texture2D;
+	texture->initWithData(
+		_bitmap->get_data(),
+		_bitmap->get_size(),
+		cocos2d::Texture2D::PixelFormat::RGB888,
+		_bitmap->get_width(),
+		_bitmap->get_height(),
+		cocos2d::Size(_bitmap->get_width(), _bitmap->get_height()));
+
+	// 반환한다.
+	return texture;
 }

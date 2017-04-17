@@ -2,12 +2,16 @@
 #include "UnitAnimation.h"
 #include "UnitWeapon.h"
 
+#include "TemplateSingleton.h"
+#include "ResourcesManager.h"
+
 using namespace cocos2d;
 
 Unit::Unit() :
 	_unit_dir(direction::up),
 	_production_time(0.0f),
 	_select_unit(false),
+	_player_color(kWhite),
 	_races_type(races_type::terran),
 	_unit_state(unit_state::idle),
 	_unit_effects(special_effects::none),
@@ -28,9 +32,9 @@ Unit::~Unit() {
 
 // cocos2d-x의 create 함수 변경
 // 매개변수로 생성할 유닛의 타입과 위치를 받는다.
-Unit * Unit::create(const unit_type _type, const cocos2d::Vec2& _vec2) {
+Unit * Unit::create(const unit_type _type, const cocos2d::Vec2& _vec2, player_color _color) {
 	Unit * pRet = new Unit();
-	if (pRet && pRet->init(_type, _vec2)) {
+	if (pRet && pRet->init(_type, _vec2, _color)) {
 		pRet->autorelease();
 		return pRet;
 	}
@@ -42,11 +46,14 @@ Unit * Unit::create(const unit_type _type, const cocos2d::Vec2& _vec2) {
 
 // cocos2d-x의 init 함수 변경
 // 매개변수로 생성할 유닛의 타입과 위치를 받는다.
-bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2) {
+bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color) {
 	assert(Sprite::init());
 
+	// 유닛 색상 지정
+	_player_color = _color;
+
 	// 유닛 애니메이션 생성
-	_unit_animation = new UnitAnimation(_type, this);
+	_unit_animation = new UnitAnimation(_type, _player_color, this);
 	this->setPosition(_vec2);
 
 	// 데이터 로드 ~~~~~~
@@ -55,12 +62,15 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2) {
 	// 데이터 로드 ~~~~~~
 	// 데이터 로드 ~~~~~~
 
+
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
+
 	// 임시작성
 	// 마린의 이미지로 초기화한다.
 	char str[16] = { 0, };
-	sprintf_s(str, sizeof(str), "marine016.bmp");
+	sprintf_s(str, sizeof(str), "marine0016.bmp");
 	auto sprite_cache = SpriteFrameCache::getInstance();
-	this->initWithSpriteFrame(sprite_cache->spriteFrameByName(str));
+	this->initWithTexture(resources_manager->load_resources(_player_color, str));
 
 	// 임시작성
 	// 유닛 정보를 생성한다.

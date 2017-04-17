@@ -56,7 +56,8 @@ enum player_color {
 	kBrown,
 	kLightGreen,
 	kDarkGrey,
-	kPink
+	kPink,
+	none
 };
 // PlayerUnitManager, UnitManager
 
