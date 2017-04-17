@@ -13,9 +13,8 @@
 #include "Unit.h"
 #include "PlayerUnitManager.h"
 
-
-#include "BitmapManager.h"
-#include "Bitmap.h"
+#include "TemplateSingleton.h"
+#include "ResourcesManager.h"
 
 using namespace cocos2d;
 
@@ -76,9 +75,7 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto sprite = Sprite::create("HelloWorld.png");
-	sprite->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-	this->addChild(sprite, 0);
+	
 
 	// unit layer 추가
 	unit_layer = UnitLayer::create();
@@ -92,21 +89,20 @@ bool HelloWorld::init()
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
 
+	ResourcesManager* resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
+	auto sprite = Sprite::create();
+	sprite->initWithTexture(resources_manager->load_resources(player_color::kRed, "marine0000.bmp"));
+	sprite->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
+	this->addChild(sprite, 0);
 
 
-	bitmap_manager = new BitmapManager;
-	Bitmap* bitmap = bitmap_manager->load_bitmap("marine000.bmp");
+	auto sprite1 = Sprite::createWithTexture(resources_manager->load_resources(player_color::kTeal, "marine0000.bmp"));
+	sprite1->setPosition(Vec2(origin.x + visibleSize.width / 3, origin.y + visibleSize.height / 3));
+	this->addChild(sprite1, 0);
 
-	Image* img = new Image;
-	img->initWithImageData(bitmap->data,bitmap->size_image);
-
-
-	Texture2D texture;
-	texture.initWithImage(img);
-
-	auto texturecache = Director::getInstance()->getTextureCache();
-	sprite->setTexture(texturecache->addImage(img, "marine000.bmp"));
-
+	int start, end;
+	start = clock();
+	
     return true;
 }
 

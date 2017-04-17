@@ -155,6 +155,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\MouseManager.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
     <ClCompile Include="..\Classes\PlayerUnitManager.cpp" />
+    <ClCompile Include="..\Classes\ResourcesManager.cpp" />
     <ClCompile Include="..\Classes\Unit.cpp" />
     <ClCompile Include="..\Classes\UnitAnimation.cpp" />
     <ClCompile Include="..\Classes\UnitLayer.cpp" />
@@ -179,6 +180,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\MouseManager.h" />
     <ClInclude Include="..\Classes\PickingManager.h" />
     <ClInclude Include="..\Classes\PlayerUnitManager.h" />
+    <ClInclude Include="..\Classes\ResourcesManager.h" />
+    <ClInclude Include="..\Classes\TemplateSingleton.h" />
     <ClInclude Include="..\Classes\Unit.h" />
     <ClInclude Include="..\Classes\UnitAnimation.h" />
     <ClInclude Include="..\Classes\UnitLayer.h" />

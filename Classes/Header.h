@@ -3,6 +3,7 @@
 // 안전해제
 #define SAFE_DELETE(p)           do { if(p) { delete (p); (p) = nullptr; } } while(0)
 #define SAFE_DELETE_ARRAY(p)     do { if(p) { delete[] (p); (p) = nullptr; } } while(0)
+#define SAFE_FREE(p)             do { if(p) { free(p); (p) = nullptr; } } while(0)
 #define BREAK_IF(cond)           if(cond) break
 // UnitManager, MouseManager
 
@@ -40,7 +41,22 @@ typedef enum unit_type {
 
 // 플레이어 색상 지정 열거체
 enum player_color {
-	red, blue, max
+	kWhite = 0,
+	kRed,
+	kBlue,
+	kTeal,
+	kPurple,
+	kYellow,
+	kOrange,
+	kGreen,
+	kLightPink,
+	kViolet,
+	kLightGrey,
+	kDarkGreen,
+	kBrown,
+	kLightGreen,
+	kDarkGrey,
+	kPink
 };
 // PlayerUnitManager, UnitManager
 

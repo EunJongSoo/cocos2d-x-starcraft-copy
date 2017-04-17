@@ -37,6 +37,8 @@ private:
 
 
 	BitmapManager* bitmap_manager;
+
+	
 };
 
 #endif // __HELLOWORLD_SCENE_H__

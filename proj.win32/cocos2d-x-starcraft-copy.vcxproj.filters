@@ -25,6 +25,9 @@
     <Filter Include="src\Map">
       <UniqueIdentifier>{3f8e27bc-a16c-4cdb-9e4d-10d3770d239d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Resources">
+      <UniqueIdentifier>{d2d0b842-76a2-4cbc-a577-a46270ab39d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,9 +54,6 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src\etc</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PickingManager.cpp">
-      <Filter>src\etc</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src\etc</Filter>
     </ClCompile>
@@ -69,9 +69,21 @@
     <ClCompile Include="..\Classes\BackGroundLayer.cpp">
       <Filter>src\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\MapManager.cpp" />
-    <ClCompile Include="..\Classes\BitmapManager.cpp" />
-    <ClCompile Include="..\Classes\Bitmap.cpp" />
+    <ClCompile Include="..\Classes\PickingManager.cpp">
+      <Filter>src\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ResourcesManager.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bitmap.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BitmapManager.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MapManager.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -104,9 +116,6 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src\etc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\PickingManager.h">
-      <Filter>src\etc</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Header.h">
       <Filter>src\etc</Filter>
     </ClInclude>
@@ -128,9 +137,6 @@
     <ClInclude Include="..\Classes\MapManager.h">
       <Filter>src\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BitmapManager.h">
-      <Filter>src\etc</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\CV5Info.h">
       <Filter>src\Map</Filter>
     </ClInclude>
@@ -149,8 +155,20 @@
     <ClInclude Include="..\Classes\MapFileInfo.h">
       <Filter>src\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Bitmap.h">
+    <ClInclude Include="..\Classes\TemplateSingleton.h">
       <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PickingManager.h">
+      <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResourcesManager.h">
+      <Filter>src\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bitmap.h">
+      <Filter>src\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BitmapManager.h">
+      <Filter>src\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
