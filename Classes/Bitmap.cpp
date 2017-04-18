@@ -2,11 +2,13 @@
 #include <Windows.h>
 #include <fstream>
 
+
+
 Bitmap::Bitmap()
 	:
-	width(0),
-	height(0),
-	size(0),
+	bitmap_width(0),
+	bitmap_height(0),
+	size_32bit(0),
 	data(nullptr)
 {
 }
@@ -17,13 +19,13 @@ Bitmap::~Bitmap()
 
 Bitmap::Bitmap(Bitmap & _other)
 	:
-	width(_other.width),
-	height(_other.height),
-	size(_other.size)
+	bitmap_width(_other.bitmap_width),
+	bitmap_height(_other.bitmap_height),
+	size_32bit(_other.size_32bit)
 {
 	// 깊은 복사
-	data = (char*)malloc(size);
-	memcpy(data, _other.data, size);
+	data = (char*)malloc(size_32bit);
+	memcpy(data, _other.data, size_32bit);
 }
 
 Bitmap * Bitmap::load_bitmap(const std::string& _filename)
@@ -41,7 +43,7 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 
 	// C 스트림이 열려 있는지 테스트합니다.
 	// test if C stream has been opened
-	if (file.is_open() == false) {
+	if (!file.is_open()) {
 		return nullptr;
 	}
 
@@ -103,24 +105,25 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 	// 비트 정보가 있는 곳으로 위치 지시자 이동
 	// file.seekg(bf.bfOffBits, std::ios::beg);
 
-	// 이밎 크기 저장
-	width = bi.biWidth;
-	height = bi.biHeight;
+	// 이미지 크기 저장
+	bitmap_width = bi.biWidth;
+	bitmap_height = bi.biHeight;
 	
+	int size_8bit = bitmap_width * bitmap_height;
 	// 비트맵 데이터 저장할 공간 할당
-	char* read_bitmap_data = (char*)malloc(width * height);
+	char* read_bitmap_data = (char*)malloc(size_8bit);
 
 	// 비트맵 데이터 불러오기
-	file.read(read_bitmap_data, width * height);
+	file.read(read_bitmap_data, size_8bit);
 	file.close();
 
 	// 사이즈 저장, 24비트 3, 32비트 4
-	size = width * height * 4;
+	size_32bit = size_8bit * 4;
 	// 변환할 데이터 저장 공간 할당
-	data = (char*)malloc(size);
-	memset(data, 0, size);
+	data = (char*)malloc(size_32bit);
+	memset(data, 0, size_32bit);
 	// BPS 계산
-	int image_BPS_8bit = (width % 4) ? (width + (4 - (width % 4))) : width;
+	int image_BPS_8bit = (bitmap_width % 4) ? (bitmap_width + (4 - (bitmap_width % 4))) : bitmap_width;
 
 	// BYTE == unsigned char
 	// 8bit 이미지 컬러 인덱스
@@ -131,8 +134,13 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 	COLORREF putColor = 0;			
 	BYTE r = 0, g = 0, b = 0, a = 255;			// 최종 RGB
 	int index = 0;
-	for (int h = 0; h < height; ++h) {
-		for (int w = 0; w < width; ++w) {
+	int max_h = bitmap_height / 2;
+	int min_h = bitmap_height / 2;
+	int max_w = bitmap_width / 2;
+	int min_w = bitmap_width / 2;
+
+	for (int h = 0; h < bitmap_height; ++h) {
+		for (int w = 0; w < bitmap_width; ++w) {
 			// 색상 인덱스 확인
 			color_index = read_bitmap_data[image_BPS_8bit * h + w];
 			// 이미지 정보에서 색상값 추출
@@ -143,9 +151,13 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 			
 			// 배경인지 검사
 			if (!check_bg(r, g, b)){
+				max_h = max(max_h, h);
+				max_w = max(max_w, w);
+				min_h = min(min_h, h);
+				min_w = min(min_w, w);
 				// 32bit 버퍼에 RGB 기록
 				// 이미지가 뒤집히기 때문에 반대쪽 부터 색상을 입력
-				index = (w + (height - 1 - h) * width) * 4;
+				index = (w + (bitmap_height - 1 - h) * bitmap_width) * 4;
 				data[index] = r;
 				data[index + 1] = g;
 				data[index + 2] = b;
@@ -154,15 +166,72 @@ Bitmap * Bitmap::load_bitmap(const std::string& _filename)
 		}
 	}
 
+	img_width = max_w - min_w;
+	img_height = max_h - min_h;
+
 	SAFE_FREE(read_bitmap_data);
 
 	return this;
 }
 
+Bitmap * Bitmap::create_mega_tile(const int _mega_tile, VX4Info::VX4* const vx4, VR4Info::VR4* const vr4, WPEInfo::WPE* const wpe)
+{
+	// 타일 크기는 일정함
+	bitmap_width = 32;
+	bitmap_height = 32;
+	size_32bit = bitmap_width * bitmap_height * 4;
+	
+	const int mini_tile_w = 4;
+	const int mini_tile_h = 4;
+	const int mini_tile_pixel_w = 8;
+	const int mini_tile_pixel_h = 8;
+	
+	data = (char*)malloc(size_32bit);
+	memset(data, 0, size_32bit);
+	// 메가 타일을 이루는 16개의 미니타일을 만든다.
+	for (int mini_h = 0; mini_h < mini_tile_h; ++mini_h) {
+		for (int mini_w = 0; mini_w < mini_tile_w; ++mini_w) {
+			int vr4_index = mini_h * mini_tile_w + mini_w;
+			// 상위 15비트는 이미지
+			int mini_tile_index = vx4->data[_mega_tile].VR4_index[vr4_index] >> 1;
+			// 하위 1비트는 상하반전
+			bool flip = vx4->data[_mega_tile].VR4_index[vr4_index] & 1;
+	
+			// 미니 타일의 그래픽 정보를 불러온다.
+			const VR4Info::VR4::vr4_data & vr4data = vr4->image[mini_tile_index];
+			const int draw_offset_x = mini_w * mini_tile_pixel_w;
+			const int draw_offset_y = mini_h * mini_tile_w * mini_tile_pixel_h * mini_tile_pixel_w;
+			
+			// 미니타일을 한 픽셀씩 찍는다.
+			for (int pixel_h = 0; pixel_h < mini_tile_pixel_h; ++pixel_h) {
+				for (int pixel_w = 0; pixel_w < mini_tile_pixel_w; ++pixel_w) {
+					int draw_x = draw_offset_x + (flip ? 7 - pixel_w : pixel_w);
+					int draw_y = draw_offset_y + (pixel_h * mini_tile_w * mini_tile_pixel_w);
+					int draw_index = (draw_y + draw_x) * 4;
+
+					// 0 ~ 7
+					// 32 ~ 39
+					// 64 ~ 71
+					// 96 ~ 103
+					// 128 ~ 135
+					// 160 ~ 167
+					// 192 ~ 199
+					// 224 ~ 231
+
+					const WPEInfo::WPE::wpe_data & wpedata = wpe->data[vr4data.color[pixel_h * mini_tile_pixel_w + pixel_w]];
+					data[draw_index] = wpedata.r;
+					data[draw_index + 1] = wpedata.g;
+					data[draw_index + 2] = wpedata.b;
+					data[draw_index + 3] = 255;
+				}
+			}
+		}
+	}
+	return this;
+}
+
 void Bitmap::converter_color(player_color _color)
 {
-	if (_color == none) return;
-
 	COLORREF player_color = 0;			// 플레이어 색상	
 	BYTE tr = 0, tg = 0, tb = 0;		// 팀컬러 RGB
 	BYTE pr = 0, pg = 0, pb = 0;		// 팔레트 RGB
@@ -172,9 +241,9 @@ void Bitmap::converter_color(player_color _color)
 	int tmp = 0;					// 계산용 임시변수
 	int index = 0;
 
-	for (int h = 0; h < height; ++h) {
-		for (int w = 0; w < width; ++w) {
-			index = (h * width + w) * 4;
+	for (int h = 0; h < bitmap_height; ++h) {
+		for (int w = 0; w < bitmap_width; ++w) {
+			index = (h * bitmap_width + w) * 4;
 			// 데이터에 순서대로 접근한다.
 			// 비트맵에는 b, g, r순서로 저장되어 있다.
 

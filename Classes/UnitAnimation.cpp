@@ -95,18 +95,19 @@ UnitAnimation::clip * UnitAnimation::create_clip(const unit_state _state)
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base) {
-	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
+	cocos2d::Texture2D* texture = nullptr;
 	_clip->max_frame = _max_frame;
 	char str[16];
 	// 모션 수
-	for (int ani_count = 0; ani_count <_clip->max_frame; ++ani_count) {
+	for (int ani_count = 0; ani_count < _max_frame; ++ani_count) {
 		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + ani_count);
-		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+		assert(texture = load_texture(str, color));
+		add_animation_vector(_clip, texture);
 	}
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count) {
-	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
+	cocos2d::Texture2D* texture = nullptr;
 	_clip->max_frame = _max_frame;
 	char str[16];
 	// 방향 수
@@ -115,30 +116,33 @@ void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _ma
 		// 애니메이션 수
 		for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
 			sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + dir2 + (ani_count * 17));
-			_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+			assert(texture = load_texture(str, color));
+			add_animation_vector(_clip, texture);
 		}
 	}
 }
 
 void UnitAnimation::init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
-	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
 	_clip->max_frame = _max_frame;
 	char str[16];
-
+	cocos2d::Texture2D* texture = nullptr;
 	// 방향 수
 	for (int dir = 0; dir < 9; ++dir) {
 		int dir2 = dir * 2;
 		int img_num1 = dir2 + 17;
 		int img_num2 = dir2 + 34;
 		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, img_num1);
-		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+		assert(texture = load_texture(str, color));
+		add_animation_vector(_clip, texture);
 		sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, img_num2);
-		_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+		assert(texture = load_texture(str, color));
+		add_animation_vector(_clip, texture);
 		for (int loop = 0; loop < _loop; ++loop) {
 			// 애니메이션 수
 			for (int ani_count = 0; ani_count < _ani_count; ++ani_count) {
 				sprintf_s(str, sizeof(str), "%s%04d.bmp", _str, _base + dir2 + (ani_count * _num));
-				_clip->animation_vector.push_back(resources_manager->load_resources(color, str));
+				assert(texture = load_texture(str, color));
+				add_animation_vector(_clip, texture);
 			}
 		}
 	}
@@ -159,4 +163,15 @@ bool UnitAnimation::clip_aniamtion(const clip* const _clip, Sprite* const _sprit
 		frame = _frame;
 	}
 	return b;
+}
+
+cocos2d::Texture2D * UnitAnimation::load_texture(const char * const _str, const player_color _color)
+{
+	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
+	return resources_manager->load_resources(_str, _color);
+}
+
+void UnitAnimation::add_animation_vector(clip* const _clip, cocos2d::Texture2D* const _texture)
+{
+	_clip->animation_vector.push_back(_texture);
 }

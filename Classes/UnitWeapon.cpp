@@ -24,7 +24,7 @@ UnitWeapon::UnitWeapon(Unit* const _target, const unit_type _unit_tpye) {
 	// 초기 이미지 세팅
 	char str[16];
 	sprintf_s(str, sizeof(str), "tspark0000.bmp");
-	this->initWithTexture(resources_manager->load_resources(player_color::none, str));
+	this->initWithTexture(resources_manager->load_resources(str));
 	SimpleAudioEngine::getInstance()->playEffect("sound/marine/tmafir00.wav");
 }
 

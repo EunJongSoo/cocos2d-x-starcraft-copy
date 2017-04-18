@@ -20,31 +20,38 @@ ResourcesManager::~ResourcesManager()
 	// 순차 접근 하여 해제 해야됨
 	// 순차 접근 하여 해제 해야됨
 	// 순차 접근 하여 해제 해야됨
-
 	color_bitmap_map;
-	base_bitmap_map;
 }
 
-// 리소스를 불러온다.
-cocos2d::Texture2D* ResourcesManager::load_resources(player_color color, const std::string& _str)
-{
-	// 원하는 색상의 map을 찾는다.
-	std::map<std::string, Bitmap*>* bitmap_map = find_bitmap_map(color);
-	assert(bitmap_map);
-
+cocos2d::Texture2D * ResourcesManager::load_resources(const int _mega_tile, const map_tile_set _tile_set) {
 	Bitmap* bitmap = nullptr;
-	// 이미지를 찾는다.
-	if (bitmap_map->find(_str) != bitmap_map->end()) {
-		// 있으면 반환
-		bitmap = bitmap_map->at(_str);
+	if (tile_bitmap_map.find(_mega_tile) != tile_bitmap_map.end()) {
+		bitmap = tile_bitmap_map.at(_mega_tile);
 	}
 	else {
+		bitmap = bitmap_manager->create_mega_tile_bitmap(_mega_tile, _tile_set);
+		tile_bitmap_map.insert(std::pair<int, Bitmap*>(_mega_tile, bitmap));
+	}
+	return create_texture(bitmap);
+}
+
+
+// 리소스를 불러온다.
+cocos2d::Texture2D * ResourcesManager::load_resources(const std::string& _str, const player_color _color)
+{
+	// 원하는 색상의 map을 찾는다.
+	std::map<std::string, Bitmap*>* bitmap_map = find_bitmap_map(_color);
+	assert(bitmap_map);
+
+	// 이미지를 찾는다.
+	Bitmap* bitmap = find_bitmap(_str, bitmap_map);
+	if (bitmap == nullptr) {
 		// 없으면 기본 이미지를 찾아서 복사한다.
-		bitmap = new Bitmap(*load_bitmap(_str));
-
+		bitmap = new Bitmap(*load_bitmap(_str, _color));
+		
 		// 색상을 바꾼다.
-		bitmap->converter_color(color);
-
+		converter_color(bitmap, _color);
+		
 		// 색상을 바꾼 이미지 주소를 저장한다.
 		bitmap_map->insert(std::pair<std::string, Bitmap*>(_str, bitmap));
 	}
@@ -54,7 +61,7 @@ cocos2d::Texture2D* ResourcesManager::load_resources(player_color color, const s
 }
 
 // 색상별로 이미지를 저장해둔다.
-std::map<std::string, Bitmap*>* ResourcesManager::find_bitmap_map(player_color color)
+std::map<std::string, Bitmap*> * ResourcesManager::find_bitmap_map(const player_color color)
 {
 	// 임시변수 선언
 	std::map<std::string, Bitmap*>* bitmap_map = nullptr;
@@ -74,20 +81,42 @@ std::map<std::string, Bitmap*>* ResourcesManager::find_bitmap_map(player_color c
 	return bitmap_map;
 }
 
-Bitmap* ResourcesManager::load_bitmap(const std::string& _str) {
+Bitmap * ResourcesManager::load_bitmap(const std::string& _str, const player_color _color) {
+	std::map<std::string, Bitmap*>* bitmap_map = find_bitmap_map(player_color::none);
 	Bitmap* bitmap = nullptr;
-	if (base_bitmap_map.find(_str) != base_bitmap_map.end()) {
-		// 있으면 해당 리소스를 대입
-		bitmap = base_bitmap_map[_str];
+	
+	// 색상이 없으면 한번 찾아봤기 때문에 다시 찾지 않는다.
+	if (_color != player_color::none) {
+		// 색상이 있으면 none에서 안찾았기 때문에 다시 찾는다.
+		bitmap = find_bitmap(_str, bitmap_map);
 	}
-	else {
+
+	if(bitmap == nullptr) {
 		// 없으면 비트맵 매니저에서 리소스를 불러온다.
 		bitmap = bitmap_manager->load_bitmap(_str);
 		assert(bitmap);
-		base_bitmap_map[_str] = bitmap;
-		//bitmap_map.insert(std::pair<std::string, Bitmap*>(_str, bitmap));
+		bitmap_map->insert(std::pair<std::string, Bitmap*>(_str, bitmap));
 	}
 	return bitmap;
+}
+
+Bitmap * ResourcesManager::find_bitmap(const std::string& _str, const std::map<std::string, Bitmap*>* const _map)
+{
+	Bitmap* bitmap = nullptr;
+	if (_map->find(_str) != _map->end()) {
+		// 있으면 반환
+		bitmap = _map->at(_str);
+	}
+	return bitmap;
+}
+
+void ResourcesManager::converter_color(Bitmap* const _bitmap, const player_color _color)
+{
+	// 색상이 없으면 바꾸지 않는다.
+	if (_color != player_color::none) {
+		// 색상을 바꾼다.
+		_bitmap->converter_color(_color);
+	}
 }
 
 cocos2d::Texture2D * ResourcesManager::create_texture(const Bitmap* const _bitmap) {
@@ -98,10 +127,9 @@ cocos2d::Texture2D * ResourcesManager::create_texture(const Bitmap* const _bitma
 		_bitmap->get_data(),
 		_bitmap->get_size(),
 		cocos2d::Texture2D::PixelFormat::RGBA8888,
-		_bitmap->get_width(),
-		_bitmap->get_height(),
-		cocos2d::Size(_bitmap->get_width(), _bitmap->get_height()));
-
+		_bitmap->get_bitmap_width(),
+		_bitmap->get_bitmap_height(),
+		cocos2d::Size(_bitmap->get_img_width(), _bitmap->get_img_height()));
 	// 반환한다.
 	return texture;
 }

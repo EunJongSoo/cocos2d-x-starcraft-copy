@@ -148,9 +148,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BackGroundLayer.cpp" />
     <ClCompile Include="..\Classes\Bitmap.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
+    <ClCompile Include="..\Classes\CV5Info.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\InputManager.cpp" />
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
+    <ClCompile Include="..\Classes\MapFileInfo.cpp" />
     <ClCompile Include="..\Classes\MapManager.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
@@ -161,6 +163,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\UnitLayer.cpp" />
     <ClCompile Include="..\Classes\UnitManager.cpp" />
     <ClCompile Include="..\Classes\UnitWeapon.cpp" />
+    <ClCompile Include="..\Classes\VF4Info.cpp" />
+    <ClCompile Include="..\Classes\VR4Info.cpp" />
+    <ClCompile Include="..\Classes\VX4Info.cpp" />
+    <ClCompile Include="..\Classes\WPEInfo.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

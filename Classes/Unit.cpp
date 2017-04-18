@@ -70,7 +70,7 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine0016.bmp");
 	auto sprite_cache = SpriteFrameCache::getInstance();
-	this->initWithTexture(resources_manager->load_resources(_player_color, str));
+	this->initWithTexture(resources_manager->load_resources(str, _player_color));
 
 	// 임시작성
 	// 유닛 정보를 생성한다.

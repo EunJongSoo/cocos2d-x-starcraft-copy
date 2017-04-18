@@ -10,7 +10,6 @@ class BackGroundLayer;
 class UnitLayer;
 class PlayerUnitManager;
 
-
 class BitmapManager;
 
 

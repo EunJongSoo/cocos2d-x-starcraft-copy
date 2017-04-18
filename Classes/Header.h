@@ -61,6 +61,17 @@ enum player_color {
 };
 // PlayerUnitManager, UnitManager
 
+enum map_tile_set {
+	badlands,
+	space_platform,
+	installation,
+	ash_world,
+	jungle_world,
+	desert,
+	ice,
+	twilight
+};
+// MapFileInfo, BitmapManager
 
 // 플레이어 타입 지정 열거체
 enum player_type {

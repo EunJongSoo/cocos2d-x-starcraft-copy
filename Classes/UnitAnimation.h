@@ -34,6 +34,8 @@ private:
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
 	bool clip_aniamtion(const clip* const _clip, cocos2d::Sprite* const _sprite, const float _dt, const int _dir, const int _frame);
+	cocos2d::Texture2D* load_texture(const char* const _str, const player_color _color);
+	void add_animation_vector(clip* const _clip, cocos2d::Texture2D* const _texture);
 };
 
 #endif

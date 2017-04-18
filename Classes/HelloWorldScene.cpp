@@ -22,6 +22,7 @@ HelloWorld::HelloWorld() :
 	input_manager(nullptr),
 	picking_manager(nullptr),
 	unit_layer(nullptr),
+	bg_layer(nullptr),
 	draw_node(nullptr)
 {
 }
@@ -58,24 +59,18 @@ bool HelloWorld::init()
         return false;
     }
 
-	
-
 	input_manager = new InputManager();
 	this->addChild(input_manager);
 
 	picking_manager = new PickingManager();
 
-
-	// 그림 파일 불러오기
-	auto sprite_cache = SpriteFrameCache::getInstance();
-	sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
-	sprite_cache->addSpriteFramesWithFile("img/unit/marine/tspark.plist", "img/unit/marine/tspark.png");
-
+	//// 그림 파일 불러오기
+	//auto sprite_cache = SpriteFrameCache::getInstance();
+	//sprite_cache->addSpriteFramesWithFile("img/unit/marine/marine.plist", "img/unit/marine/marine.png");
+	//sprite_cache->addSpriteFramesWithFile("img/unit/marine/tspark.plist", "img/unit/marine/tspark.png");
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	
 
 	// unit layer 추가
 	unit_layer = UnitLayer::create();
@@ -84,25 +79,22 @@ bool HelloWorld::init()
 
 	// draw_node 추가
 	draw_node = DrawNode::create();
-	this->addChild(draw_node);
+	this->addChild(draw_node, 2);
+
+	// 맵 생성
+	bg_layer = BackGroundLayer::create();
+	bg_layer->create_map();
+	this->addChild(bg_layer, 0);
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
 
-	ResourcesManager* resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
-	auto sprite = Sprite::create();
-	sprite->initWithTexture(resources_manager->load_resources(player_color::kRed, "marine0000.bmp"));
-	sprite->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-	this->addChild(sprite, 0);
 
-
-	auto sprite1 = Sprite::createWithTexture(resources_manager->load_resources(player_color::kTeal, "marine0000.bmp"));
-	sprite1->setPosition(Vec2(origin.x + visibleSize.width / 3, origin.y + visibleSize.height / 3));
-	this->addChild(sprite1, 0);
-
+	// 시간 체크
 	int start, end;
 	start = clock();
-	
+	end = clock();
+
     return true;
 }
 

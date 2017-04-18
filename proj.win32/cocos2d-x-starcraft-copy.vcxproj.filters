@@ -84,6 +84,22 @@
     <ClCompile Include="..\Classes\MapManager.cpp">
       <Filter>src\Map</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MapFileInfo.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CV5Info.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\VR4Info.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\VX4Info.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\WPEInfo.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\VF4Info.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
