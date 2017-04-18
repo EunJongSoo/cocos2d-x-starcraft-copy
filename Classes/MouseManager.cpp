@@ -1,6 +1,5 @@
 #include "MouseManager.h"
 #include "MouseInfo.h"
-#include "Point.h"
 #include "Header.h"
 
 using namespace cocos2d;
