@@ -2,7 +2,7 @@
 #include <iostream>
 
 CV5Info::CV5Info() :
-		cv5_data(nullptr)
+	cv5_data(nullptr)
 {
 }
 CV5Info::~CV5Info()
@@ -10,18 +10,19 @@ CV5Info::~CV5Info()
 	SAFE_DELETE(cv5_data);
 }
 
-bool CV5Info::load_data(const map_tile_set _tile) {
-	char file_name[32];
+bool CV5Info::load_data(const map_tile_set _tile) 
+{
+	char file_name[64];
 	switch (_tile)
 	{
-	case badlands:			sprintf_s(file_name, "tile_set/badlands.cv5"); break;
-	case space_platform:	sprintf_s(file_name, "tile_set/platform.cv5"); break;
-	case installation:		sprintf_s(file_name, "tile_set/install.cv5"); break;
-	case ash_world:			sprintf_s(file_name, "tile_set/ashworld.cv5"); break;
-	case jungle_world:		sprintf_s(file_name, "tile_set/jungle.cv5"); break;
-	case desert:			sprintf_s(file_name, "tile_set/desert.cv5"); break;
-	case ice:				sprintf_s(file_name, "tile_set/ice.cv5"); break;
-	case twilight:			sprintf_s(file_name, "tile_set/twilight.cv5"); break;
+	case badlands:			sprintf_s(file_name, sizeof(file_name), "tile_set/badlands.cv5"); break;
+	case space_platform:	sprintf_s(file_name, sizeof(file_name), "tile_set/platform.cv5"); break;
+	case installation:		sprintf_s(file_name, sizeof(file_name), "tile_set/install.cv5"); break;
+	case ash_world:			sprintf_s(file_name, sizeof(file_name), "tile_set/ashworld.cv5"); break;
+	case jungle_world:		sprintf_s(file_name, sizeof(file_name), "tile_set/jungle.cv5"); break;
+	case desert:			sprintf_s(file_name, sizeof(file_name), "tile_set/desert.cv5"); break;
+	case ice:				sprintf_s(file_name, sizeof(file_name), "tile_set/ice.cv5"); break;
+	case twilight:			sprintf_s(file_name, sizeof(file_name), "tile_set/twilight.cv5"); break;
 	}
 
 	FILE* file;
@@ -35,12 +36,11 @@ bool CV5Info::load_data(const map_tile_set _tile) {
 	// 데이터를 새로 불러오기 전에 안전해제 실시
 	SAFE_DELETE(cv5_data);
 	// 복사를 위해서 동적할당
-	cv5_data = new CV5;
+	cv5_data = new CV5();
 	// 읽기전에 초기화 0을 16진수로 표현하면 0x00
 	memset(cv5_data, 0x00, sizeof(CV5));
 	// 버퍼, 버퍼크기, 읽는 크기, 읽는 횟수, 파일을 매개변수로 한다.
-	//fread_s(cv5_data, sizeof(CV5), sizeof(CV5), 1, file);
-	fread(cv5_data, 1, sizeof(CV5), file);
+	fread_s(cv5_data, sizeof(CV5), sizeof(CV5), 1, file);
 
 	fclose(file);
 	return true;

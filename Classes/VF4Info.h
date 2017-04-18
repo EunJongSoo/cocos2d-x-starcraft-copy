@@ -14,14 +14,17 @@ public:
 	// Rest unknown/unused
 
 	struct VF4 {
-		unsigned short flags[16];
-	} data[65536];
+		struct vf4_data {
+			unsigned short flags[16];
+		} data[65536];
+	};
+	
 public:
 	VF4Info();
 	~VF4Info();
 
-	bool load_data(char* _file_name);
-	inline VF4* get_vx4_data() const { return vf4_data; }
+	bool load_data(const map_tile_set _tile);
+	inline VF4* get_vf4_data() const { return vf4_data; }
 private:
 	VF4 * vf4_data;
 };

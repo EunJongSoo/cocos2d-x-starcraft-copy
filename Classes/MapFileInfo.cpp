@@ -1,14 +1,12 @@
 #include "MapFileInfo.h"
 #include <iostream>
-#include <fstream>
 
-MapFileInfo::MapFileInfo(const char * _map_file_name):
+MapFileInfo::MapFileInfo(const char * _file_name):
 	MXTM_data(nullptr),
 	map_width(0),
-	map_height(0),
-	era_tile_set(map_tile_set::space_platform)
+	map_height(0)
 {
-	load_data(_map_file_name);
+	load_data(_file_name);
 }
 
 MapFileInfo::~MapFileInfo()
@@ -18,13 +16,14 @@ MapFileInfo::~MapFileInfo()
 
 bool MapFileInfo::load_data(const char * _file_name)
 {
-	FILE* file = fopen(_file_name, "rb");
+	FILE* file;
+	fopen_s(&file, _file_name, "rb");
 
 	fseek(file, 0, SEEK_END);
 	int file_size = ftell(file);
 	rewind(file);
 
-	char data_type[4] = { 0, };
+	char data_type[4];
 	int data_size = 0;
 
 	while (true) {
@@ -32,8 +31,8 @@ bool MapFileInfo::load_data(const char * _file_name)
 		fread(&data_size, sizeof(int), 1, file);
 		// 맵 데이터 추출
 		if (!memcmp(data_type, "MTXM", sizeof(data_type))) {
-			MXTM_data = (unsigned short*)malloc(map_width * map_height);
-			fread(MXTM_data, 2, map_width * map_height, file);
+			MXTM_data = (unsigned short*)malloc(data_size);
+			fread(MXTM_data, data_size, 1, file);
 			break;
 		}
 		// 맵 크기 추출
@@ -43,15 +42,17 @@ bool MapFileInfo::load_data(const char * _file_name)
 		}
 		// 타일 종류 추출
 		else if (!memcmp(data_type, "ERA ", sizeof(data_type))) {
-			fread(&era_tile_set, 1, data_size, file);
+			fread(&era_tile_set, data_size, 1, file);
 		}
 		else {
 			// 데이터 크기 만큼 위치 지시자 이동
 			fseek(file, data_size, SEEK_CUR);
 		}
 	}
+
 	fclose(file);
 	return true;
+}
 
 	//FILE* file;
 	//fopen_s(&file, _file_name, "rb");
@@ -98,4 +99,3 @@ bool MapFileInfo::load_data(const char * _file_name)
 	//	}
 	//}
 	//fclose(file);
-}

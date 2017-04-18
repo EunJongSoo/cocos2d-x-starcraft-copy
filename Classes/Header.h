@@ -4,7 +4,6 @@
 #define SAFE_DELETE(p)           do { if(p) { delete (p); (p) = nullptr; } } while(0)
 #define SAFE_DELETE_ARRAY(p)     do { if(p) { delete[] (p); (p) = nullptr; } } while(0)
 #define SAFE_FREE(p)             do { if(p) { free(p); (p) = nullptr; } } while(0)
-#define BREAK_IF(cond)           if(cond) break
 // UnitManager, MouseManager
 
 // 임시로 무기도 추가

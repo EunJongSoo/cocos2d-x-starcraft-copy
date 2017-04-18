@@ -10,9 +10,6 @@ class BackGroundLayer;
 class UnitLayer;
 class PlayerUnitManager;
 
-class BitmapManager;
-
-
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -26,18 +23,13 @@ public:
 	void main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_array, const float _dt);
 	void draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt);
 private:
+	void create_drag_rect(InputInfo * const _input);
+
 	InputManager* input_manager;
 	PickingManager* picking_manager;
 	BackGroundLayer* bg_layer;
 	UnitLayer* unit_layer;
 	cocos2d::DrawNode* draw_node;
-
-	void create_drag_rect(InputInfo * const _input);
-
-
-	BitmapManager* bitmap_manager;
-
-	
 };
 
 #endif // __HELLOWORLD_SCENE_H__

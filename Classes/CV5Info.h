@@ -5,8 +5,6 @@
 
 class CV5Info {
 public:
-	CV5Info();
-	~CV5Info();
 	// unsigned short index;
 	// Unknwon
 
@@ -52,18 +50,18 @@ public:
 	// 16 references to VF4 and VX4.
 
 	struct CV5 {
-		struct cv5_data{
+		struct cv5_data {
 			unsigned char something[20];
 			unsigned short mega_tile_index[16];
 		} group[4096];
 	};
+public:
+	CV5Info();
+	~CV5Info();
 	
 	bool load_data(const map_tile_set _tile);
 	inline CV5* get_cv5_data() const { return cv5_data; }
-
 private:
 	CV5 * cv5_data;
-
 };
-
 #endif

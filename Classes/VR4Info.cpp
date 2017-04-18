@@ -11,8 +11,9 @@ VR4Info::~VR4Info()
 	SAFE_DELETE(vr4_data);
 }
 
-bool VR4Info::load_data(const map_tile_set _tile) {
-	char file_name[32];
+bool VR4Info::load_data(const map_tile_set _tile) 
+{
+	char file_name[64];
 	switch (_tile)
 	{
 	case badlands:			sprintf_s(file_name, "tile_set/badlands.vr4"); break;
@@ -34,13 +35,13 @@ bool VR4Info::load_data(const map_tile_set _tile) {
 		return false;
 	}
 	// 데이터를 새로 불러오기 전에 안전해제 실시
-	SAFE_DELETE(vr4_data);
+	// SAFE_DELETE(vr4_data);
 	// 복사를 위해서 동적할당
-	vr4_data = new VR4;
+	vr4_data = new VR4();
 	// 읽기전에 초기화 0을 16진수로 표현하면 0x00
 	memset(vr4_data, 0x00, sizeof(VR4));
 	// 버퍼, 버퍼크기, 읽는 크기, 읽는 횟수, 파일을 매개변수로 한다.
-	fread(vr4_data, sizeof(VR4), 1, file);
+	fread_s(vr4_data, sizeof(VR4), sizeof(VR4), 1, file);
 
 	fclose(file);
 	return true;

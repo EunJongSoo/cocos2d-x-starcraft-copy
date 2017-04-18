@@ -2,6 +2,7 @@
 #define INPUT_INFO_H_
 
 class MouseInfo;
+class KeyboardInfo;
 
 class InputInfo {
 public:
@@ -22,7 +23,9 @@ public:
 
 private:
 	bool mouse_order;
+	bool keyboard_order;
 	MouseInfo* mouse;
+	KeyboardInfo* keyboard;
 
 };
 

@@ -13,7 +13,7 @@ VX4Info::~VX4Info()
 
 bool VX4Info::load_data(const map_tile_set _tile)
 {
-	char file_name[32];
+	char file_name[64];
 	switch (_tile)
 	{
 	case badlands:			sprintf_s(file_name, "tile_set/badlands.vx4"); break;
@@ -35,9 +35,9 @@ bool VX4Info::load_data(const map_tile_set _tile)
 		return false;
 	}
 	// 데이터를 새로 불러오기 전에 안전해제 실시
-	//SAFE_DELETE(vx4_data);
+	// SAFE_DELETE(vx4_data);
 	// 복사를 위해서 동적할당
-	vx4_data = new VX4;
+	vx4_data = new VX4();
 	// 읽기전에 초기화 0을 16진수로 표현하면 0x00
 	memset(vx4_data, 0x00, sizeof(VX4));
 	// 버퍼, 버퍼크기, 읽는 크기, 읽는 횟수, 파일을 매개변수로 한다.

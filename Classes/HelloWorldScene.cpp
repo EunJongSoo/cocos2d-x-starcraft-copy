@@ -7,14 +7,11 @@
 
 #include "PickingManager.h"
 
-#include "BackGroundLayer.h"
-
 #include "UnitLayer.h"
 #include "Unit.h"
 #include "PlayerUnitManager.h"
 
-#include "TemplateSingleton.h"
-#include "ResourcesManager.h"
+#include "BackGroundLayer.h"
 
 using namespace cocos2d;
 

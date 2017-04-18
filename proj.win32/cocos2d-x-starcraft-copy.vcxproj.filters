@@ -99,7 +99,9 @@
     <ClCompile Include="..\Classes\WPEInfo.cpp">
       <Filter>src\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\VF4Info.cpp" />
+    <ClCompile Include="..\Classes\VF4Info.cpp">
+      <Filter>src\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
