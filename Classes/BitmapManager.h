@@ -1,28 +1,26 @@
 #ifndef BITMAP_MANAGER_H_
 #define BITMAP_MANAGER_H_
 
-#include <string>
 #include "Header.h"
 
 class Bitmap;
-class VX4Info;
-class VR4Info;
-class WPEInfo;
+class BitmapFileLoadManager;
+class BitmapColorKeyConverter;
+class StarCraftMapCreator;
 
 class BitmapManager {
 public:
 	BitmapManager();
 	~BitmapManager();
 
-	Bitmap* load_bitmap(const std::string& _filename);
-	Bitmap* create_mega_tile_bitmap(const int _mega_tile, const map_tile_set _tile_set);
+	Bitmap* load_bitmap(const char* _file_name);
+	void Converter_Bitmap_Color_Key(Bitmap* const _bitmap, player_color _color);
 private:
-	void load_tile_set_info(const map_tile_set _tile_set);
+	Bitmap* load_bitmap_file(const char* _filename);
+	Bitmap* create_bitmap_mapdata(const char* _file_name);
 
-	// 타일을 부르기 위해 필요한 정보
-	VX4Info* vx4_info;
-	VR4Info* vr4_info;
-	WPEInfo* wpe_info;
-
+	BitmapFileLoadManager* file_load_manager;
+	BitmapColorKeyConverter* colorkey_converter;
+	StarCraftMapCreator* map_creator;
 };
 #endif // !BITMAP_MANAGER_H_

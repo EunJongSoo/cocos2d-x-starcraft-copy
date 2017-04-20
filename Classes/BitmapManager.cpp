@@ -1,49 +1,52 @@
 #include "BitmapManager.h"
 #include "Bitmap.h"
+#include "BitmapFileLoadManager.h"
+#include "BitmapColorKeyConverter.h"
+#include "StarcraftMapCreator.h"
+#include "MapData.h"
 
-#include "VX4Info.h"
-#include "VR4Info.h"
-#include "WPEInfo.h"
-
-BitmapManager::BitmapManager() :
-	vx4_info(nullptr),
-	vr4_info(nullptr),
-	wpe_info(nullptr)
+BitmapManager::BitmapManager()
 {
+	file_load_manager = new BitmapFileLoadManager();
+	colorkey_converter = new BitmapColorKeyConverter();
+	map_creator = new StarCraftMapCreator();
 }
 
 BitmapManager::~BitmapManager()
 {
+	SAFE_DELETE(file_load_manager);
+	SAFE_DELETE(colorkey_converter);
 }
 
 // 8비트 파일을 불러서 24비트로 변환하여 반환
-Bitmap * BitmapManager::load_bitmap(const std::string& _filename)
+Bitmap * BitmapManager::load_bitmap(const char* _file_name)
 {
+	const char* extension = strchr(_file_name, '.');
 	Bitmap* bitmap = new Bitmap;
-	return bitmap->load_bitmap(_filename);
+
+	// bmp 파일이다.
+	if (!strcmp(extension, ".bmp")) {
+		bitmap = load_bitmap_file(_file_name);
+	}
+	// 맵 파일이다.
+	else if (!strcmp(extension, ".chk")) {
+		bitmap = create_bitmap_mapdata(_file_name);
+	}
+	return bitmap;
 }
 
-// 타일 비트맵을 만든다.
-Bitmap * BitmapManager::create_mega_tile_bitmap(const int _mega_tile, const map_tile_set _tile_set)
+void BitmapManager::Converter_Bitmap_Color_Key(Bitmap * const _bitmap, player_color _color)
 {
-	load_tile_set_info(_tile_set);
-	Bitmap* bitmap = new Bitmap;
-	return bitmap->create_mega_tile(_mega_tile, vx4_info->get_vx4_data(), vr4_info->get_vr4_data(), wpe_info->get_wpe_data());
+	colorkey_converter->converter_colorkey(_bitmap, _color);
 }
 
-void BitmapManager::load_tile_set_info(const map_tile_set _tile_set) {
-	if (vx4_info == nullptr) {
-		vx4_info = new VX4Info();
-		vx4_info->load_data(_tile_set);
-	}
+Bitmap * BitmapManager::load_bitmap_file(const char * _file_name)
+{
+	return file_load_manager->load_bitmap_file(_file_name);
+}
 
-	if (vr4_info == nullptr) {
-		vr4_info = new VR4Info();
-		vr4_info->load_data(_tile_set);
-	}
-
-	if (wpe_info == nullptr) {
-		wpe_info = new WPEInfo();
-		wpe_info->load_data(_tile_set);
-	}
+Bitmap * BitmapManager::create_bitmap_mapdata(const char * _file_name)
+{
+	MapData* data = new MapData(_file_name);
+	return map_creator->create_bitmap_mapdata(data);
 }
