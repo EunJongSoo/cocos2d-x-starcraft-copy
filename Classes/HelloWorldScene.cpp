@@ -86,7 +86,6 @@ bool HelloWorld::init()
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
 
-
 	// 시간 체크
 	int start, end;
 	start = clock();

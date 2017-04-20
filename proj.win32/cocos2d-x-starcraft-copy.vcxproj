@@ -147,17 +147,19 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\BackGroundLayer.cpp" />
     <ClCompile Include="..\Classes\Bitmap.cpp" />
+    <ClCompile Include="..\Classes\BitmapColorKeyConverter.cpp" />
+    <ClCompile Include="..\Classes\BitmapFileLoadManager.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
     <ClCompile Include="..\Classes\CV5Info.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\InputManager.cpp" />
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
     <ClCompile Include="..\Classes\MapFileInfo.cpp" />
-    <ClCompile Include="..\Classes\MapManager.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
     <ClCompile Include="..\Classes\PlayerUnitManager.cpp" />
     <ClCompile Include="..\Classes\ResourcesManager.cpp" />
+    <ClCompile Include="..\Classes\StarcraftMapCreator.cpp" />
     <ClCompile Include="..\Classes\Unit.cpp" />
     <ClCompile Include="..\Classes\UnitAnimation.cpp" />
     <ClCompile Include="..\Classes\UnitLayer.cpp" />
@@ -172,6 +174,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\BackGroundLayer.h" />
+    <ClInclude Include="..\Classes\BitmapColorKeyConverter.h" />
+    <ClInclude Include="..\Classes\BitmapFileLoadManager.h" />
     <ClInclude Include="..\Classes\Bitmap.h" />
     <ClInclude Include="..\Classes\BitmapManager.h" />
     <ClInclude Include="..\Classes\Header.h" />
@@ -180,13 +184,15 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\InputInfo.h" />
     <ClInclude Include="..\Classes\InputManager.h" />
     <ClInclude Include="..\Classes\KeyboardManager.h" />
+    <ClInclude Include="..\Classes\MapData.h" />
+    <ClInclude Include="..\Classes\MapDataManager.h" />
     <ClInclude Include="..\Classes\MapFileInfo.h" />
-    <ClInclude Include="..\Classes\MapManager.h" />
     <ClInclude Include="..\Classes\MouseInfo.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />
     <ClInclude Include="..\Classes\PickingManager.h" />
     <ClInclude Include="..\Classes\PlayerUnitManager.h" />
     <ClInclude Include="..\Classes\ResourcesManager.h" />
+    <ClInclude Include="..\Classes\StarcraftMapCreator.h" />
     <ClInclude Include="..\Classes\TemplateSingleton.h" />
     <ClInclude Include="..\Classes\Unit.h" />
     <ClInclude Include="..\Classes\UnitAnimation.h" />

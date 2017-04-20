@@ -22,11 +22,14 @@
     <Filter Include="src\etc">
       <UniqueIdentifier>{764f7fb4-b3e6-4990-b3d9-6386b17ae7df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Map">
-      <UniqueIdentifier>{3f8e27bc-a16c-4cdb-9e4d-10d3770d239d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Resources">
       <UniqueIdentifier>{d2d0b842-76a2-4cbc-a577-a46270ab39d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources\Map">
+      <UniqueIdentifier>{3f8e27bc-a16c-4cdb-9e4d-10d3770d239d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources\Bitmap">
+      <UniqueIdentifier>{3ea464cd-6abc-4a6f-b5e5-cbe19afd644a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,32 +78,38 @@
     <ClCompile Include="..\Classes\ResourcesManager.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Bitmap.cpp">
-      <Filter>src\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BitmapManager.cpp">
-      <Filter>src\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\MapManager.cpp">
-      <Filter>src\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\MapFileInfo.cpp">
-      <Filter>src\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\CV5Info.cpp">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\VR4Info.cpp">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\VX4Info.cpp">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\WPEInfo.cpp">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\VF4Info.cpp">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BitmapFileLoadManager.cpp">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bitmap.cpp">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BitmapManager.cpp">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BitmapColorKeyConverter.cpp">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MapFileInfo.cpp">
+      <Filter>src\Resources\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StarcraftMapCreator.cpp">
+      <Filter>src\Resources\Bitmap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,26 +161,23 @@
     <ClInclude Include="..\Classes\BackGroundLayer.h">
       <Filter>src\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\MapManager.h">
-      <Filter>src\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\CV5Info.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\VX4Info.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\VR4Info.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\WPEInfo.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\VF4Info.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MapFileInfo.h">
-      <Filter>src\Map</Filter>
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\TemplateSingleton.h">
       <Filter>src\etc</Filter>
@@ -182,11 +188,26 @@
     <ClInclude Include="..\Classes\ResourcesManager.h">
       <Filter>src\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BitmapFileLoadManager.h">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\Bitmap.h">
-      <Filter>src\Resources</Filter>
+      <Filter>src\Resources\Bitmap</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BitmapManager.h">
-      <Filter>src\Resources</Filter>
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BitmapColorKeyConverter.h">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StarcraftMapCreator.h">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MapDataManager.h">
+      <Filter>src\Resources\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MapData.h">
+      <Filter>src\Resources\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
