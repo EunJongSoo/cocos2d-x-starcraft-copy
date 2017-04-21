@@ -12,9 +12,9 @@ public:
 
 	Bitmap* create_bitmap_mapdata(const char * _file_name);
 private:
-	void create_mega_tile(char* _data, int _mega_tile, int _x, int _y);
-	void create_mini_tile(char* _data, int _index, bool _flip, int _offset_x, int _offset_y);
-	
+	void load_map_data(const char * _file_name);
+	void draw_mega_tile(char* _data, int _mega_tile, int _x, int _y);
+	void draw_mini_tile(char* _data, int _index, bool _flip, int _offset_x, int _offset_y);
 	int find_mega_tile_num(int _x, int _y);
 	int find_mini_tile_num(int _mega_tile, int _index);
 	bool is_flip_mini_tile(int _mega_tile, int _index);

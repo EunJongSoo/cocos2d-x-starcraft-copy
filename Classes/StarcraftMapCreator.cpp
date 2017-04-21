@@ -16,9 +16,7 @@ StarCraftMapCreator::~StarCraftMapCreator()
 
 Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
 {
-	map_data = new MapData(_file_name);
-	width = map_data->get_width();
-	height = map_data->get_height();
+	load_map_data(_file_name);
 
 	int bitmap_w = mega_tile_w * width;
 	int bitmap_h = mega_tile_h * height;
@@ -28,11 +26,14 @@ Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
 	char* bitmap_data = (char*)malloc(size_32bit);
 	memset(bitmap_data, 0, size_32bit);
 	
+	// 메가 타일 그리기
 	int mega_tile = 0;
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
+			// 해당 좌표의 메가 타일 번호 찾기
 			mega_tile = find_mega_tile_num(x, y);
-			create_mega_tile(bitmap_data, mega_tile, x, y);
+			// 메가타일 번호로 좌표에 메가타일 그리기
+			draw_mega_tile(bitmap_data, mega_tile, x, y);
 		}
 	}
 
@@ -40,7 +41,15 @@ Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
 	return map_bitmap;
 }
 
-void StarCraftMapCreator::create_mega_tile(char* _data, int _mega_tile, int _x, int _y)
+void StarCraftMapCreator::load_map_data(const char * _file_name)
+{
+	// 맵 정보 불러오기
+	map_data = new MapData(_file_name);
+	width = map_data->get_width();
+	height = map_data->get_height();
+}
+
+void StarCraftMapCreator::draw_mega_tile(char* _data, int _mega_tile, int _x, int _y)
 {
 	int vr4_index = 0;
 	int mini_tile_index = 0;
@@ -54,22 +63,23 @@ void StarCraftMapCreator::create_mega_tile(char* _data, int _mega_tile, int _x, 
 		for (int mini_w = 0; mini_w < mini_tile_w; ++mini_w) {
 			vr4_index = mini_h * mini_tile_w + mini_w;
 			
-			// 상위 15비트는 이미지
+			// 미니 타일 위치 확인한다.
 			mini_tile_index = find_mini_tile_num(_mega_tile, vr4_index);
 			
-			// 하위 1비트는 상하반전
+			// 미니타일이 반전 되었는지 확인한다.
 			flip = is_flip_mini_tile(_mega_tile, vr4_index);
 			
-			// 미니 타일의 그래픽 정보를 불러온다.
+			// 메가 타일의 위치를 계산한다.
 			int mega_offset_x = tile_offset_x + mini_w * mini_tile_pixel_w;
 			int mega_offset_y = tile_offset_y + offset_y * mini_h;
 
-			create_mini_tile(_data, mini_tile_index, flip, mega_offset_x, mega_offset_y);
+			// 메가 타일 내의 미니타일을 그린다.
+			draw_mini_tile(_data, mini_tile_index, flip, mega_offset_x, mega_offset_y);
 		}
 	}
 }
 
-void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, int _offset_x, int _offset_y)
+void StarCraftMapCreator::draw_mini_tile(char* _data, int _index, bool _flip, int _offset_x, int _offset_y)
 {
 	int draw_x = 0, draw_y = 0;
 	int draw_index = 0;
@@ -77,6 +87,7 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 	// 미니타일을 한 픽셀씩 찍는다.
 	for (int pixel_h = 0; pixel_h < mini_tile_pixel_h; ++pixel_h) {
 		for (int pixel_w = 0; pixel_w < mini_tile_pixel_w; ++pixel_w) {
+			// 픽셀을 찍을 데이터 위치 계산
 			draw_x = _offset_x + (_flip ? 7 - pixel_w : pixel_w);
 			draw_y = _offset_y + (pixel_h * offset_y);
 			draw_index = (draw_y + draw_x) * 4;
@@ -90,6 +101,7 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 			// 192 ~ 199
 			// 224 ~ 231
 
+			// 해당 좌표에 찍을 색상을 찾아서 입력한다.
 			const MapData::WPE::wpe_data & wpedata = find_wpe_data(_index, pixel_w, pixel_h);
 			_data[draw_index] = wpedata.r;
 			_data[draw_index + 1] = wpedata.g;
@@ -99,21 +111,25 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 	}
 }
 
+// 메가 타일의 번호를 찾아온다.
 int StarCraftMapCreator::find_mega_tile_num(int _x, int _y)
 {
 	return map_data->find_mega_tile_num(_x, _y);
 }
 
+// 미니 타일의 번호를 찾아온다.
 int StarCraftMapCreator::find_mini_tile_num(int _mega_tile, int _index)
 {
 	return map_data->find_mini_tile_num(_mega_tile, _index);
 }
 
+// 미니타일이 반전 되었는지 확인한다.
 bool StarCraftMapCreator::is_flip_mini_tile(int _mega_tile, int _index)
 {
 	return map_data->is_flip_mini_tile(_mega_tile, _index);
 }
 
+// 색상 정보를 가져온다.
 const MapData::WPE::wpe_data & StarCraftMapCreator::find_wpe_data(int _index, int _w, int _h) {
 	return map_data->find_wpe_data(_index, _w, _h);
 }

@@ -47,11 +47,13 @@ int MapData::find_mega_tile_num(int _x, int _y) const
 
 int MapData::find_mini_tile_num(int _mega_tile, int _index) const
 {
+	// 상위 15비트는 이미지
 	return vx4->data[_mega_tile].VR4_index[_index] >> 1;
 }
 
 bool MapData::is_flip_mini_tile(int _mega_tile, int _index) const
 {
+	// 하위 1비트는 상하반전
 	return vx4->data[_mega_tile].VR4_index[_index] & 1;
 }
 
