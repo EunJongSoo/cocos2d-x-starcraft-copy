@@ -1,4 +1,5 @@
 #include "KeyboardManager.h"
+#include "Header.h"
 
 using namespace cocos2d;
 

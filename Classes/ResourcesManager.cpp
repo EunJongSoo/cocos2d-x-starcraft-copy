@@ -82,6 +82,9 @@ Bitmap * ResourcesManager::load_bitmap(const std::string& _file_name, const play
 		// 없으면 비트맵 매니저에서 리소스를 불러온다.
 		bitmap = bitmap_manager->load_bitmap(_file_name.c_str());
 		assert(bitmap);
+		
+		// 색상이 있으면 변경 전 이미지, 변경 후 이미지를 따로 저장해야 된다.
+		// 색상이 없으면 반환 값을 저장하기 때문에 저장하지 않는다.
 		if (_color != player_color::none) {
 			bitmap_map->insert(std::pair<std::string, Bitmap*>(_file_name, bitmap));
 		}

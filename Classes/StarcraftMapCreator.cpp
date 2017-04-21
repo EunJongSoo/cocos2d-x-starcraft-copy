@@ -5,11 +5,8 @@
 StarCraftMapCreator::StarCraftMapCreator() :
 	width(0),
 	height(0),
-	map_info_mapdata(nullptr),
-	cv5(nullptr),
-	vx4(nullptr),
-	vr4(nullptr),
-	wpe(nullptr)
+	map_data(nullptr),
+	map_info_mapdata(nullptr)
 {
 }
 
@@ -17,10 +14,11 @@ StarCraftMapCreator::~StarCraftMapCreator()
 {
 }
 
-Bitmap * StarCraftMapCreator::create_bitmap_mapdata(MapData * _data)
+Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
 {
-	height = _data->mapfile_info->get_map_height();
-	width = _data->mapfile_info->get_map_width();
+	map_data = new MapData(_file_name);
+	width = map_data->get_width();
+	height = map_data->get_height();
 
 	int bitmap_w = mega_tile_w * width;
 	int bitmap_h = mega_tile_h * height;
@@ -30,12 +28,6 @@ Bitmap * StarCraftMapCreator::create_bitmap_mapdata(MapData * _data)
 	char* bitmap_data = (char*)malloc(size_32bit);
 	memset(bitmap_data, 0, size_32bit);
 	
-	map_info_mapdata = _data->mapfile_info->get_map_data();
-	cv5 = _data->cv5_info->get_cv5_data();
-	vx4 = _data->vx4_info->get_vx4_data();
-	vr4 = _data->vr4_info->get_vr4_data();
-	wpe = _data->wpe_info->get_wpe_data();
-
 	int mega_tile = 0;
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
@@ -82,7 +74,6 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 	int draw_x = 0, draw_y = 0;
 	int draw_index = 0;
 	int offset_y = mini_tile_w * mini_tile_pixel_w * width;
-	const VR4Info::VR4::vr4_data& vr4data = vr4->image[_index];
 	// 미니타일을 한 픽셀씩 찍는다.
 	for (int pixel_h = 0; pixel_h < mini_tile_pixel_h; ++pixel_h) {
 		for (int pixel_w = 0; pixel_w < mini_tile_pixel_w; ++pixel_w) {
@@ -99,7 +90,7 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 			// 192 ~ 199
 			// 224 ~ 231
 
-			const WPEInfo::WPE::wpe_data & wpedata = find_wpe_data(vr4data, pixel_w, pixel_h);
+			const MapData::WPE::wpe_data & wpedata = find_wpe_data(_index, pixel_w, pixel_h);
 			_data[draw_index] = wpedata.r;
 			_data[draw_index + 1] = wpedata.g;
 			_data[draw_index + 2] = wpedata.b;
@@ -110,22 +101,19 @@ void StarCraftMapCreator::create_mini_tile(char* _data, int _index, bool _flip, 
 
 int StarCraftMapCreator::find_mega_tile_num(int _x, int _y)
 {
-	int data_index = width * _y + _x;
-	int group = map_info_mapdata[data_index] >> 4;
-	int index = map_info_mapdata[data_index] & 0xf;
-	return cv5->group[group].mega_tile_index[index];
+	return map_data->find_mega_tile_num(_x, _y);
 }
 
 int StarCraftMapCreator::find_mini_tile_num(int _mega_tile, int _index)
 {
-	return vx4->data[_mega_tile].VR4_index[_index] >> 1;
+	return map_data->find_mini_tile_num(_mega_tile, _index);
 }
 
 bool StarCraftMapCreator::is_flip_mini_tile(int _mega_tile, int _index)
 {
-	return vx4->data[_mega_tile].VR4_index[_index] & 1;
+	return map_data->is_flip_mini_tile(_mega_tile, _index);
 }
 
-const WPEInfo::WPE::wpe_data & StarCraftMapCreator::find_wpe_data(const VR4Info::VR4::vr4_data& _vr4data, int _w, int _h) {
-	return wpe->data[_vr4data.color[_h * mini_tile_pixel_w + _w]];
+const MapData::WPE::wpe_data & StarCraftMapCreator::find_wpe_data(int _index, int _w, int _h) {
+	return map_data->find_wpe_data(_index, _w, _h);
 }

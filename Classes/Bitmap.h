@@ -4,10 +4,6 @@
 #include "Header.h"
 #include <string>
 
-#include "VX4Info.h"
-#include "VR4Info.h"
-#include "WPEInfo.h"
-
 class Bitmap {
 public:
 	Bitmap();

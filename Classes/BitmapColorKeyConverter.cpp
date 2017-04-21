@@ -10,7 +10,7 @@ BitmapColorKeyConverter::~BitmapColorKeyConverter()
 {
 }
 
-void BitmapColorKeyConverter::converter_colorkey(Bitmap * _bitmap, player_color _color) {
+void BitmapColorKeyConverter::converter_colorkey(Bitmap * const _bitmap, const player_color _color) {
 	COLORREF player_color = 0;			// 플레이어 색상	
 	BYTE tr = 0, tg = 0, tb = 0;		// 팀컬러 RGB
 	BYTE pr = 0, pg = 0, pb = 0;		// 팔레트 RGB
@@ -68,18 +68,16 @@ void BitmapColorKeyConverter::converter_colorkey(Bitmap * _bitmap, player_color 
 	}
 }
 
-
-
 //
 // R: 32 ~ 255
 // G: 0 ~ 16
 // B: 56 ~ 255
 //
-bool BitmapColorKeyConverter::check_colorkey(unsigned char r, unsigned char g, unsigned char b) const {
+bool BitmapColorKeyConverter::check_colorkey(const unsigned char r, const unsigned char g, const unsigned char b) const {
 	return (r > 32 && g < 16 && b > 56);
 }
 
-COLORREF BitmapColorKeyConverter::get_player_color(player_color _color) const {
+COLORREF BitmapColorKeyConverter::get_player_color(const player_color _color) const {
 	switch (_color)
 	{
 	case kWhite:		return RGB(255, 255, 255);

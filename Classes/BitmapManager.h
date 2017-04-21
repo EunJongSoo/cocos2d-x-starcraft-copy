@@ -14,7 +14,7 @@ public:
 	~BitmapManager();
 
 	Bitmap* load_bitmap(const char* _file_name);
-	void Converter_Bitmap_Color_Key(Bitmap* const _bitmap, player_color _color);
+	void Converter_Bitmap_Color_Key(Bitmap* const _bitmap, const player_color _color);
 private:
 	Bitmap* load_bitmap_file(const char* _filename);
 	Bitmap* create_bitmap_mapdata(const char* _file_name);

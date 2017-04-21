@@ -78,21 +78,6 @@
     <ClCompile Include="..\Classes\ResourcesManager.cpp">
       <Filter>src\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\CV5Info.cpp">
-      <Filter>src\Resources\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\VR4Info.cpp">
-      <Filter>src\Resources\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\VX4Info.cpp">
-      <Filter>src\Resources\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\WPEInfo.cpp">
-      <Filter>src\Resources\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\VF4Info.cpp">
-      <Filter>src\Resources\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BitmapFileLoadManager.cpp">
       <Filter>src\Resources\Bitmap</Filter>
     </ClCompile>
@@ -110,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\StarcraftMapCreator.cpp">
       <Filter>src\Resources\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MapData.cpp">
+      <Filter>src\Resources\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,21 +149,6 @@
     <ClInclude Include="..\Classes\BackGroundLayer.h">
       <Filter>src\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\CV5Info.h">
-      <Filter>src\Resources\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\VX4Info.h">
-      <Filter>src\Resources\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\VR4Info.h">
-      <Filter>src\Resources\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\WPEInfo.h">
-      <Filter>src\Resources\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\VF4Info.h">
-      <Filter>src\Resources\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\MapFileInfo.h">
       <Filter>src\Resources\Map</Filter>
     </ClInclude>
@@ -201,9 +174,6 @@
       <Filter>src\Resources\Bitmap</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\StarcraftMapCreator.h">
-      <Filter>src\Resources\Bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MapDataManager.h">
       <Filter>src\Resources\Bitmap</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MapData.h">

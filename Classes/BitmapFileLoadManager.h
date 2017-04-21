@@ -10,6 +10,7 @@ public:
 
 	Bitmap* load_bitmap_file(const char* _file_name);
 private:
-	bool check_background(unsigned char r, unsigned char g, unsigned char b) const;
+
+	bool check_background(const unsigned char r, const unsigned char g, const unsigned char b) const;
 };
 #endif // !BIT_FILE_LOAD_MANAGER_H_

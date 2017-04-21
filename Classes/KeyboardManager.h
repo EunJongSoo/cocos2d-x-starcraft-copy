@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 
+struct CV5;
+
 class KeyboardManager : public cocos2d::Node {
 public:
 	KeyboardManager();
@@ -15,7 +17,6 @@ public:
 
 private:
 	void on_key_pressed(cocos2d::EventKeyboard::KeyCode _key, cocos2d::Event* _event);
-
 };
 
 #endif // !KEYBOARD_MANAGER_H_

@@ -156,6 +156,6 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 	return bitmap;
 }
 
-bool BitmapFileLoadManager::check_background(unsigned char r, unsigned char g, unsigned char b) const {
+bool BitmapFileLoadManager::check_background(const unsigned char r, const unsigned char g, const unsigned char b) const {
 	return (r == 0 && g == 0 && b == 0);
 }

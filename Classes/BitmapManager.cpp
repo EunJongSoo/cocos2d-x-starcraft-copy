@@ -3,7 +3,6 @@
 #include "BitmapFileLoadManager.h"
 #include "BitmapColorKeyConverter.h"
 #include "StarcraftMapCreator.h"
-#include "MapData.h"
 
 BitmapManager::BitmapManager()
 {
@@ -35,7 +34,7 @@ Bitmap * BitmapManager::load_bitmap(const char* _file_name)
 	return bitmap;
 }
 
-void BitmapManager::Converter_Bitmap_Color_Key(Bitmap * const _bitmap, player_color _color)
+void BitmapManager::Converter_Bitmap_Color_Key(Bitmap * const _bitmap, const player_color _color)
 {
 	colorkey_converter->converter_colorkey(_bitmap, _color);
 }
@@ -47,6 +46,5 @@ Bitmap * BitmapManager::load_bitmap_file(const char * _file_name)
 
 Bitmap * BitmapManager::create_bitmap_mapdata(const char * _file_name)
 {
-	MapData* data = new MapData(_file_name);
-	return map_creator->create_bitmap_mapdata(data);
+	return map_creator->create_bitmap_mapdata(_file_name);
 }

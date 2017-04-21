@@ -150,10 +150,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BitmapColorKeyConverter.cpp" />
     <ClCompile Include="..\Classes\BitmapFileLoadManager.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
-    <ClCompile Include="..\Classes\CV5Info.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\InputManager.cpp" />
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
+    <ClCompile Include="..\Classes\MapData.cpp" />
     <ClCompile Include="..\Classes\MapFileInfo.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
@@ -165,10 +165,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\UnitLayer.cpp" />
     <ClCompile Include="..\Classes\UnitManager.cpp" />
     <ClCompile Include="..\Classes\UnitWeapon.cpp" />
-    <ClCompile Include="..\Classes\VF4Info.cpp" />
-    <ClCompile Include="..\Classes\VR4Info.cpp" />
-    <ClCompile Include="..\Classes\VX4Info.cpp" />
-    <ClCompile Include="..\Classes\WPEInfo.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -180,12 +176,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BitmapManager.h" />
     <ClInclude Include="..\Classes\Header.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
-    <ClInclude Include="..\Classes\CV5Info.h" />
     <ClInclude Include="..\Classes\InputInfo.h" />
     <ClInclude Include="..\Classes\InputManager.h" />
     <ClInclude Include="..\Classes\KeyboardManager.h" />
     <ClInclude Include="..\Classes\MapData.h" />
-    <ClInclude Include="..\Classes\MapDataManager.h" />
     <ClInclude Include="..\Classes\MapFileInfo.h" />
     <ClInclude Include="..\Classes\MouseInfo.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />
@@ -199,10 +193,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\UnitLayer.h" />
     <ClInclude Include="..\Classes\UnitManager.h" />
     <ClInclude Include="..\Classes\UnitWeapon.h" />
-    <ClInclude Include="..\Classes\VF4Info.h" />
-    <ClInclude Include="..\Classes\VR4Info.h" />
-    <ClInclude Include="..\Classes\VX4Info.h" />
-    <ClInclude Include="..\Classes\WPEInfo.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

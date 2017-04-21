@@ -77,3 +77,38 @@ enum player_type {
 	user, ai,
 };
 // PlayerUnitManager, UnitManager
+
+struct CV5 {
+	struct cv5_data {
+		unsigned char something[20];
+		unsigned short mega_tile_index[16];
+	} group[4096];
+};
+
+
+//namespace std
+//{
+//	template < class T > struct less;
+//	template < class T1, class T2 > struct pair;
+//	template < class T > class allocator;
+//	template < class T, class Allocator > class list;
+//	template < class T, class Allocator > class vector;
+//	template < class Key, class T, class Compare, class Allocator > class map;
+//}
+
+//struct MyCompare
+//{
+//	bool operator() (const int & p_lhs, const int & p_rhs)
+//	{
+//		if (p_lhs > p_rhs) { return true; }
+//		if (p_lhs < p_rhs) { return false; }
+//		return (p_lhs > p_rhs);
+//	}
+//};
+//
+//std::map<int, int, MyCompare, std::allocator < int >>* Test();
+
+// 전방선언
+//#define LIST_FWD(x_type)  std::list<x_type, std::allocator<x_type> >
+//#define VECTOR_FWD(x_type)  std::vector<x_type, std::allocator<x_type> >
+//#define MAP_FWD(x_key,x_value)  std::map<x_key, x_value, std::less<x_key>, std::allocator<std::pair<const x_key,x_value> > >
