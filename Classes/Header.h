@@ -30,6 +30,8 @@ enum direction {
 	down_left1,
 	down_left2,
 	down_left3,
+	
+	center
 };
 
 typedef enum unit_type {
