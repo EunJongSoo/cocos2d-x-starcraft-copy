@@ -4,7 +4,7 @@
 USING_NS_CC;
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(640, 480);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
@@ -39,7 +39,21 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("cocos2d-x-starcraft-copy", cocos2d::Rect(0, 0, largeResolutionSize.width, largeResolutionSize.height));
+        //glview = GLViewImpl::createWithRect("cocos2d-x-starcraft-copy", cocos2d::Rect(0, 0, smallResolutionSize.width, smallResolutionSize.height));
+		
+		/*Size size = glview->getFrameSize();
+		float f = glview->getScaleX();*/
+
+		glview = GLViewImpl::create("cocos2d-x-starcraft-copy");
+		
+		// 풀스크린으로 화면 만들기
+		//glview = GLViewImpl::createWithFullScreen("cocos2d-x-starcraft-copy");
+		// 해상도 지정
+		glview->setDesignResolutionSize(640, 480, ResolutionPolicy::EXACT_FIT);
+
+		// 마우스 커서숨기기
+		//glview->setCursorVisible(false);
+
 #else
         glview = GLViewImpl::create("cocos2d-x-starcraft-copy");
 #endif
@@ -53,23 +67,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 30);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
-    auto frameSize = glview->getFrameSize();
-    // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
+    //glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
+    //auto frameSize = glview->getFrameSize();
+    //// if the frame's height is larger than the height of medium size.
+    //if (frameSize.height > mediumResolutionSize.height)
+    //{        
+    //    director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
+    //}
+    //// if the frame's height is larger than the height of small size.
+    //else if (frameSize.height > smallResolutionSize.height)
+    //{        
+    //    director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
+    //}
+    //// if the frame's height is smaller than the height of medium size.
+    //else
+    //{        
+    //    director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
+    //}
 
     register_all_packages();
 
@@ -78,7 +92,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
-
     return true;
 }
 
