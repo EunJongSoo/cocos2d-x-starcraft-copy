@@ -47,7 +47,7 @@ void MouseManager::on_mouse_down(Event * _event) {
 	}
 
 	// 이벤트를 이벤트 마우스로 형변환
-	auto mouse = static_cast<EventMouse*>(_event);
+ 	auto mouse = static_cast<EventMouse*>(_event);
 	
 	// 마우의 좌표 확인
 	Vec2 vec2 = mouse->getLocation();
@@ -60,8 +60,11 @@ void MouseManager::on_mouse_down(Event * _event) {
 		set_mouse_order(MouseInfo::mouse_state::L_down, vec2, set_pos::start);
 		break;
 		// 마우스 버튼이 오른쪽일때
-	case MOUSE_BUTTON_RIGHT:
+	case MOUSE_BUTTON_RIGHT: {
 		set_mouse_order(MouseInfo::mouse_state::R_down, vec2, set_pos::start);
+		CCLOG("mouse manager pos_x : %f, pos_y : %f", vec2.x, vec2.y);
+	}
+		
 		break;
 	}
 }
@@ -89,6 +92,17 @@ void MouseManager::on_mouse_move(Event * _event) {
 		// 마우스 상태를 L_dragging로 변경하고 현재 좌표를 마지막 위치로 설정한다.
 		set_mouse_order(MouseInfo::mouse_state::L_dragging, vec2, set_pos::end);
 		break;
+	default: {
+		// 마우스 이동 명령이 일정 숫자 이상 되어야 전달되도록 지연시킴
+		// move 명령이 자주 전달되어 다른 명령이 무시당하는 현상 때문에 추가
+		static int count = 0;
+		++count;
+		if (count == 4){
+			count = 0;
+			set_mouse_order(MouseInfo::mouse_state::move, vec2, set_pos::end);
+			break;
+		}
+	}
 	}
 }
 
