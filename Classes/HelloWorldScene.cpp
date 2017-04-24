@@ -13,6 +13,8 @@
 
 #include "BackGroundLayer.h"
 
+#include "UiLayer.h"
+
 using namespace cocos2d;
 
 HelloWorld::HelloWorld() :
@@ -20,7 +22,8 @@ HelloWorld::HelloWorld() :
 	picking_manager(nullptr),
 	unit_layer(nullptr),
 	bg_layer(nullptr),
-	draw_node(nullptr)
+	draw_node(nullptr),
+	scroll_direction(direction::center)
 {
 }
 
@@ -69,19 +72,26 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	
+	// 카메라 좌표에 영향 받지 않음
+
+	// 배경추가
+	bg_layer = BackGroundLayer::create();
+	bg_layer->create_map();
+	this->addChild(bg_layer, 0);
+
 	// unit layer 추가
 	unit_layer = UnitLayer::create();
 	unit_layer->setPosition(0, 0);
 	this->addChild(unit_layer, 1);
-
+		
 	// draw_node 추가
 	draw_node = DrawNode::create();
 	this->addChild(draw_node, 2);
-
-	// 맵 생성
-	bg_layer = BackGroundLayer::create();
-	bg_layer->create_map();
-	this->addChild(bg_layer, 0);
+	
+	// ui layer 추가
+	ui_layer = UiLayer::create();
+	this->addChild(ui_layer, 3);
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
@@ -112,14 +122,112 @@ void HelloWorld::update(float _dt) {
 
 void HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	
-	// 조작된 유닛 에게 명령 내리기
 	if (_input->get_mouse_order()) {
+		// 조작된 유닛 에게 명령 내리기
 		picking_manager->picking_unit(_input, _unit_vector);
+		
+		Vec2 mouse_pos = _input->get_mouse_info()->get_end_pos();
+		check_dir(mouse_pos);
 	}
 
+	background_scroll();
+	
+	
 	// 모든 유닛을 움직이기
 
+
+
+
 }
+
+void HelloWorld::background_scroll()
+{
+	float x = 0.0f, y = 0.0f;
+	switch (scroll_direction)
+	{
+	case direction::center: {
+		x = 0.0f, y = 0.0f;
+		break;
+	}
+	case direction::up: {
+		y = 1.0f;
+		break;
+	}
+	case direction::up_right2: {
+		x = 1.0f, y = 1.0f;
+		break;
+	}
+	case direction::right: {
+		x = 1.0f;
+		break;
+	}
+	case direction::down_right2: {
+		x = 1.0f, y = -1.0f;
+		break;
+	}
+	case direction::down: {
+		y = -1.0f;
+		break;
+	}
+	case direction::up_left2: {
+		x = -1.0f, y = 1.0f;
+		break;
+	}
+	case direction::left: {
+		x = -+1.0f;
+		break;
+	}
+	case direction::down_left2: {
+		x = -1.0f, y = -1.0f;
+		break;
+	}
+	}
+	auto camera = Camera::getDefaultCamera();
+	Vec2 camera_pos = camera->getPosition();
+
+
+	if (camera_pos.x - 320.0f + x <= 0) {
+		x = 0.0f;
+	}
+	if (camera_pos.y - 240.0f + y <= 0) {
+		y = 0.0f;
+	}
+
+	if ((camera_pos.x + 320.0f + x) >= 4096.0f) {
+		x = 0.0f;
+	}
+	if ((camera_pos.y + 240.0f + y) >= 4096.0f) {
+		y = 0.0f;
+	}
+
+	//CCLOG("camera x : %f, camera y : %f", camera_pos.x, camera_pos.y);
+
+	float camera_speed = 32.0f;
+	Vec2 origin = Vec2(x, y) * camera_speed;
+	camera->setPosition(camera_pos + origin);
+	ui_layer->setPosition(ui_layer->getPosition() + origin);
+	draw_node->setPosition(draw_node->getPosition() + origin);
+
+
+}
+
+void HelloWorld::check_dir(const cocos2d::Vec2 & _pos) {
+	scroll_direction = direction::center;
+	if (_pos.y > 475.0f) {
+		scroll_direction = direction::up;
+		if (_pos.x > 635.0f)					scroll_direction = direction::up_right2;
+		else if (_pos.x < 5.0f) 				scroll_direction = direction::up_left2;
+	}
+	else if (_pos.y < 5.0f) {
+		scroll_direction = direction::down;
+		if (_pos.x > 635.0f)					scroll_direction = direction::down_right2;
+		else if (_pos.x < 5.0f) 				scroll_direction = direction::down_left2;
+	}
+	else if (_pos.x > 635.0f)					scroll_direction = direction::right;
+	else if (_pos.x < 5.0f) 				scroll_direction = direction::left;
+}
+
+
 
 void HelloWorld::draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	// 드래그한 범위를 그려준다.
@@ -153,6 +261,8 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 		}
 	}
 }
+
+
 
 //
 //mouse_info = input_manager->input_process();
