@@ -1,19 +1,16 @@
 #include "MouseManager.h"
-#include "MouseInfo.h"
-#include "Header.h"
 
 using namespace cocos2d;
 
 MouseManager::MouseManager() : 
-	order(false), 
-	mouse_info(nullptr) 
+	state(MouseInfo::mouse_state::none),
+	order(MouseInfo::mouse_state::none),
+	start_pos(Vec2::ZERO),
+	end_pos(Vec2::ZERO)
 {
-	mouse_info = new MouseInfo();
 }
 
 MouseManager::~MouseManager() {
-	// 멤버 변수 동적할당 안전해제
-	SAFE_DELETE(mouse_info);
 }
 
 bool MouseManager::init() {
@@ -33,10 +30,28 @@ bool MouseManager::init() {
 	return true;
 }
 
-// 마우스 정보 초기화
-void MouseManager::init_mouse_info() {
-	// 마우스 오더가 없다고 설정하여 접근하지 않도록 한다.
-	order = false;
+MouseInfo * MouseManager::get_mouse_info()
+{
+	MouseInfo* info = nullptr;
+	if (order != MouseInfo::mouse_state::none) {
+		info = new MouseInfo(state, start_pos, end_pos);
+		order = MouseInfo::mouse_state::none;
+	}
+	/*if (!fast_mouse_info_deque.empty()) {
+		info = fast_mouse_info_deque[0];
+		fast_mouse_info_deque.pop_front();
+	}*/
+	return info;
+}
+
+MouseInfo * MouseManager::get_normal_mouse_info()
+{
+	/*MouseInfo* mouse_info = nullptr;
+	if (state == MouseInfo::mouse_state::move) {
+		mouse_info = new MouseInfo(state, start_pos, end_pos);
+	}*/
+	MouseInfo* mouse_info = new MouseInfo(MouseInfo::mouse_state::move, start_pos, end_pos);
+	return mouse_info;
 }
 
 // 마우스 클릭 되었을때 이벤트
@@ -51,21 +66,13 @@ void MouseManager::on_mouse_down(Event * _event) {
 	
 	// 마우의 좌표 확인
 	Vec2 vec2 = mouse->getLocation();
+	correction_mouse_location_y(vec2);
 
 	// 마우스의 버튼 확인
 	switch (mouse->getMouseButton())
 	{
-		// 마우스 버튼이 왼쪽일때
-	case MOUSE_BUTTON_LEFT:
-		set_mouse_order(MouseInfo::mouse_state::L_down, vec2, set_pos::start);
-		break;
-		// 마우스 버튼이 오른쪽일때
-	case MOUSE_BUTTON_RIGHT: {
-		set_mouse_order(MouseInfo::mouse_state::R_down, vec2, set_pos::start);
-		CCLOG("mouse manager pos_x : %f, pos_y : %f", vec2.x, vec2.y);
-	}
-		
-		break;
+	case MOUSE_BUTTON_LEFT: on_mouse_L_down_process(vec2);	break;
+	case MOUSE_BUTTON_RIGHT: on_mouse_R_down_process(vec2);	break;
 	}
 }
 
@@ -75,33 +82,24 @@ void MouseManager::on_mouse_move(Event * _event) {
 	
 	auto mouse = static_cast<EventMouse*>(_event);
 	Vec2 vec2 = mouse->getLocation();
+	correction_mouse_location_y(vec2);
 
 	// 마우스의 현재 상태를 확인한다.
-	switch (mouse_info->get_mouse_state()) {
+	switch (state) {
+	case MouseInfo::mouse_state::L_dragging:
 		// 마우스의 상태가 L_down 일때의 처리를 한다.
 	case MouseInfo::mouse_state::L_down: {
 		// 마우스 첫 클릭 좌표와 현재 좌표의 거리가 차이가 지정한 수치를 넘었는지 확인한다.
-		if (mouse_distance_check(vec2) > mouse_drag_distance) {
+		if (mouse_distance_check(vec2)) {
 			// 마우스 상태를 L_dragging로 변경하고 현재 좌표를 마지막 위치로 설정한다.
-			set_mouse_order(MouseInfo::mouse_state::L_dragging, vec2, set_pos::end);
+			on_mouse_L_dragging_process(vec2);
 		}
 		break;
 	}
-		// 마우스의 상태가 L_dragging 일때의 처리를 한다.		
-	case MouseInfo::mouse_state::L_dragging:
-		// 마우스 상태를 L_dragging로 변경하고 현재 좌표를 마지막 위치로 설정한다.
-		set_mouse_order(MouseInfo::mouse_state::L_dragging, vec2, set_pos::end);
-		break;
 	default: {
 		// 마우스 이동 명령이 일정 숫자 이상 되어야 전달되도록 지연시킴
 		// move 명령이 자주 전달되어 다른 명령이 무시당하는 현상 때문에 추가
-		static int count = 0;
-		++count;
-		if (count == 4){
-			count = 0;
-			set_mouse_order(MouseInfo::mouse_state::move, vec2, set_pos::end);
-			break;
-		}
+		on_mouse_move_process(vec2);
 	}
 	}
 }
@@ -110,17 +108,21 @@ void MouseManager::on_mouse_up(Event * _event) {
 	if (_event->getType() != Event::Type::MOUSE) return;
 	
 	auto mouse = static_cast<EventMouse*>(_event);
+	
+	Vec2 vec2 = mouse->getLocation();
+	correction_mouse_location_y(vec2);
+
 	// 마우스 버튼을 확인한다.
 	switch (mouse->getMouseButton()) {
 		// 마우스 왼쪽 버튼일때 처리를 한다.
 	case MOUSE_BUTTON_LEFT: {
 		// 기존 마우스 상태가 L_down이면 L_up으로 변경한다.
-		if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_down) {
-			set_mouse_order(MouseInfo::mouse_state::L_up);
+		if (state == MouseInfo::mouse_state::L_down) {
+			on_mouse_L_up_process(vec2);
 		}
 		// 기존 마우스 상태가 L_dragging이면 L_drag로 변경한다.
-		else if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_dragging) {
-			set_mouse_order(MouseInfo::mouse_state::L_drag);
+		else if (state == MouseInfo::mouse_state::L_dragging) {
+			on_mouse_L_drag_process(vec2);
 		}
 		break;
 	}
@@ -128,40 +130,69 @@ void MouseManager::on_mouse_up(Event * _event) {
 }
 
 // 마우스 좌표를 보정한다.
-void MouseManager::correction_mouse_location_y(cocos2d::Vec2& _point) {
+void MouseManager::correction_mouse_location_y(Vec2& _point) {
 	// 마우스 Y좌표 반전되어 있어서 화면의 세로 크기를 빼서 보정한다.
 	_point.y = win_size.height - _point.y;
 }
 
 // 마우스 거리를 확인한다.
-float MouseManager::mouse_distance_check(const Vec2& _vec2) {
-	// 마우스 처음 좌표를 저장한다.
-	cocos2d::Vec2 vec2 = mouse_info->get_start_pos();
+bool MouseManager::mouse_distance_check(const Vec2& _vec2) {
 	// 처음 좌표와 현재 좌표의 차이를 반환한다.
-	return _vec2.distance(vec2);
+	return _vec2.distance(start_pos) > mouse_drag_distance;
 }
 
-// 마우스 명령을 설정한다.
-void MouseManager::set_mouse_order(const int _state) {
-	// 마우스의 상태값을 설정한다.
-	mouse_info->set_mouse_state(_state);
-	// 마우스 명령여부를 설정한다.
-	order = true;
+void MouseManager::set_value(MouseInfo::mouse_state _state, const Vec2& _start_pos, const Vec2 & _end_pos) {
+	state = _state;
+	order = _state;
+	start_pos = _start_pos;
+	end_pos = _end_pos;
 }
 
-// 마우스 명령을 설정한다.
-void MouseManager::set_mouse_order(const int _state, Vec2& _vec2, set_pos _start_end) {
-	// 마우스 명령을 설정한다.
-	this->set_mouse_order(_state);
-	// 마우스 좌표를 보정한다.
-	correction_mouse_location_y(_vec2);
+// 왼클릭 프로세스
+void MouseManager::on_mouse_L_down_process(const Vec2& _start_pos)
+{
+	set_value(MouseInfo::mouse_state::L_down, _start_pos, _start_pos);
+	set_mouse_order();
+}
 
-	// 마우스 좌표가 어딘지 확인한다.
-	switch (_start_end)
-	{
-		// 처음 좌표에 설정한다.
-	case MouseManager::start:	mouse_info->set_start_pos(_vec2);	break;
-		// 마지막 좌표에 설정한다.
-	case MouseManager::end:		mouse_info->set_end_pos(_vec2);	break;
+// 오른클릭 프로세스
+void MouseManager::on_mouse_R_down_process(const Vec2& _start_pos)
+{
+	set_value(MouseInfo::mouse_state::R_down, _start_pos, _start_pos);
+	set_mouse_order();
+}
+
+void MouseManager::on_mouse_L_dragging_process(const Vec2 & _end_pos)
+{
+	// 이전 마지막 점과, 새로운 마지막 점의 거리가 일정 이상 날때
+	if (end_pos.distance(_end_pos) > 1.0f) {
+		set_value(MouseInfo::mouse_state::L_dragging, start_pos, _end_pos);
+		set_mouse_order();
 	}
+}
+
+void MouseManager::on_mouse_move_process(const Vec2 & _end_pos)
+{
+	//set_value(MouseInfo::mouse_state::move, start_pos, _end_pos);
+	end_pos = _end_pos;
+}
+
+void MouseManager::on_mouse_L_up_process(const cocos2d::Vec2 & _end_pos)
+{
+	set_value(MouseInfo::mouse_state::L_up, start_pos, _end_pos);
+	set_mouse_order();
+	//set_value(MouseInfo::mouse_state::none, Vec2::ZERO, Vec2::ZERO);
+}
+
+void MouseManager::on_mouse_L_drag_process(const cocos2d::Vec2 & _end_pos)
+{
+	set_value(MouseInfo::mouse_state::L_drag, start_pos, _end_pos);
+	set_mouse_order();
+	//set_value(MouseInfo::mouse_state::none, Vec2::ZERO, Vec2::ZERO);
+}
+
+// 마우스 명령을 설정한다.
+void MouseManager::set_mouse_order() {
+	/*MouseInfo* mouse_info = new MouseInfo(state, start_pos, end_pos);
+	fast_mouse_info_deque.push_back(mouse_info);*/
 }

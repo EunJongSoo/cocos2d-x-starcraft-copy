@@ -1,10 +1,9 @@
 #ifndef MOUSE_MANAGER_H_
 #define MOUSE_MANAGER_H_
 
+#include <deque>
 #include "cocos2d.h"
-
-// class 전방선언
-class MouseInfo;
+#include "MouseInfo.h"
 
 class MouseManager : public cocos2d::Node {
 public:
@@ -13,30 +12,34 @@ public:
 	virtual bool init();
 	CREATE_FUNC(MouseManager);
 
-	void init_mouse_info();
-
-	// inline 함수
-	inline MouseInfo* get_mouse_info() { return mouse_info; }
-	inline bool is_order() const { 	return order; }
+	MouseInfo* get_mouse_info();
+	MouseInfo* get_normal_mouse_info();
 
 private:
-	enum set_pos {
-		start, end
-	};
 	void on_mouse_down(cocos2d::Event* _event);
 	void on_mouse_move(cocos2d::Event* _event);
 	void on_mouse_up(cocos2d::Event* _event);
 	
+	void on_mouse_L_down_process(const cocos2d::Vec2& _start_pos);
+	void on_mouse_R_down_process(const cocos2d::Vec2& _start_pos);
+	void on_mouse_L_dragging_process(const cocos2d::Vec2& _end_pos);
+	void on_mouse_move_process(const cocos2d::Vec2& _end_pos);
+	void on_mouse_L_up_process(const cocos2d::Vec2& _end_pos);
+	void on_mouse_L_drag_process(const cocos2d::Vec2& _end_pos);
+
 	void correction_mouse_location_y(cocos2d::Vec2& _point);
-	float mouse_distance_check(const cocos2d::Vec2& _vec2);
-	void set_mouse_order(const int _state);
-	void set_mouse_order(const int _state, cocos2d::Vec2& _vec2, set_pos _start_end);
-	
+	bool mouse_distance_check(const cocos2d::Vec2& _vec2);
+	void set_value(MouseInfo::mouse_state _state, const cocos2d::Vec2& _start_pos, const cocos2d::Vec2& _end_pos);
+	void set_mouse_order();
 private:
-	bool order;
 	cocos2d::Size win_size;
-	MouseInfo* mouse_info;
-	
+
+	MouseInfo::mouse_state state;
+	MouseInfo::mouse_state order;
+	cocos2d::Vec2 start_pos;
+	cocos2d::Vec2 end_pos;
+
+	std::deque<MouseInfo*> fast_mouse_info_deque;
 	const float mouse_drag_distance = 0.5f;
 };
 

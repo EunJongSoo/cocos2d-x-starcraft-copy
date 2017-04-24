@@ -1,31 +1,33 @@
 #ifndef INPUT_INFO_H_
 #define INPUT_INFO_H_
 
-class MouseInfo;
-class KeyboardInfo;
+#include "Header.h"
+
+#include "MouseInfo.h"
+//#include "key"
+
+//class MouseInfo;
+//class KeyboardInfo;
 
 class InputInfo {
 public:
-	InputInfo() : 
-		mouse_order(false),
-		mouse(nullptr)
+	InputInfo(MouseInfo* _info, MouseInfo* _normal) :
+		mouse_info(_info),
+		normal_mouse_info(_normal)
 		{}
-	~InputInfo() {}
-
-	inline bool get_mouse_order() const {	return mouse_order;	}
-	inline MouseInfo * get_mouse_info() const { return mouse; }
-	inline void set_mouse_order(const bool _order) { mouse_order = _order; }
-	inline void set_mouse_info(MouseInfo * const _mouse) {	mouse = _mouse;	}
-	inline void init_input_info() {
-		mouse_order = false;
-		mouse = nullptr;
+	~InputInfo() {
+		SAFE_DELETE(mouse_info);
+		SAFE_DELETE(normal_mouse_info);
 	}
+	inline MouseInfo * get_mouse_info() const { return mouse_info; }
+	inline MouseInfo * get_normal_mouse_info() const { return normal_mouse_info; }
 
 private:
-	bool mouse_order;
-	bool keyboard_order;
-	MouseInfo* mouse;
-	KeyboardInfo* keyboard;
+	InputInfo();
+
+	MouseInfo* mouse_info;
+	MouseInfo* normal_mouse_info;
+	//KeyboardInfo* keyboard_info;
 
 };
 

@@ -1,10 +1,11 @@
 #include <vector>
 #include "PickingManager.h"
-#include "InputInfo.h"
-#include "MouseInfo.h"
 #include "Unit.h"
 #include "PlayerUnitManager.h"
 #include "cocos2d.h"
+
+#include "InputInfo.h"
+#include "MouseInfo.h"
 
 PickingManager::PickingManager() {}
 PickingManager::~PickingManager() {}
@@ -13,73 +14,70 @@ PickingManager::~PickingManager() {}
 void PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 마우스 명령 확인
-	if (_input->get_mouse_order()) {
-		MouseInfo* info = _input->get_mouse_info();
+	MouseInfo* info = _input->get_mouse_info();
+	// 마우스 명령 종류에 따라 해당 이벤트를 동작
+	switch (info->get_mouse_state())
+	{
+	case MouseInfo::R_down: {
+		run_action_mouse_R_down(info->get_start_pos(), _manager_vector);
+		break;
+	}
+	case MouseInfo::L_down: {
 
-		// 마우스 명령 종류에 따라 해당 이벤트를 동작
-		switch (info->get_mouse_state())
-		{
-		case MouseInfo::R_down: {
-			run_action_mouse_R_down(info, _manager_vector);
-			break;
-		}
-		case MouseInfo::L_down: {
-			
-			break;
-		}
-		case MouseInfo::L_dragging: {
-			break;
-		}
-		case MouseInfo::L_drag: {
-			run_action_mouse_L_drag(info, _manager_vector);
-			break;
-		}
-		case MouseInfo::L_double:	break;
-		case MouseInfo::L_up: {
-			run_action_mouse_L_up(info, _manager_vector);
-			break;
-		}
-		case MouseInfo::R_up:		break;
-		}
+		break;
+	}
+	case MouseInfo::L_dragging: {
+		break;
+	}
+	case MouseInfo::L_drag: {
+		run_action_mouse_L_drag(info->get_start_pos(), info->get_end_pos(), _manager_vector);
+		break;
+	}
+	case MouseInfo::L_double:	break;
+	case MouseInfo::L_up: {
+		run_action_mouse_L_up(info->get_end_pos(), _manager_vector);
+		break;
+	}
+	case MouseInfo::R_up:		break;
 	}
 }
 
 // 마우스 왼클릭 끝날때 이벤트
-void PickingManager::run_action_mouse_L_up(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
+void PickingManager::run_action_mouse_L_up(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 유닛이 클릭 되었을때의 처리를 한다.
 	for (PlayerUnitManager* manager : _manager_vector) {
 		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
-		mouse_L_up_process(_info, unit_vector);
+		mouse_L_up_process(_vec2, unit_vector);
 	}
 }
 
 // 마우스 왼클릭 드래그 끝날때 이벤트
-void PickingManager::run_action_mouse_L_drag(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
+void PickingManager::run_action_mouse_L_drag(const cocos2d::Vec2& _str_vec2, const cocos2d::Vec2& _end_vec2, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 모든 선택된 유닛을 취소한다.
 	for (PlayerUnitManager* manager : _manager_vector) {
 		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
-		mouse_L_drag_process(_info, unit_vector);
+		mouse_L_drag_process(_str_vec2, _end_vec2, unit_vector);
 	}
 }
 
 // 마우스 오른클릭 시작할때 이벤트
-void PickingManager::run_action_mouse_R_down(MouseInfo * const _info, const std::vector<PlayerUnitManager*>& _manager_vector)
+void PickingManager::run_action_mouse_R_down(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	for (PlayerUnitManager* manager : _manager_vector) {
 		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
-		mouse_R_down_process(_info, unit_vector, _manager_vector);
+		mouse_R_down_process(_vec2, unit_vector, _manager_vector);
 	}
 }
 
-void PickingManager::mouse_L_up_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+void PickingManager::mouse_L_up_process(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
 {
 	// 유닛을 선택을 취소한다.
 	select_unit(_unit_vector, false);
 
 	// 클릭된 유닛을 찾는다.
-	Unit* unit = find_click_unit(_info, _unit_vector);
+	Unit* unit = find_click_unit(_vec2, _unit_vector);
 
 	// 선택된 유닛이 있는지 확인한다.
 	if (is_unit(unit)) {
@@ -88,18 +86,18 @@ void PickingManager::mouse_L_up_process(MouseInfo * const _info, const std::vect
 	}
 }
 
-void PickingManager::mouse_L_drag_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+void PickingManager::mouse_L_drag_process(const cocos2d::Vec2& _str_vec2, const cocos2d::Vec2& _end_vec2, const std::vector<Unit*>& _unit_vector)
 {
 	// 유닛 선택을 취소한다.
 	select_unit(_unit_vector, false);
 	// 드래그한 유닛을 찾는다.
-	std::vector<Unit*> unit_vector = find_drag_unit(_info, _unit_vector);
+	std::vector<Unit*> unit_vector = find_drag_unit(_str_vec2, _end_vec2, _unit_vector);
 	if (is_unit(unit_vector)) {
 		select_unit(unit_vector, true);
 	}
 }
 
-void PickingManager::mouse_R_down_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector, const std::vector<PlayerUnitManager*>& _manager_vector)
+void PickingManager::mouse_R_down_process(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 선택된 유닛을 찾는다.
 	std::vector<Unit*> select_unit_vector = find_select_unit(_unit_vector);
@@ -122,7 +120,7 @@ void PickingManager::mouse_R_down_process(MouseInfo * const _info, const std::ve
 	std::vector<Unit*> manager_unit_vector;
 	for (PlayerUnitManager* manager : _manager_vector) {
 		manager_unit_vector = manager->get_unit_vector();
-		unit = find_click_unit(_info, manager_unit_vector);
+		unit = find_click_unit(_vec2, manager_unit_vector);
 		// 유닛을 찾으면 검색을 중단한다.
 		if (unit != nullptr) {
 			break;
@@ -137,7 +135,7 @@ void PickingManager::mouse_R_down_process(MouseInfo * const _info, const std::ve
 	else
 	{
 		// 없을때의 처리를 한다.
-		R_click_not_unit_process(_info, select_unit_vector);
+		R_click_not_unit_process(_vec2, select_unit_vector);
 	}
 }
 
@@ -148,9 +146,10 @@ void PickingManager::R_click_unit_process(Unit* _unit, const std::vector<Unit*>&
 	attack_unit(_unit, _unit_vector);
 }
 
-void PickingManager::R_click_not_unit_process(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+void PickingManager::R_click_not_unit_process(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
 {
-	move_unit(_info->get_start_pos(), _unit_vector);
+	CCLOG("pos_x : %f, pos_y : %f", _vec2.x, _vec2.y);
+	move_unit(_vec2, _unit_vector);
 }
 
 // 선택한 유닛의 bool 상태값 변경
@@ -170,15 +169,13 @@ void PickingManager::select_unit(const std::vector<Unit*>& _unit_vector, bool _b
 }
 
 // 클릭한 유닛을 찾는다.
-Unit * PickingManager::find_click_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+Unit * PickingManager::find_click_unit(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
 {
-	// 위치 정보 임시저장
-	cocos2d::Vec2 start_pos = _info->get_start_pos();
 	for (Unit* unit : _unit_vector) {
 		// 유닛의 바운딩 박스 저장
 		cocos2d::Rect rect = unit->getBoundingBox();
 		// 바운딩 박스와 위치가 겹치는지 확인
-		if (rect.containsPoint(start_pos)) {
+		if (rect.containsPoint(_vec2)) {
 			// 겹친 유닛 반환
 			return unit;
 		}
@@ -188,22 +185,17 @@ Unit * PickingManager::find_click_unit(MouseInfo * const _info, const std::vecto
 }
 
 // 드래그한 유닛을 찾는다.
-std::vector<Unit*> PickingManager::find_drag_unit(MouseInfo * const _info, const std::vector<Unit*>& _unit_vector)
+std::vector<Unit*> PickingManager::find_drag_unit(const cocos2d::Vec2& _str_vec2, const cocos2d::Vec2& _end_vec2, const std::vector<Unit*>& _unit_vector)
 {
 	std::vector<Unit*> select_unit_vector;
-
-	// 마우스 클릭한 첫 포인트 임시 저장
-	cocos2d::Vec2 start_pos = _info->get_start_pos();
-	// 마우스 클릭땐 마지막 포인트 임시 저장
-	cocos2d::Vec2 end_pos = _info->get_end_pos();
 	
 	// 마우스 클릭한 두 점으로 생긴 사각형의 왼쪽 아래값을 찾는다.
 	// cocos2d-x의 좌표계는 왼쪽 아래가 0, 0
-	cocos2d::Vec2 min_pos(MIN(start_pos.x, end_pos.x), MIN(start_pos.y, end_pos.y));
+	cocos2d::Vec2 min_pos(MIN(_str_vec2.x, _end_vec2.x), MIN(_str_vec2.y, _end_vec2.y));
 	
 	// 드래그한 크기를 계산한다.
 	// 첫 포인트에서 마지막 포인트를 빼고 절대값으로 변경
-	cocos2d::Size size(fabsf(start_pos.x - end_pos.x), fabsf(start_pos.y - end_pos.y));
+	cocos2d::Size size(fabsf(_str_vec2.x - _end_vec2.x), fabsf(_str_vec2.y - _end_vec2.y));
 
 	// 왼쪽 아래 점부터 가로 세로 크기를 사용해서 Rect 변수를 만든다.
 	cocos2d::Rect drag_rect = cocos2d::Rect(min_pos, size);

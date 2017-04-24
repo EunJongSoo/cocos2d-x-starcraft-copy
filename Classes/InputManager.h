@@ -4,25 +4,18 @@
 #include "cocos2d.h"
 
 class InputInfo;
-class MouseInfo;
+class KeyboardInfo;
 class KeyboardManager;
 class MouseManager;
+class MouseInfo;
 
 class InputManager : public cocos2d::Node {
 public:
 	InputManager();
 	~InputManager();
 
-	InputInfo* input_prossce();
-
-	void mouse_order_init();
-	MouseInfo* get_mouse_info() const;
-	bool is_mouse_order() const;
-
+	InputInfo* input_prossce(const cocos2d::Vec2& _origin);
 private:
-	bool input_order;
-
-	InputInfo* input;
 	KeyboardManager* keyboard_manager;
 	MouseManager* mouse_manager;
 };
