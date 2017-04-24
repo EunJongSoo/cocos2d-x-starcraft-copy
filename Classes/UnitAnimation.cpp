@@ -7,7 +7,7 @@ using namespace cocos2d;
 UnitAnimation::UnitAnimation(const unit_type _type, cocos2d::Sprite * const _sprite):
 	frame(0),
 	dt(0.0f),
-	color(none)
+	color(player_color::none)
 {
 	this->init_unit_animation(_type, _sprite);
 }
