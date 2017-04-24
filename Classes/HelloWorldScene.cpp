@@ -107,7 +107,7 @@ bool HelloWorld::init()
 void HelloWorld::update(float _dt) {
 	
 	// 조작
-	InputInfo * _input_info = input_manager->input_prossce();
+	InputInfo * _input_info = input_manager->input_prossce(get_origin());
 	std::vector<PlayerUnitManager*>& unit_manager_vector = unit_layer->get_unit_manager_vector();
 
 	// 메인 프로세스
@@ -116,28 +116,21 @@ void HelloWorld::update(float _dt) {
 	// 그리기
 	draw_process(_input_info, unit_manager_vector, _dt);
 
-	// 마우스 명령 초기화
-	_input_info->init_input_info();
+	SAFE_DELETE(_input_info);
 }
 
 void HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	
-	if (_input->get_mouse_order()) {
+	if (_input->get_mouse_info()) {
 		// 조작된 유닛 에게 명령 내리기
 		picking_manager->picking_unit(_input, _unit_vector);
-		
-		Vec2 mouse_pos = _input->get_mouse_info()->get_end_pos();
+	}
+	if (_input->get_normal_mouse_info()) {
+		Vec2 mouse_pos = _input->get_normal_mouse_info()->get_end_pos();
 		check_dir(mouse_pos);
 	}
-
 	background_scroll();
-	
-	
 	// 모든 유닛을 움직이기
-
-
-
-
 }
 
 void HelloWorld::background_scroll()
@@ -196,7 +189,7 @@ void HelloWorld::background_scroll()
 	if ((camera_pos.x + 320.0f + x) >= 4096.0f) {
 		x = 0.0f;
 	}
-	if ((camera_pos.y + 240.0f + y) >= 4096.0f) {
+	if ((camera_pos.y + 240.0f + y) >= 4192.0f) {
 		y = 0.0f;
 	}
 
@@ -206,28 +199,24 @@ void HelloWorld::background_scroll()
 	Vec2 origin = Vec2(x, y) * camera_speed;
 	camera->setPosition(camera_pos + origin);
 	ui_layer->setPosition(ui_layer->getPosition() + origin);
-	draw_node->setPosition(draw_node->getPosition() + origin);
-
-
+	//draw_node->setPosition(draw_node->getPosition() + origin);
 }
 
 void HelloWorld::check_dir(const cocos2d::Vec2 & _pos) {
 	scroll_direction = direction::center;
-	if (_pos.y > 475.0f) {
+	if (_pos.y > 475.0f + get_origin().y) {
 		scroll_direction = direction::up;
-		if (_pos.x > 635.0f)					scroll_direction = direction::up_right2;
-		else if (_pos.x < 5.0f) 				scroll_direction = direction::up_left2;
+		if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::up_right2;
+		else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::up_left2;
 	}
-	else if (_pos.y < 5.0f) {
+	else if (_pos.y < 5.0f + get_origin().y) {
 		scroll_direction = direction::down;
-		if (_pos.x > 635.0f)					scroll_direction = direction::down_right2;
-		else if (_pos.x < 5.0f) 				scroll_direction = direction::down_left2;
+		if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::down_right2;
+		else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::down_left2;
 	}
-	else if (_pos.x > 635.0f)					scroll_direction = direction::right;
-	else if (_pos.x < 5.0f) 				scroll_direction = direction::left;
+	else if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::right;
+	else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::left;
 }
-
-
 
 void HelloWorld::draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	// 드래그한 범위를 그려준다.
@@ -244,14 +233,13 @@ void HelloWorld::draw_process(InputInfo * const _input, const std::vector<Player
 
 // 기능 이관이 필요함
 void HelloWorld::create_drag_rect(InputInfo * const _input) {
-	if (_input->get_mouse_order()) {
+	MouseInfo* mouse_info = _input->get_mouse_info();
+	if (mouse_info) {
 		// 있으면 화면에 그린 그림을 삭제한다.
 		draw_node->clear();
-		// 마우스 정보를 저장한다.
-		MouseInfo* mouse_info = _input->get_mouse_info();
 
 		// 마우스 상태가 드래그 중인지 확인한다.
-		if (mouse_info->get_mouse_state() == MouseInfo::L_dragging) {
+		if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_dragging) {
 			// 마우스 클릭 시작점과 끝점의 값을 저장한다.
 			Vec2 start_vec2(mouse_info->get_start_pos());
 			Vec2 end_vec2(mouse_info->get_end_pos());
@@ -262,8 +250,6 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 	}
 }
 
-
-
 //
 //mouse_info = input_manager->input_process();
 //unit_array = player_manager->get_unit_array();
@@ -271,11 +257,6 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 //game_manager->main_process(pick_unit);
 //
 //mouse_info = input_manager->input_process(player_manager->get_unit_array());
-
-
-
-
-
 
 //	//
 //	// DebugDraw 생성

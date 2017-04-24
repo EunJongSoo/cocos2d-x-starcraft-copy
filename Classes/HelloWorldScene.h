@@ -37,6 +37,9 @@ private:
 
 	direction scroll_direction;
 	void check_dir(const cocos2d::Vec2 & _dir);
+	cocos2d::Vec2 get_origin() {
+		return (cocos2d::Camera::getDefaultCamera()->getPosition() - cocos2d::Vec2(320.0f, 240.0f));
+	}
 };
 
 #endif // __HELLOWORLD_SCENE_H__

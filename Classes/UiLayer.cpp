@@ -1,4 +1,5 @@
 #include "UiLayer.h"
+
 #include "TemplateSingleton.h"
 #include "ResourcesManager.h"
 

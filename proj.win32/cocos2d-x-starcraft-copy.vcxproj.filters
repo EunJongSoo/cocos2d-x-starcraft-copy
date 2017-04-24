@@ -99,6 +99,9 @@
     <ClCompile Include="..\Classes\MapData.cpp">
       <Filter>src\Resources\Map</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\UiLayer.cpp">
+      <Filter>src\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\MapData.h">
       <Filter>src\Resources\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UiLayer.h">
+      <Filter>src\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
