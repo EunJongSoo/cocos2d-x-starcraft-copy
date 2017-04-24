@@ -16,14 +16,14 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 {
 	FILE* file;
 	fopen_s(&file, _file_name, "rb");
-	
+
 	// 비트맵 헤더파일
 	BITMAPFILEHEADER bf;
 	BITMAPINFOHEADER bi;
 
 	// 비트맵 파일 헤더 부르기
 	fread((char*)&bf, sizeof(BITMAPFILEHEADER), 1, file);
-	
+
 	// 파일 형식 검사
 	if (bf.bfType != 0x4d42)
 	{
@@ -34,15 +34,13 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 
 	// 비트맵 인포 헤더 부르기
 	fread((char*)&bi, sizeof(BITMAPINFOHEADER), 1, file);
-	
+
+
 	// 파일 포맷 검사
 	if (bi.biBitCount != 8)
 	{
-		//MessageBox(NULL,"8비트 포맷만 지원합니다.","에러 보고", MB_OK);
-		//MessageBox(NULL, "Cannot use except that 8bit color format", "WARNING", MB_OK);
 		return nullptr;
 	}
-
 	// 색상 파레트 크기 확인
 	int color_table_size = 0;
 	int bit_count = bi.biBitCount;
@@ -66,16 +64,16 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 	RGBQUAD rgb[256];
 
 	// COLORREF == unsigned long
-	COLORREF color_palette[256];
-	
+	//COLORREF color_palette[256];
+
 	// 파레트 크기만큼 불러오기
 	fread(rgb, sizeof(RGBQUAD), 256, file);
 
 	// 비트 연산
 	// #define RGB(r,g,b) ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
-	for (int i = 0; i < color_table_size; ++i) {
-		color_palette[i] = RGB(rgb[i].rgbRed, rgb[i].rgbGreen, rgb[i].rgbBlue);
-	}
+	/*for (int i = 0; i < color_table_size; ++i) {
+	color_palette[i] = RGB(rgb[i].rgbRed, rgb[i].rgbGreen, rgb[i].rgbBlue);
+	}*/
 
 	// 비트 정보가 있는 곳으로 위치 지시자 이동
 	fseek(file, bf.bfOffBits, SEEK_SET);
@@ -92,12 +90,10 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 	// 파일 닫기
 	fclose(file);
 
-	// 8비트 -> 32비트 파일 변환
 	int size_32bit = width * height * 4;
-
 	// 변환할 데이터 저장 공간 할당
 	char* bitmap_32bit_data = (char*)malloc(size_32bit);
-	
+
 	// BPS 계산
 	int image_BPS_8bit = (width % 4) ? (width + (4 - (width % 4))) : width;
 
@@ -122,10 +118,15 @@ Bitmap * BitmapFileLoadManager::load_bitmap_file(const char * _file_name)
 			// 색상 인덱스 확인
 			color_index = read_bitmap_data[image_BPS_8bit * h + w];
 			// 이미지 정보에서 색상값 추출
-			putColor = color_palette[color_index];
-			r = GetRValue(putColor);
+			//putColor = color_palette[color_index];
+
+			r = rgb[color_index].rgbRed;
+			g = rgb[color_index].rgbGreen;
+			b = rgb[color_index].rgbBlue;
+
+			/*r = GetRValue(putColor);
 			g = GetGValue(putColor);
-			b = GetBValue(putColor);
+			b = GetBValue(putColor);*/
 
 			// 배경인지 검사
 			// 배경이 아니면 저장
