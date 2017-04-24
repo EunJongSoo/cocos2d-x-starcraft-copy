@@ -26,25 +26,33 @@ ResourcesManager::~ResourcesManager()
 // 리소스를 불러온다.
 cocos2d::Texture2D * ResourcesManager::load_resources(const std::string& _file_name, const player_color _color)
 {
-	// 원하는 색상의 map을 찾는다.
-	std::map<std::string, Bitmap*>* bitmap_map = find_bitmap_map(_color);
-	assert(bitmap_map);
-
-	// 이미지를 찾는다.
-	Bitmap* bitmap = find_bitmap(_file_name, bitmap_map);
-	if (bitmap == nullptr) {
-		// 없으면 기본 이미지를 찾아서 복사한다.
-		bitmap = new Bitmap(*load_bitmap(_file_name, _color));
-		
-		// 색상을 바꾼다.
-		converter_color(bitmap, _color);
-		
-		// 색상을 바꾼 이미지 주소를 저장한다.
-		bitmap_map->insert(std::pair<std::string, Bitmap*>(_file_name, bitmap));
+	const char* extension = strchr(_file_name.c_str(), '.');
+	cocos2d::Texture2D* texture = nullptr;
+	if (!strcmp(extension, ".png")) {
+		texture = cocos2d::TextureCache::getInstance()->addImage(_file_name);
 	}
+	else {
+		// 원하는 색상의 map을 찾는다.
+		std::map<std::string, Bitmap*>* bitmap_map = find_bitmap_map(_color);
+		assert(bitmap_map);
 
-	assert(bitmap);
-	return create_texture(bitmap);
+		// 이미지를 찾는다.
+		Bitmap* bitmap = find_bitmap(_file_name, bitmap_map);
+		if (bitmap == nullptr) {
+			// 없으면 기본 이미지를 찾아서 복사한다.
+			bitmap = new Bitmap(*load_bitmap(_file_name, _color));
+
+			// 색상을 바꾼다.
+			converter_color(bitmap, _color);
+
+			// 색상을 바꾼 이미지 주소를 저장한다.
+			bitmap_map->insert(std::pair<std::string, Bitmap*>(_file_name, bitmap));
+		}
+
+		assert(bitmap);
+		texture = create_texture(bitmap);
+	}
+	return texture;
 }
 
 // 색상별로 이미지를 저장해둔다.
