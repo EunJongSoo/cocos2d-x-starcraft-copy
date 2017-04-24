@@ -265,8 +265,10 @@ void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 
 // 상태를 설정한다.
 void Unit::set_state(const unit_state _state) {
-	// 애니메이션 프레임을 초기화한다.
-	_unit_animation->init_frame();
-	// 상태를 설정한다.
-	_unit_state = _state;
+	if (_unit_state != _state) {
+		// 애니메이션 프레임을 초기화한다.
+		_unit_animation->init_frame();
+		// 상태를 설정한다.
+		_unit_state = _state;
+	}
 }
