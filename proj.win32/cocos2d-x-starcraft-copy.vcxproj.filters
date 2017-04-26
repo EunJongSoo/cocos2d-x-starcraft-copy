@@ -102,6 +102,7 @@
     <ClCompile Include="..\Classes\UiLayer.cpp">
       <Filter>src\Layer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -184,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UiLayer.h">
       <Filter>src\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CameraManager.h">
+      <Filter>src\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

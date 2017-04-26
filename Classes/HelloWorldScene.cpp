@@ -15,6 +15,8 @@
 
 #include "UiLayer.h"
 
+#include "CameraManager.h"
+
 using namespace cocos2d;
 
 HelloWorld::HelloWorld() :
@@ -23,7 +25,7 @@ HelloWorld::HelloWorld() :
 	unit_layer(nullptr),
 	bg_layer(nullptr),
 	draw_node(nullptr),
-	scroll_direction(direction::center)
+	camera_manager(nullptr)
 {
 }
 
@@ -72,9 +74,6 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	
-	// 카메라 좌표에 영향 받지 않음
-
 	// 배경추가
 	bg_layer = BackGroundLayer::create();
 	bg_layer->create_map();
@@ -92,6 +91,9 @@ bool HelloWorld::init()
 	// ui layer 추가
 	ui_layer = UiLayer::create();
 	this->addChild(ui_layer, 3);
+
+	// camera_manager 추가
+	camera_manager = new CameraManager(128, 128);
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
@@ -125,103 +127,15 @@ void HelloWorld::main_process(InputInfo * const _input, const std::vector<Player
 		// 조작된 유닛 에게 명령 내리기
 		picking_manager->picking_unit(_input, _unit_vector);
 	}
-	if (_input->get_normal_mouse_info()) {
-		Vec2 mouse_pos = _input->get_normal_mouse_info()->get_end_pos();
-		check_dir(mouse_pos);
-	}
-	background_scroll();
 	// 모든 유닛을 움직이기
 }
 
-void HelloWorld::background_scroll()
-{
-	float x = 0.0f, y = 0.0f;
-	switch (scroll_direction)
-	{
-	case direction::center: {
-		x = 0.0f, y = 0.0f;
-		break;
-	}
-	case direction::up: {
-		y = 1.0f;
-		break;
-	}
-	case direction::up_right2: {
-		x = 1.0f, y = 1.0f;
-		break;
-	}
-	case direction::right: {
-		x = 1.0f;
-		break;
-	}
-	case direction::down_right2: {
-		x = 1.0f, y = -1.0f;
-		break;
-	}
-	case direction::down: {
-		y = -1.0f;
-		break;
-	}
-	case direction::up_left2: {
-		x = -1.0f, y = 1.0f;
-		break;
-	}
-	case direction::left: {
-		x = -+1.0f;
-		break;
-	}
-	case direction::down_left2: {
-		x = -1.0f, y = -1.0f;
-		break;
-	}
-	}
-	auto camera = Camera::getDefaultCamera();
-	Vec2 camera_pos = camera->getPosition();
 
-
-	if (camera_pos.x - 320.0f + x <= 0) {
-		x = 0.0f;
-	}
-	if (camera_pos.y - 240.0f + y <= 0) {
-		y = 0.0f;
-	}
-
-	if ((camera_pos.x + 320.0f + x) >= 4096.0f) {
-		x = 0.0f;
-	}
-	if ((camera_pos.y + 240.0f + y) >= 4192.0f) {
-		y = 0.0f;
-	}
-
-	//CCLOG("camera x : %f, camera y : %f", camera_pos.x, camera_pos.y);
-
-	float camera_speed = 32.0f;
-	Vec2 origin = Vec2(x, y) * camera_speed;
-	camera->setPosition(camera_pos + origin);
-	ui_layer->setPosition(ui_layer->getPosition() + origin);
-	//draw_node->setPosition(draw_node->getPosition() + origin);
-}
-
-void HelloWorld::check_dir(const cocos2d::Vec2 & _pos) {
-	scroll_direction = direction::center;
-	if (_pos.y > 475.0f + get_origin().y) {
-		scroll_direction = direction::up;
-		if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::up_right2;
-		else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::up_left2;
-	}
-	else if (_pos.y < 5.0f + get_origin().y) {
-		scroll_direction = direction::down;
-		if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::down_right2;
-		else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::down_left2;
-	}
-	else if (_pos.x > 635.0f + get_origin().x)					scroll_direction = direction::right;
-	else if (_pos.x < 5.0f + get_origin().x) 				scroll_direction = direction::left;
-}
 
 void HelloWorld::draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
 	// 드래그한 범위를 그려준다.
 	create_drag_rect(_input);
-
+	camera_scroll(_input);
 	// 전체 유닛 애니메이션 변경하기
 	for (PlayerUnitManager* manager : _unit_vector) {
 		std::vector<Unit*> unit_vector = manager->get_unit_vector();
@@ -248,6 +162,17 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 			draw_node->drawRect(start_vec2, end_vec2, Color4F(10, 20, 30, 100));
 		}
 	}
+}
+
+Vec2 HelloWorld::get_origin() const
+{
+	return camera_manager->get_origin();
+}
+
+void HelloWorld::camera_scroll(InputInfo * const _input)
+{
+	const Vec2& move_pos = camera_manager->camera_scroll(_input->get_normal_mouse_info()->get_end_pos());
+	ui_layer->setPosition(ui_layer->getPosition() + move_pos);
 }
 
 //

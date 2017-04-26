@@ -150,6 +150,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BitmapColorKeyConverter.cpp" />
     <ClCompile Include="..\Classes\BitmapFileLoadManager.cpp" />
     <ClCompile Include="..\Classes\BitmapManager.cpp" />
+    <ClCompile Include="..\Classes\CameraManager.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\InputManager.cpp" />
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
@@ -175,6 +176,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BitmapFileLoadManager.h" />
     <ClInclude Include="..\Classes\Bitmap.h" />
     <ClInclude Include="..\Classes\BitmapManager.h" />
+    <ClInclude Include="..\Classes\CameraManager.h" />
     <ClInclude Include="..\Classes\Header.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\InputInfo.h" />

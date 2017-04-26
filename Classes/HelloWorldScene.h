@@ -11,6 +11,7 @@ class BackGroundLayer;
 class UnitLayer;
 class UiLayer;
 class PlayerUnitManager;
+class CameraManager;
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -26,7 +27,8 @@ public:
 	void draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt);
 private:
 	void create_drag_rect(InputInfo * const _input);
-	void background_scroll();
+	cocos2d::Vec2 get_origin() const;
+	void camera_scroll(InputInfo * const _input);
 
 	InputManager* input_manager;
 	PickingManager* picking_manager;
@@ -34,12 +36,7 @@ private:
 	UnitLayer* unit_layer;
 	UiLayer* ui_layer;
 	cocos2d::DrawNode* draw_node;
-
-	direction scroll_direction;
-	void check_dir(const cocos2d::Vec2 & _dir);
-	cocos2d::Vec2 get_origin() {
-		return (cocos2d::Camera::getDefaultCamera()->getPosition() - cocos2d::Vec2(320.0f, 240.0f));
-	}
+	CameraManager* camera_manager;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
