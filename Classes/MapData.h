@@ -44,10 +44,12 @@ public:
 	};
 
 public:
-	MapData(const char* _file_name); 
+	MapData(); 
 	~MapData(); 
 
+	void load_map_data(const char * _file_name);
 	int find_mega_tile_num(int _x, int _y) const;
+	unsigned short find_mini_tile_flag(int _mega_tile, int _index) const;
 	int find_mini_tile_num(int _mega_tile, int _index) const;
 	bool is_flip_mini_tile(int _mega_tile, int _index) const;
 	WPE::wpe_data& MapData::find_wpe_data(int _mini_tile_index, int _w, int _h) const;
@@ -56,6 +58,7 @@ public:
 	inline int get_height() { return height; }
 
 private:
+	
 	template<typename T>
 	T* load_data(T* _type, const map_tile_set _tile, const char* _str);
 

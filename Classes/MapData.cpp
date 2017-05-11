@@ -2,7 +2,7 @@
 #include "MapFileInfo.h"
 #include <iostream>
 
-MapData::MapData(const char * _file_name) :
+MapData::MapData() :
 	width(0),
 	height(0),
 	map_info_mapdata(nullptr),
@@ -12,6 +12,18 @@ MapData::MapData(const char * _file_name) :
 	vr4(nullptr),
 	wpe(nullptr),
 	vf4(nullptr)
+{
+}
+
+MapData::~MapData() {
+	SAFE_DELETE(cv5);
+	SAFE_DELETE(vx4);
+	SAFE_DELETE(vr4);
+	SAFE_DELETE(wpe);
+	SAFE_DELETE(vf4);
+}
+
+void MapData::load_map_data(const char * _file_name)
 {
 	// 맵을 부르기 위해 필요한 정보
 	mapfile_info = new MapFileInfo(_file_name);
@@ -29,20 +41,17 @@ MapData::MapData(const char * _file_name) :
 	map_info_mapdata = mapfile_info->get_map_data();
 }
 
-MapData::~MapData() {
-	SAFE_DELETE(cv5);
-	SAFE_DELETE(vx4);
-	SAFE_DELETE(vr4);
-	SAFE_DELETE(wpe);
-	SAFE_DELETE(vf4);
-}
-
 int MapData::find_mega_tile_num(int _x, int _y) const
 {
 	int data_index = width * _y + _x;
 	int group = map_info_mapdata[data_index] >> 4;
 	int index = map_info_mapdata[data_index] & 0xf;
 	return cv5->group[group].mega_tile_index[index];
+}
+
+unsigned short MapData::find_mini_tile_flag(int _mega_tile, int _index) const
+{
+	return vf4->data[_mega_tile].flags[_index];
 }
 
 int MapData::find_mini_tile_num(int _mega_tile, int _index) const

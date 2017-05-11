@@ -21,7 +21,7 @@ public:
 	PickingManager();
 	~PickingManager();
 
-	void picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector);
+	std::vector<Unit*>* picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector);
 
 private:
 	void run_action_mouse_L_up(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector);
@@ -45,6 +45,9 @@ private:
 
 	inline bool is_unit(Unit* _unit);
 	inline bool is_unit(const std::vector<Unit*>& _unit_vector);
+
+	std::vector<Unit*>* selete_unit_vector;
+
 };
 
 #endif

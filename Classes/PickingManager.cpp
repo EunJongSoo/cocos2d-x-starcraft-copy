@@ -3,15 +3,22 @@
 #include "Unit.h"
 #include "PlayerUnitManager.h"
 #include "cocos2d.h"
+#include "Header.h"
 
 #include "InputInfo.h"
 #include "MouseInfo.h"
 
-PickingManager::PickingManager() {}
-PickingManager::~PickingManager() {}
+PickingManager::PickingManager():
+	selete_unit_vector(nullptr)
+{
+	selete_unit_vector = new std::vector<Unit*>;
+}
+PickingManager::~PickingManager() {
+	SAFE_DELETE(selete_unit_vector);
+}
 
 // input 정보를 확인하여 관련 이벤트를 동작
-void PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
+std::vector<Unit*>* PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 마우스 명령 확인
 	MouseInfo* info = _input->get_mouse_info();
@@ -40,6 +47,7 @@ void PickingManager::picking_unit(InputInfo * const _input, const std::vector<Pl
 	}
 	case MouseInfo::R_up:		break;
 	}
+	return selete_unit_vector;
 }
 
 // 마우스 왼클릭 끝날때 이벤트

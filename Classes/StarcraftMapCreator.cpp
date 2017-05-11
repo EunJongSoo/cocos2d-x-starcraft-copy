@@ -1,12 +1,12 @@
 #include "StarcraftMapCreator.h"
-#include "Bitmap.h"
+#include "MapData.h"
+#include "cocos2d.h"
 
 
 StarCraftMapCreator::StarCraftMapCreator() :
 	width(0),
 	height(0),
-	map_data(nullptr),
-	map_info_mapdata(nullptr)
+	map_data(nullptr)
 {
 }
 
@@ -14,9 +14,11 @@ StarCraftMapCreator::~StarCraftMapCreator()
 {
 }
 
-Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
+cocos2d::Sprite * StarCraftMapCreator::create_bitmap_mapdata(MapData * const _map_data)
 {
-	load_map_data(_file_name);
+	map_data = _map_data;
+	width = map_data->get_width();
+	height = map_data->get_height();
 
 	int bitmap_w = mega_tile_w * width;
 	int bitmap_h = mega_tile_h * height;
@@ -37,16 +39,15 @@ Bitmap * StarCraftMapCreator::create_bitmap_mapdata(const char * _file_name)
 		}
 	}
 
-	Bitmap* map_bitmap = new Bitmap(bitmap_w, bitmap_h, size_32bit, bitmap_w, bitmap_h, bitmap_data);
-	return map_bitmap;
-}
-
-void StarCraftMapCreator::load_map_data(const char * _file_name)
-{
-	// 맵 정보 불러오기
-	map_data = new MapData(_file_name);
-	width = map_data->get_width();
-	height = map_data->get_height();
+	cocos2d::Texture2D* texture = new cocos2d::Texture2D;
+	texture->initWithData(
+		bitmap_data,
+		size_32bit,
+		cocos2d::Texture2D::PixelFormat::RGBA8888,
+		bitmap_w,
+		bitmap_h,
+		cocos2d::Size(bitmap_w, bitmap_h));
+	return cocos2d::Sprite::createWithTexture(texture);
 }
 
 void StarCraftMapCreator::draw_mega_tile(char* _data, int _mega_tile, int _x, int _y)
@@ -102,7 +103,7 @@ void StarCraftMapCreator::draw_mini_tile(char* _data, int _index, bool _flip, in
 			// 224 ~ 231
 
 			// 해당 좌표에 찍을 색상을 찾아서 입력한다.
-			const MapData::WPE::wpe_data & wpedata = find_wpe_data(_index, pixel_w, pixel_h);
+			const MapData::WPE::wpe_data & wpedata = map_data->find_wpe_data(_index, pixel_w, pixel_h);
 			_data[draw_index] = wpedata.r;
 			_data[draw_index + 1] = wpedata.g;
 			_data[draw_index + 2] = wpedata.b;
@@ -127,9 +128,4 @@ int StarCraftMapCreator::find_mini_tile_num(int _mega_tile, int _index)
 bool StarCraftMapCreator::is_flip_mini_tile(int _mega_tile, int _index)
 {
 	return map_data->is_flip_mini_tile(_mega_tile, _index);
-}
-
-// 색상 정보를 가져온다.
-const MapData::WPE::wpe_data & StarCraftMapCreator::find_wpe_data(int _index, int _w, int _h) {
-	return map_data->find_wpe_data(_index, _w, _h);
 }

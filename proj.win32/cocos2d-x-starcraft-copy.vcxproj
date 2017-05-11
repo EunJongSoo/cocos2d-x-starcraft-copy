@@ -156,7 +156,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\KeyboardManager.cpp" />
     <ClCompile Include="..\Classes\MapData.cpp" />
     <ClCompile Include="..\Classes\MapFileInfo.cpp" />
+    <ClCompile Include="..\Classes\MegaNode.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
+    <ClCompile Include="..\Classes\MiniNode.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
     <ClCompile Include="..\Classes\PlayerUnitManager.cpp" />
     <ClCompile Include="..\Classes\ResourcesManager.cpp" />
@@ -184,8 +186,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\KeyboardManager.h" />
     <ClInclude Include="..\Classes\MapData.h" />
     <ClInclude Include="..\Classes\MapFileInfo.h" />
+    <ClInclude Include="..\Classes\MegaNode.h" />
     <ClInclude Include="..\Classes\MouseInfo.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />
+    <ClInclude Include="..\Classes\MiniNode.h" />
     <ClInclude Include="..\Classes\PickingManager.h" />
     <ClInclude Include="..\Classes\PlayerUnitManager.h" />
     <ClInclude Include="..\Classes\ResourcesManager.h" />

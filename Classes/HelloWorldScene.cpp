@@ -16,6 +16,8 @@
 #include "UiLayer.h"
 
 #include "CameraManager.h"
+#include "MapData.h"
+#include "TemplateSingleton.h"
 
 using namespace cocos2d;
 
@@ -92,8 +94,11 @@ bool HelloWorld::init()
 	ui_layer = UiLayer::create();
 	this->addChild(ui_layer, 3);
 
+	// 맵 정보 불러오기
+	MapData* map_data = TemplateSingleton<MapData>::get_instance();
+
 	// camera_manager 추가
-	camera_manager = new CameraManager(128, 128);
+	camera_manager = new CameraManager(map_data->get_width(), map_data->get_height());
 
 	// 메인 업데이트 시작
 	this->scheduleUpdate();

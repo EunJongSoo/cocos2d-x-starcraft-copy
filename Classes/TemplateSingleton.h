@@ -9,7 +9,7 @@ protected:
 public:
 	static T * get_instance()
 	{
-		if (instance == NULL)
+		if (instance == nullptr)
 			instance = new T;
 		return instance;
 	};
@@ -19,7 +19,7 @@ public:
 		if (instance)
 		{
 			delete instance;
-			instance = NULL;
+			instance = nullptr;
 		}
 	};
 

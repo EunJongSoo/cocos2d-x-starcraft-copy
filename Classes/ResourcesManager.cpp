@@ -121,8 +121,7 @@ void ResourcesManager::converter_color(Bitmap* const _bitmap, const player_color
 
 cocos2d::Texture2D * ResourcesManager::create_texture(const Bitmap* const _bitmap) {
 	// 비트맵 이미지로 텍스쳐2D를 만들어서 반환한다.
-	cocos2d::Texture2D* texture = nullptr;
-	texture = new cocos2d::Texture2D;
+	cocos2d::Texture2D* texture = new cocos2d::Texture2D;
 	texture->initWithData(
 		_bitmap->get_data(),
 		_bitmap->get_size(),
