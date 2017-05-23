@@ -77,22 +77,22 @@ void CameraManager::set_scroll_direction(float _x, float _y)
 
 void CameraManager::check_screen_limit(const Vec2& _pos)
 {
-	float lower_limit_x = _pos.x - camera_origin_x + scroll_x;
-	float lower_limit_y = _pos.y - camera_origin_y + scroll_y;
+	float lower_pos_x = _pos.x - camera_origin_x + scroll_x;
+	float lower_pos_y = _pos.y - camera_origin_y + scroll_y;
 
-	float higher_limit_x = _pos.x + camera_origin_x + scroll_x;
-	float higher_limit_y = _pos.y + camera_origin_y + scroll_y;
+	float higher_pos_x = _pos.x + camera_origin_x + scroll_x;
+	float higher_pos_y = _pos.y + camera_origin_y + scroll_y;
 
-	if (lower_limit_x <= 0) {
+	if (lower_pos_x <= lower_limit) {
 		scroll_x = 0.0f;
 	}
-	if (lower_limit_y <= 0) {
+	if (lower_pos_y <= lower_limit) {
 		scroll_y = 0.0f;
 	}
-	if (higher_limit_x >= 4096.0f) {
+	if (higher_pos_x >= higher_limit_x) {
 		scroll_x = 0.0f;
 	}
-	if (higher_limit_y >= 4192.0f) {
+	if (higher_pos_y >= higher_limit_y) {
 		scroll_y = 0.0f;
 	}
 }
