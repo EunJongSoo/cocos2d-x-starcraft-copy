@@ -2,9 +2,6 @@
 #include "MapData.h"
 #include "StarcraftMapCreator.h"
 
-#include "MegaNode.h"
-#include "MiniNode.h"
-
 using namespace cocos2d;
 
 BackGroundLayer::BackGroundLayer()
@@ -30,6 +27,8 @@ MapData * BackGroundLayer::create_map()
 	
 	create_map_sprite(map_data);
 	create_map_tree(map_data);
+
+	return map_data;
 }
 
 void BackGroundLayer::create_map_sprite(MapData * const _map_data)
@@ -55,29 +54,8 @@ void BackGroundLayer::create_map_sprite(MapData * const _map_data)
 
 void BackGroundLayer::create_map_tree(MapData * const _map_data)
 {
-	int width = _map_data->get_width();
-	int height = _map_data->get_height();
-
-	for (int h = 0; h < height; ++h) {
-		for (int w = 0; w < width; ++w) {
-			int mega_tile_num = _map_data->find_mega_tile_num(w, h);
-
-			MegaNode mega_node;
-
-			for (int mini_h = 0; mini_h < 4; ++mini_h) {
-				for (int mini_w = 0; mini_w < 4; ++mini_w) {
-					int index = mini_h * 4 + mini_w;
-					// 미니 노드를 만든다.
-					MiniNode* mini_node = new MiniNode;
-					
-					// 미니타일 플레그를 미니노드에 넣어야한다.
-					_map_data->find_mini_tile_flag(mega_tile_num, index);
+	
 
 
-					mega_node.add_mini_node(mini_node, index);
-				}
-			}
-			mega_node;
-		}
-	}
+	
 }
