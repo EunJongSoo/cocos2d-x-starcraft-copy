@@ -42,12 +42,9 @@ private:
 	void attack_unit(Unit* const _unit, const std::vector<Unit*>& _unit_vector);
 	void move_unit(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector);
 	
-
 	inline bool is_unit(Unit* _unit);
 	inline bool is_unit(const std::vector<Unit*>& _unit_vector);
-
 	std::vector<Unit*>* selete_unit_vector;
-
 };
 
 #endif
