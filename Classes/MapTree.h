@@ -12,7 +12,7 @@ public:
 	MapTree();
 	~MapTree();
 
-	void set_super_tree(SuperNode* _super_node);
+	void set_super_node(SuperNode* _super_node);
 private:
 	std::vector<SuperNode*> super_node_vector;
 

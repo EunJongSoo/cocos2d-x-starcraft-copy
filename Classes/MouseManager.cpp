@@ -152,14 +152,12 @@ void MouseManager::set_value(MouseInfo::mouse_state _state, const Vec2& _start_p
 void MouseManager::on_mouse_L_down_process(const Vec2& _start_pos)
 {
 	set_value(MouseInfo::mouse_state::L_down, _start_pos, _start_pos);
-	set_mouse_order();
 }
 
 // 오른클릭 프로세스
 void MouseManager::on_mouse_R_down_process(const Vec2& _start_pos)
 {
 	set_value(MouseInfo::mouse_state::R_down, _start_pos, _start_pos);
-	set_mouse_order();
 }
 
 void MouseManager::on_mouse_L_dragging_process(const Vec2 & _end_pos)
@@ -167,7 +165,6 @@ void MouseManager::on_mouse_L_dragging_process(const Vec2 & _end_pos)
 	// 이전 마지막 점과, 새로운 마지막 점의 거리가 일정 이상 날때
 	if (end_pos.distance(_end_pos) > 1.0f) {
 		set_value(MouseInfo::mouse_state::L_dragging, start_pos, _end_pos);
-		set_mouse_order();
 	}
 }
 
@@ -180,19 +177,9 @@ void MouseManager::on_mouse_move_process(const Vec2 & _end_pos)
 void MouseManager::on_mouse_L_up_process(const cocos2d::Vec2 & _end_pos)
 {
 	set_value(MouseInfo::mouse_state::L_up, start_pos, _end_pos);
-	set_mouse_order();
-	//set_value(MouseInfo::mouse_state::none, Vec2::ZERO, Vec2::ZERO);
 }
 
 void MouseManager::on_mouse_L_drag_process(const cocos2d::Vec2 & _end_pos)
 {
 	set_value(MouseInfo::mouse_state::L_drag, start_pos, _end_pos);
-	set_mouse_order();
-	//set_value(MouseInfo::mouse_state::none, Vec2::ZERO, Vec2::ZERO);
-}
-
-// 마우스 명령을 설정한다.
-void MouseManager::set_mouse_order() {
-	/*MouseInfo* mouse_info = new MouseInfo(state, start_pos, end_pos);
-	fast_mouse_info_deque.push_back(mouse_info);*/
 }

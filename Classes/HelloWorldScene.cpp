@@ -17,7 +17,7 @@
 
 #include "CameraManager.h"
 #include "MapData.h"
-#include "TemplateSingleton.h"
+#include "MapTree.h"
 
 using namespace cocos2d;
 
@@ -76,9 +76,20 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+
+	// 수정필요// 수정필요// 수정필요// 수정필요
+	// 수정필요// 수정필요// 수정필요// 수정필요
+	// 수정필요// 수정필요// 수정필요// 수정필요
+	// 수정필요// 수정필요// 수정필요// 수정필요
+	// 수정필요// 수정필요// 수정필요// 수정필요
+	// 맵 데이터 불러올 변수 선언
+	MapData* map_data = new MapData;
+	MapTree* map_tree = new MapTree;
+
+
 	// 배경추가
 	bg_layer = BackGroundLayer::create();
-	bg_layer->create_map();
+	bg_layer->create_map(map_data, map_tree);
 	this->addChild(bg_layer, 0);
 
 	// unit layer 추가
@@ -93,9 +104,6 @@ bool HelloWorld::init()
 	// ui layer 추가
 	ui_layer = UiLayer::create();
 	this->addChild(ui_layer, 3);
-
-	// 맵 정보 불러오기
-	MapData* map_data = TemplateSingleton<MapData>::get_instance();
 
 	// camera_manager 추가
 	camera_manager = new CameraManager(map_data->get_width(), map_data->get_height());

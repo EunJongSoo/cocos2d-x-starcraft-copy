@@ -1,7 +1,6 @@
 #ifndef MOUSE_MANAGER_H_
 #define MOUSE_MANAGER_H_
 
-#include <deque>
 #include "cocos2d.h"
 #include "MouseInfo.h"
 
@@ -30,7 +29,7 @@ private:
 	void correction_mouse_location_y(cocos2d::Vec2& _point);
 	bool mouse_distance_check(const cocos2d::Vec2& _vec2);
 	void set_value(MouseInfo::mouse_state _state, const cocos2d::Vec2& _start_pos, const cocos2d::Vec2& _end_pos);
-	void set_mouse_order();
+
 private:
 	cocos2d::Size win_size;
 
@@ -39,7 +38,6 @@ private:
 	cocos2d::Vec2 start_pos;
 	cocos2d::Vec2 end_pos;
 
-	std::deque<MouseInfo*> fast_mouse_info_deque;
 	const float mouse_drag_distance = 0.5f;
 };
 

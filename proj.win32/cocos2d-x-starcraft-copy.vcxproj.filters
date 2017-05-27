@@ -108,6 +108,18 @@
     <ClCompile Include="..\Classes\CameraManager.cpp">
       <Filter>src\etc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MapTree.cpp">
+      <Filter>src\MapTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SuperNode.cpp">
+      <Filter>src\MapTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MegaNode.cpp">
+      <Filter>src\MapTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\MiniNode.cpp">
+      <Filter>src\MapTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -193,6 +205,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\CameraManager.h">
       <Filter>src\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MapTree.h">
+      <Filter>src\MapTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SuperNode.h">
+      <Filter>src\MapTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MegaNode.h">
+      <Filter>src\MapTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MiniNode.h">
+      <Filter>src\MapTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
