@@ -19,6 +19,8 @@
 #include "MapData.h"
 #include "MapTree.h"
 
+#include "OrderManager.h"
+
 using namespace cocos2d;
 
 HelloWorld::HelloWorld() :
@@ -108,6 +110,9 @@ bool HelloWorld::init()
 	// camera_manager 추가
 	camera_manager = new CameraManager(map_data->get_width(), map_data->get_height());
 
+	// order manager 추가
+	order_manager = new OrderManager;
+
 	// 메인 업데이트 시작
 	this->scheduleUpdate();
 
@@ -126,7 +131,7 @@ void HelloWorld::update(float _dt) {
 	std::vector<PlayerUnitManager*>& unit_manager_vector = unit_layer->get_unit_manager_vector();
 
 	// 메인 프로세스
-	main_process(_input_info, unit_manager_vector, _dt);
+	const std::vector<Unit*>& select_unit_vector = main_process(_input_info, unit_manager_vector);
 
 	// 그리기
 	draw_process(_input_info, unit_manager_vector, _dt);
@@ -134,13 +139,13 @@ void HelloWorld::update(float _dt) {
 	SAFE_DELETE(_input_info);
 }
 
-void HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt) {
-	
-	if (_input->get_mouse_info()) {
-		// 조작된 유닛 에게 명령 내리기
-		picking_manager->picking_unit(_input, _unit_vector);
-	}
-	// 모든 유닛을 움직이기
+const std::vector<Unit*>& HelloWorld::main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector) {
+	// 유닛 선택
+	const std::vector<Unit*>& select_unit_vector = picking_manager->picking_unit(_input, _manager_vector);
+
+	// 유닛에게 명령 내리기
+	order_manager->order_process(_input, _manager_vector, select_unit_vector);
+	return select_unit_vector;
 }
 
 
@@ -156,6 +161,10 @@ void HelloWorld::draw_process(InputInfo * const _input, const std::vector<Player
 			unit->run_action_animation(_dt);
 		}
 	}
+
+	// 선택된 유닛 정보를 그려준다.
+
+
 }
 
 // 기능 이관이 필요함

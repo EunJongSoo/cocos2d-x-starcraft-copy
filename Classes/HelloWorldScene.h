@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Header.h"
 
+class Unit;
 class InputManager;
 class InputInfo;
 class PickingManager;
@@ -12,6 +13,7 @@ class UnitLayer;
 class UiLayer;
 class PlayerUnitManager;
 class CameraManager;
+class OrderManager;
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -23,8 +25,8 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	virtual void update(float _dt);
-	void main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_array, const float _dt);
-	void draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _unit_vector, const float _dt);
+	const std::vector<Unit*>& main_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector);
+	void draw_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector, const float _dt);
 private:
 	void create_drag_rect(InputInfo * const _input);
 	cocos2d::Vec2 get_origin() const;
@@ -37,6 +39,7 @@ private:
 	UiLayer* ui_layer;
 	cocos2d::DrawNode* draw_node;
 	CameraManager* camera_manager;
+	OrderManager* order_manager;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

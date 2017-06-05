@@ -161,6 +161,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\MegaNode.cpp" />
     <ClCompile Include="..\Classes\MiniNode.cpp" />
     <ClCompile Include="..\Classes\MouseManager.cpp" />
+    <ClCompile Include="..\Classes\OrderManager.cpp" />
     <ClCompile Include="..\Classes\PickingManager.cpp" />
     <ClCompile Include="..\Classes\PlayerUnitManager.cpp" />
     <ClCompile Include="..\Classes\ResourcesManager.cpp" />
@@ -195,6 +196,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\MiniNode.h" />
     <ClInclude Include="..\Classes\MouseInfo.h" />
     <ClInclude Include="..\Classes\MouseManager.h" />
+    <ClInclude Include="..\Classes\OrderManager.h" />
     <ClInclude Include="..\Classes\PickingManager.h" />
     <ClInclude Include="..\Classes\PlayerUnitManager.h" />
     <ClInclude Include="..\Classes\ResourcesManager.h" />

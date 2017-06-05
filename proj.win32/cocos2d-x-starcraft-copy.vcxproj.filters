@@ -124,6 +124,7 @@
       <Filter>src\AI\MapTree</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AIManager.cpp" />
+    <ClCompile Include="..\Classes\OrderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -223,6 +224,9 @@
       <Filter>src\AI\MapTree</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AIManager.h">
+      <Filter>src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\OrderManager.h">
       <Filter>src\AI</Filter>
     </ClInclude>
   </ItemGroup>

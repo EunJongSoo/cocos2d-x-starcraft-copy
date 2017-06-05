@@ -8,33 +8,31 @@
 #include "InputInfo.h"
 #include "MouseInfo.h"
 
-PickingManager::PickingManager(): 
-	select_unit_vector(nullptr)
+PickingManager::PickingManager()
 {
-	select_unit_vector = new std::vector<Unit*>;
 }
 PickingManager::~PickingManager() {
-	SAFE_DELETE(select_unit_vector);
 }
 
 // input 정보를 확인하여 관련 이벤트를 동작
-std::vector<Unit*>* PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
+const std::vector<Unit*>& PickingManager::picking_unit(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 마우스 명령 확인
 	MouseInfo* info = _input->get_mouse_info();
-	// 마우스 명령 종류에 따라 해당 이벤트를 동작
-	switch (info->get_mouse_state())
-	{
-	case MouseInfo::L_drag: {
-		run_action_mouse_L_drag(info->get_start_pos(), info->get_end_pos(), _manager_vector);
-		break;
-	}
-	case MouseInfo::L_double:	break;
-	case MouseInfo::L_up: {
-		run_action_mouse_L_up(info->get_end_pos(), _manager_vector);
-		break;
-	}
-	}
+	if (info) {
+		// 마우스 명령 종류에 따라 해당 이벤트를 동작
+		switch (info->get_mouse_state())
+		{
+		case MouseInfo::L_drag: {
+			run_action_mouse_L_drag(info->get_start_pos(), info->get_end_pos(), _manager_vector);
+			break;
+		}
+		case MouseInfo::L_double:	break;
+		case MouseInfo::L_up: {
+			run_action_mouse_L_up(info->get_end_pos(), _manager_vector);
+			break;
+		}
+		}
 		/*case MouseInfo::R_down: {
 			run_action_mouse_R_down(info->get_start_pos(), _manager_vector);
 			break;
@@ -46,9 +44,10 @@ std::vector<Unit*>* PickingManager::picking_unit(InputInfo * const _input, const
 		case MouseInfo::L_dragging: {
 			break;
 		}*/
-	
-	/*case MouseInfo::R_up:		break;
-	}*/
+
+		/*case MouseInfo::R_up:		break;
+		}*/
+	}
 	return select_unit_vector;
 }
 
@@ -94,11 +93,14 @@ void PickingManager::run_action_mouse_L_drag(const cocos2d::Vec2& _str_vec2, con
 	// 드래그된 유닛이 있는지 확인한다.
 	if (tmp_select_unit_vector.size() > 0) {
 		// 드래그된 유닛이 있으면 기존 유닛을 초기화 한다.
-		select_unit_vector->clear();
+		select_unit_vector.clear();
+
+
+		// select_unit_vector = tmp_select_unit_vector;
 
 		// 임시 저장한 유닛을 저장한다.
 		for (Unit* unit : tmp_select_unit_vector) {
-			select_unit_vector->push_back(unit);
+			select_unit_vector.push_back(unit);
 		}
 	}
 }
@@ -120,9 +122,9 @@ bool PickingManager::mouse_L_up_process(const cocos2d::Vec2& _vec2, const std::v
 	// 선택된 유닛이 있는지 확인한다.
 	if (is_unit(unit)) {
 		// 선택된 유닛이 있으면 기존 선택 유닛은 취소한다.
-		select_unit_vector->clear();
+		select_unit_vector.clear();
 		// 새로 유닛을 선택한다.
-		select_unit_vector->push_back(unit);
+		select_unit_vector.push_back(unit);
 		return true;
 	}
 	return false;
@@ -235,13 +237,13 @@ bool PickingManager::find_drag_unit(const cocos2d::Rect& _drag_rect, const std::
 		if (rect.intersectsRect(_drag_rect)) {
 			// 저장한 유닛이 12개가 되면 검색을 중지한다.
 			if (tmp_select_unit_vector.size() == 12) {
-				return false;
+				return true;
 			}
 			// 겹친 유닛을 vector에 저장
 			tmp_select_unit_vector.push_back(unit);
 		}
 	}
-	return true;
+	return false;
 }
 
 // 현재 선택된 유닛을 찾는다.
