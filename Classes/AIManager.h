@@ -7,19 +7,23 @@
 #ifndef AI_MANAGER_H_
 #define AI_MANAGER_H_
 
-class MapTree;
+class PathFindingManager;
+
+namespace cocos2d {
+	class Vec2;
+}
 
 class AIManager {
 public:
 	AIManager();
 	~AIManager();
 
-	void set_map_tree(MapTree* _map_tree);
-
+	// 길을 찾는 함수
+	// 자기위치, 목표위치를 줍니다.
+	void path_finding(const cocos2d::Vec2& _start_pos, const cocos2d::Vec2& _end_pos);
 
 private:
-	MapTree* map_tree;
-
+	PathFindingManager * path_finding_manager;
 
 };
 
