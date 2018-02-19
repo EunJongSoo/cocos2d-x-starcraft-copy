@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : Header.h
+****************************/
+
 #pragma once
 
 // 안전해제
@@ -7,8 +13,14 @@
 // UnitManager, MouseManager
 
 // 임시로 무기도 추가
-enum unit_state {
-	production, idle, move, attack, patrol, hold, die
+enum class UnitState {
+	production,			// 생산중
+	idle,				// 대기
+	move,				// 이동
+	attack,				// 공격
+	patrol,				// 순찰
+	hold,				// 고정
+	die					// 사망
 };
 
 enum direction {
