@@ -23,7 +23,7 @@ enum class UnitState {
 	die					// »ç¸Á
 };
 
-enum direction {
+enum Direction {
 	up,
 	up_right1,
 	up_right2,
