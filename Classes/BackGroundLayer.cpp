@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : BackGroundLayer.cpp
+****************************/
+
 #include <vector>
 #include "BackGroundLayer.h"
 #include "MapData.h"
@@ -28,7 +34,7 @@ bool BackGroundLayer::init()
 
 bool BackGroundLayer::create_map(MapData* const _map_data, MapTree* const _map_tree)
 {
-	_map_data->load_map_data("(8)Orbital Death.chk");
+	_map_data->load_map_data("(2)The Small Divide.chk");
 	
 	create_map_sprite(_map_data);
 	create_map_tree(_map_data, _map_tree);
@@ -91,35 +97,80 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 	}
 
 	int i = 0;
+	// 마지막 노드 번호
+	int mini_height_width = mini_height * mini_width;
+	// 뒤에서 두번째줄 마지막 노드번호
+	int mini_height_width2 = mini_height_width - mini_width;
+
+	int mini_width_plus = mini_width + 1;
+	int mini_width_minus = mini_width - 1;
+
 	// 미니노드에 주변 통행가능 저장
 	for (int h = 0; h < mini_height; ++h) {
 		for (int w = 0; w < mini_width; ++w) {
 			// 위쪽
-			if (i - mini_width >= 0) {
+			// 세로 첫번째줄 노드인지 확인
+			// i가 가로줄 보다 크거나 같으면 둘째 줄 이후다.
+			if (i >= mini_width) {
 				if (mini_node_vector[i - mini_width]->is_walkable()) {
 					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::up);
 				}
 			}
 			// 아래쪽
-			if (i + mini_width < mini_height * mini_width) {
+			// 세로 마지막줄 노드인지 확인
+			if (i < mini_height_width2) {
 				if (mini_node_vector[i + mini_width]->is_walkable()) {
 					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::down);
 				}
 			}
 			// 왼쪽
-			if (i - 1 >= 0) {
+			// 가로 첫번째 노드인지 확인해서 제외한다.
+			if (i % mini_width != 0) {
 				if (mini_node_vector[i - 1]->is_walkable()) {
 					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::left);
 				}
 			}
 			
-			
 			// 오른쪽
-			if (i + 1 < mini_height * mini_width) {
+			// 가로 마지막 노드인지 확인해서 제외한다.
+			if (i % mini_width != mini_width_minus) {
 				if (mini_node_vector[i + 1]->is_walkable()) {
 					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::right);
 				}
 			}
+			
+			// 왼쪽 위
+			// 세로 첫번째줄 노드가 아니면서, 가로 첫번째줄 노드가 아닐것
+			if (i >= mini_width && i % mini_width != 0) {
+				if (mini_node_vector[i - mini_width_plus]->is_walkable()) {
+					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::up_left);
+				}
+			}
+
+			// 오른쪽 위
+			// 세로 첫번째줄 노드가 아니면서, 가로 마지막줄 노드가 아닐것
+			if (i >= mini_width && i % mini_width != mini_width_minus) {
+				if (mini_node_vector[i - mini_width_minus]->is_walkable()) {
+					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::up_left);
+				}
+			}
+
+			// 왼쪽 아래
+			// 세로 마지막줄 노드가 아니면서, 가로 첫번째줄 노드가 아닐것
+			if (i < mini_height_width2 && i % mini_width != 0) {
+				if (mini_node_vector[i + mini_width_minus]->is_walkable()) {
+					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::down_left);
+				}
+			}
+
+			// 오른쪽 아래
+			// 세로 마지막줄 노드가 아니면서, 가로 마지막줄 노드가 아닐것
+			if (i < mini_height_width2 && i % mini_width != mini_width_minus) {
+				if (mini_node_vector[i + mini_width_plus]->is_walkable()) {
+					mini_node_vector[i]->set_open_node((char)MiniNode::node_dir_check::down_right);
+				}
+			}
+
 			++i;
 		}
 	}
