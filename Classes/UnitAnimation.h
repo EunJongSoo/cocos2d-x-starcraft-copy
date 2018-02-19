@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : UnitAnimation.h
+****************************/
+
 #ifndef UNIT_ANIMATION_H_
 #define UNIT_ANIMATION_H_
 
@@ -7,14 +13,14 @@
 class UnitAnimation {
 public:
 	struct clip {
-		unit_state state;
+		UnitState state;
 		unsigned int max_frame;
 		std::vector<cocos2d::Texture2D*> animation_vector;
 	};
 	UnitAnimation(const unit_type _type, cocos2d::Sprite* const _sprite);
 	UnitAnimation(const unit_type _type, const player_color _color, cocos2d::Sprite* const _sprite);
 	~UnitAnimation();
-	bool run_action_aniamtion(const unit_state _state, cocos2d::Sprite* const _sprite, const float _dt, const int _dir = 0, const int _frame = 0);
+	bool run_action_aniamtion(const UnitState _state, cocos2d::Sprite* const _sprite, const float _dt, const int _dir = 0, const int _frame = 0);
 	void init_frame();
 private:
 	UnitAnimation() {};
@@ -25,11 +31,11 @@ private:
 	std::vector<clip*> clip_vector;
 
 	void init_unit_animation(const unit_type _type, cocos2d::Sprite* const _sprite);
-	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base);
-	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count);
-	void init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
+	void init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base);
+	void init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count);
+	void init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);
 	void sprite_flipped_x(cocos2d::Sprite* const _sprite, const bool _is_left, const bool _is_flipped_x);
-	clip* create_clip(const unit_state _state);
+	clip* create_clip(const UnitState _state);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count);
 	void init_clip(clip* const _clip, const char* _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num);

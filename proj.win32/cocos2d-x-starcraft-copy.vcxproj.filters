@@ -127,6 +127,9 @@
     <ClCompile Include="..\Classes\OrderManager.cpp">
       <Filter>src\AI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\PathFindingManager.cpp">
+      <Filter>src\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -229,6 +232,12 @@
       <Filter>src\AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\OrderManager.h">
+      <Filter>src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Path.h">
+      <Filter>src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PathFindingManager.h">
       <Filter>src\AI</Filter>
     </ClInclude>
   </ItemGroup>

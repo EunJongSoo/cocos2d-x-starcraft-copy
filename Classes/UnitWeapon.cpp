@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : UnitWeapon.cpp
+****************************/
+
 #include "Unit.h"
 #include "UnitWeapon.h"
 #include "UnitAnimation.h"
@@ -35,7 +41,7 @@ UnitWeapon::~UnitWeapon() {
 
 void UnitWeapon::run_action_animation(const float _dt) {
 	this->setPosition(target->getPosition());
-	if (weapon_animation->run_action_aniamtion(unit_state::idle, this, _dt)) {
+	if (weapon_animation->run_action_aniamtion(UnitState::idle, this, _dt)) {
 		this->setVisible(false);
 	}
 }

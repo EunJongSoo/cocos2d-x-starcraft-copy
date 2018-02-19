@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : UnitAnimation.cpp
+****************************/
+
 #include "UnitAnimation.h"
 #include "TemplateSingleton.h"
 #include "ResourcesManager.h"
@@ -36,15 +42,15 @@ void UnitAnimation::init_unit_animation(const unit_type _type, Sprite* const _sp
 	switch (_type)
 	{
 	case marine: {
-		this->init_animation(move, "marine", 9, 68, 9);
-		this->init_animation(attack, "marine", 8, 51, 2, 3, -17);
-		this->init_animation(die, "marine", 8, 221);
+		this->init_animation(UnitState::move, "marine", 9, 68, 9);
+		this->init_animation(UnitState::attack, "marine", 8, 51, 2, 3, -17);
+		this->init_animation(UnitState::die, "marine", 8, 221);
 		break;
 	}
 	case marine_weapon: {
-		this->init_animation(idle, "tspark", 15, 0);
+		this->init_animation(UnitState::idle, "tspark", 15, 0);
 		for (clip* _clip : clip_vector) {
-			if (_clip->state == idle) {
+			if (_clip->state == UnitState::idle) {
 				_sprite->setTexture(_clip->animation_vector[0]);
 			}
 		}
@@ -55,7 +61,7 @@ void UnitAnimation::init_unit_animation(const unit_type _type, Sprite* const _sp
 	
 }
 
-bool UnitAnimation::run_action_aniamtion(const unit_state _state, Sprite* const _sprite, const float _dt, const int _dir, const int _frame) {
+bool UnitAnimation::run_action_aniamtion(const UnitState _state, Sprite* const _sprite, const float _dt, const int _dir, const int _frame) {
 	for (clip* _clip : clip_vector) {
 		if (_clip->state == _state) {
 			return clip_aniamtion(_clip, _sprite, _dt, _dir, _frame);
@@ -68,15 +74,15 @@ void UnitAnimation::init_frame() {
 	dt = 0;
 }
 
-void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base) {
+void UnitAnimation::init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base) {
 	init_clip(create_clip(_state), _str, _max_frame, _base);
 }
 
-void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count) {
+void UnitAnimation::init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count) {
 	init_clip(create_clip(_state), _str, _max_frame, _base, _ani_count);
 }
 
-void UnitAnimation::init_animation(const unit_state _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
+void UnitAnimation::init_animation(const UnitState _state, const char* const _str, const int _max_frame, const int _base, const int _ani_count, const int _loop, const int _num) {
 	init_clip(create_clip(_state), _str, _max_frame, _base, _ani_count, _loop, _num);
 }
 
@@ -86,7 +92,7 @@ void UnitAnimation::sprite_flipped_x(Sprite* const _sprite, const bool _is_left,
 	}
 }
 
-UnitAnimation::clip * UnitAnimation::create_clip(const unit_state _state)
+UnitAnimation::clip * UnitAnimation::create_clip(const UnitState _state)
 {
 	clip* _clip = new clip();
 	_clip->state = _state;

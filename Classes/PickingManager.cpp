@@ -25,7 +25,10 @@ const std::vector<Unit*>& PickingManager::picking_unit(InputInfo * const _input,
 {
 	// 마우스 명령 확인
 	MouseInfo* info = _input->get_mouse_info();
+
+	// 입력된 명령이 있으면 명령을 전달한다.
 	if (info) {
+
 		// 마우스 명령 종류에 따라 해당 이벤트를 동작
 		switch (info->get_mouse_state())
 		{

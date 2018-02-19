@@ -23,6 +23,8 @@ void OrderManager::order_process(InputInfo * const _input, const std::vector<Pla
 {
 	// 마우스 명령 확인
 	MouseInfo* info = _input->get_mouse_info();
+
+	// 입력된 명령이 있으면 명령을 전달한다.
 	if (info) {
 		// 마우스 명령 종류에 따라 해당 이벤트를 동작
 		switch (info->get_mouse_state())
@@ -44,7 +46,7 @@ void OrderManager::run_action_mouse_R_down(const cocos2d::Vec2& _vec2, const std
 		return;
 	}
 
-	// 선택한 유닛의 색상의 확인한다.
+	// 선택한 유닛의 색상의 확인해서 플레이어 유닛만 조작한다.
 	// 이후 추가되어야 하는부분
 	// 이후 추가되어야 하는부분
 	// 이후 추가되어야 하는부분

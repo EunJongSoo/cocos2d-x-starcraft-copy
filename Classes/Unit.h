@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : Unit.h
+****************************/
+
 #ifndef UNIT_H_
 #define UNIT_H_
 
@@ -10,22 +16,36 @@ class UnitAnimation;
 
 class Unit :public cocos2d::Sprite {
 public:
-	enum upgrade_type {
-		bionic, mechanic, air_force
+	// 유닛 타입
+	enum class UpgradeType {
+		bionic, 
+		mechanic, 
+		air_force
 	};
-	enum races_type {
+
+	// 종족 타입
+	enum class RacesType {
 		terran,
 	};
-	enum unit_size_type {
-		small_unit, medium_unit, large_unit, building
+
+	// 유닛 사이즈
+	enum class UnitSizeType {
+		small_unit, 
+		medium_unit, 
+		large_unit, 
+		building
 	};
-	enum special_effects {
-		none, clockking,
+
+	// 특수효과
+	enum class SpecialEffects {
+		none, 
+		clockking,
 	};
+
 	struct unit_info {
 		unit_info(int _hp, int _mp, int _shield, int _attack,
 			int _defence, int _attack_lv, int _defence_lv, unit_type _unit_type,
-			upgrade_type _up_type, char* _name) :
+			UpgradeType _up_type, char* _name) :
 			killing_count(0),
 			hp(_hp),
 			mp(_mp),
@@ -47,7 +67,7 @@ public:
 		unsigned int attack_upgrade_level;			// 공격 업그레이드 수준
 		unsigned int defence_upgrade_level;			// 방어 업그레이드 수준
 		unit_type unit_type;						// 유닛 종류
-		upgrade_type upgrade_type;					// 업그레이드 종류
+		UpgradeType upgrade_type;					// 업그레이드 종류
 		std::string unit_name;						// 유닛 이름
 	private:
 		unit_info();
@@ -99,7 +119,7 @@ public:
 private:
 	Unit();
 	void check_dir(const cocos2d::Vec2& _dir);
-	void set_state(const unit_state _state);
+	void set_state(const UnitState _state);
 
 	// 분리해야되는 기능
 	void run_action_move();
@@ -122,9 +142,9 @@ private:
 	bool _select_unit;
 
 	player_color _player_color;						// 플레이어 색상
-	races_type _races_type;							// enum 종족
-	unit_state _unit_state;							// enum 유닛의 현재 상태
-	special_effects _unit_effects;					// 현재 특수이팩트
+	RacesType _races_type;							// enum 종족
+	UnitState _unit_state;							// enum 유닛의 현재 상태
+	SpecialEffects _unit_effects;					// 현재 특수이팩트
 
 	cocos2d::Vec2 _move_vec2;						// 이동 목표
 	cocos2d::Vec2 _my_pos_vec2;						// 시작위치, 정찰 명령시 사용

@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : Unit.cpp
+****************************/
+
 #include "Unit.h"
 #include "UnitAnimation.h"
 #include "UnitWeapon.h"
@@ -12,9 +18,9 @@ Unit::Unit() :
 	_production_time(0.0f),
 	_select_unit(false),
 	_player_color(kWhite),
-	_races_type(races_type::terran),
-	_unit_state(unit_state::idle),
-	_unit_effects(special_effects::none),
+	_races_type(RacesType::terran),
+	_unit_state(UnitState::idle),
+	_unit_effects(SpecialEffects::none),
 	_unit_info(nullptr),
 	_unit_info2(nullptr),
 	_production_info(nullptr),
@@ -74,7 +80,7 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color
 
 	// 임시작성
 	// 유닛 정보를 생성한다.
-	_unit_info = new unit_info(1, 1, 1, 1, 1, 1, 1, unit_type::marine, upgrade_type::bionic, "marine");
+	_unit_info = new unit_info(1, 1, 1, 1, 1, 1, 1, unit_type::marine, UpgradeType::bionic, "marine");
 	_unit_info2 = new unit_info2(1, 1, 1, 1, 1);
 
 	// 임시작성
@@ -88,7 +94,7 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color
 // 유닛 공격 명령
 void Unit::attack_unit(Unit* const _target) {
 	// 유닛의 현재 상태를 설정한다.
-	set_state(unit_state::attack);
+	set_state(UnitState::attack);
 	
 	// 타겟을 설정한다.
 	_target_unit = _target;
@@ -103,30 +109,30 @@ void Unit::attack_unit(Unit* const _target) {
 
 // 유닛 이동 명령
 void Unit::move_unit(const cocos2d::Vec2& _vec2) {
-	set_state(unit_state::move);
+	set_state(UnitState::move);
 	_move_vec2 = _vec2;
 }
 
 // 유닛 정지 명령
 void Unit::stop_unit() {
-	set_state(unit_state::idle);
+	set_state(UnitState::idle);
 }
 
 // 유닛 순찰 명령
 void Unit::patrol_unit(const cocos2d::Vec2& _vec2) {
-	set_state(unit_state::patrol);
+	set_state(UnitState::patrol);
 	_move_vec2 = _vec2;
 	_my_pos_vec2 = this->getPosition();
 }
 
 // 유닛 고정 명령
 void Unit::hold_unit() {
-	set_state(unit_state::hold);
+	set_state(UnitState::hold);
 }
 
 // 유닛이 죽으면 호출
 void Unit::die_unit() {
-	set_state(unit_state::die);
+	set_state(UnitState::die);
 }
 
 // 공격 당할때 호출된다.
@@ -155,14 +161,14 @@ void Unit::run_action_animation(float _dt) {
 
 	switch (_unit_state)
 	{
-	case production: 		break;
-	case idle:				break;
-	case move:
+	case UnitState::production: 		break;
+	case UnitState::idle:				break;
+	case UnitState::move:
 		run_action_move();														// 이동처리
-		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
+		_unit_animation->run_action_aniamtion(UnitState::move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
-	case attack: {
-		_unit_animation->run_action_aniamtion(attack, this, _dt, _unit_dir, 2);	// 애니메이션 처리		
+	case UnitState::attack: {
+		_unit_animation->run_action_aniamtion(UnitState::attack, this, _dt, _unit_dir, 2);	// 애니메이션 처리		
 		{																		// 생성 조건필요한데..
 			_weapon = new UnitWeapon(_target_unit, unit_type::marine_weapon);
 			this->getParent()->addChild(_weapon);
@@ -170,17 +176,17 @@ void Unit::run_action_animation(float _dt) {
 		}
 		break;
 	}
-	case patrol: {
+	case UnitState::patrol: {
 		run_action_move();														// 이동처리, 기능 이관 해야됨
-		if (_unit_state == idle) {
-			_unit_state = patrol;
+		if (_unit_state == UnitState::idle) {
+			_unit_state = UnitState::patrol;
 			std::swap(_move_vec2, _my_pos_vec2);
 		}
-		_unit_animation->run_action_aniamtion(move, this, _dt, _unit_dir);		// 애니메이션 처리
+		_unit_animation->run_action_aniamtion(UnitState::move, this, _dt, _unit_dir);		// 애니메이션 처리
 		break;
 	}
-	case hold: 		break;
-	case die: 		_unit_animation->run_action_aniamtion(die, this, _dt); 		break;
+	case UnitState::hold: 		break;
+	case UnitState::die: 		_unit_animation->run_action_aniamtion(UnitState::die, this, _dt); 		break;
 	default:
 		break;
 	}
@@ -211,7 +217,7 @@ void Unit::weapon_animaiton(float _dt) {
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
 	if (bounding.containsPoint(_move_vec2)) {
-		_unit_state = idle;
+		_unit_state = UnitState::idle;
 	}
 	else {
 		// 현재 유닛 위치를 저장
@@ -264,7 +270,7 @@ void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 }
 
 // 상태를 설정한다.
-void Unit::set_state(const unit_state _state) {
+void Unit::set_state(const UnitState _state) {
 	if (_unit_state != _state) {
 		// 애니메이션 프레임을 초기화한다.
 		_unit_animation->init_frame();
