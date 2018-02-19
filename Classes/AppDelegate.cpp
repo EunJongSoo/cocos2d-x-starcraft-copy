@@ -44,10 +44,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		/*Size size = glview->getFrameSize();
 		float f = glview->getScaleX();*/
 
-		glview = GLViewImpl::create("cocos2d-x-starcraft-copy");
+		//glview = GLViewImpl::create("cocos2d-x-starcraft-copy");
 		
 		// 풀스크린으로 화면 만들기
-		//glview = GLViewImpl::createWithFullScreen("cocos2d-x-starcraft-copy");
+		glview = GLViewImpl::createWithFullScreen("cocos2d-x-starcraft-copy");
 		// 해상도 지정
 		glview->setDesignResolutionSize(640, 480, ResolutionPolicy::EXACT_FIT);
 

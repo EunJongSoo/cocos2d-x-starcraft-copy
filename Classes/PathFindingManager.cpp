@@ -6,14 +6,14 @@
 
 #include "PathFindingManager.h"
 #include "Path.h"
+#include "MapTree.h"
 
 PathFindingManager::PathFindingManager() 
-	: start_path(nullptr), end_path(nullptr), size_x(192), size_y(128), size_cell(5.0f)  {
+	: start_path(nullptr), end_path(nullptr) {}
 
-}
-PathFindingManager::PathFindingManager(const int _size_x, const int _size_y, const int _size_cell)
-	: start_path(nullptr), end_path(nullptr), size_x(_size_x), size_y(_size_y), size_cell(_size_cell) {
-}
+PathFindingManager::PathFindingManager(const int _size_x, const int _size_y, const int _node_size)
+	: start_path(nullptr), end_path(nullptr), size_x(_size_x), size_y(_size_y), node_size(_node_size) {}
+
 PathFindingManager::~PathFindingManager() {}
 
 void PathFindingManager::init_path() {
@@ -36,20 +36,27 @@ void PathFindingManager::goal_path_clear() {
 	goal_path.clear();
 }
 
-void PathFindingManager::finding_path(const float _str_x, const float _str_y, 
-										const float _end_x, const float _end_y) 
+void PathFindingManager::finding_path(const float _str_x, const float _str_y, const float _end_x, const float _end_y, const int _node_size) 
 {
+	// 경로를 초기화 합니다.
 	init_path();
 
-	int str_x = _str_x / size_cell;
-	int str_y = _str_y / size_cell;
-	int end_x = _end_x / size_cell;
-	int end_y = _end_y / size_cell;
+	// 노드 사이즈를 받는다.
+	node_size = _node_size;
+
+	// 받은 좌표로 트리의 슈퍼노드 좌표를 추정? 역산? 해야됩니다.
+	int str_x = _str_x / node_size;
+	int str_y = _str_y / node_size;
+	int end_x = _end_x / node_size;
+	int end_y = _end_y / node_size;
+
 
 	start_path = new Path(str_x, str_y, str_y * size_x + str_x, nullptr);
 	end_path = new Path(end_x, end_y, end_y * size_x + end_x, nullptr);
 
+	// 소비 비용 초기화
 	start_path->consumption_cost = 0.0f;
+	// 예상 비용 계산
 	start_path->expected_cost = start_path->manhattan_distance(end_path);
 
 	open_path_vector.push_back(start_path);
@@ -75,10 +82,10 @@ const bool PathFindingManager::is_goal(const int _idx) const {
 void PathFindingManager::record_path(const Path* const _path) {
 	end_path->set_parent(_path->get_parent());
 	Path* get_path = end_path;
-	goal_path.push_back(new vec2(get_path->x * size_cell, get_path->y * size_cell));
+	goal_path.push_back(new vec2(get_path->x * node_size, get_path->y * node_size));
 	// 목적지 이면 도착지부터 시작점 까지 경로를 저장합니다.
 	for (; get_path != nullptr; get_path = get_path->get_parent()) {
-		goal_path.push_back(new vec2(get_path->x * size_cell, get_path->y * size_cell));
+		goal_path.push_back(new vec2(get_path->x * node_size, get_path->y * node_size));
 	}
 	//goal_path.pop_back();
 }
@@ -108,6 +115,12 @@ void PathFindingManager::search_around_path(Path* const path) {
 	// 주변 좌표를 검색하고, 조건에 맞으면 open_path에 추가한다.
 	int x = path->x;
 	int y = path->y;
+
+	// *************** 현재 위치에서 갈수 없는 지역도 검사해야한다. ***************
+	// 몇번 노드에서 특정방향으로 갈수 있다 없다를 검사
+
+	// *************** 현재 위치에서 갈수 없는 지역도 검사해야한다. ***************
+
 	// left
 	open_path(x + 1, y, 1, path);
 	// right
@@ -132,9 +145,6 @@ void PathFindingManager::open_path(const int _x, const int _y, const int _cost, 
 	
 	if (is_out_bounds(_x, _y)) return;
 	if (close_path_overlap(idx)) return;
-
-	// *************** 갈수 없는 지역도 검사해야한다. ***************
-	//if (map[ty][tx] == 1) continue;
 
 	// path를 등록 opne_path에 등록해준다.
 	// 단 이미 등록된 path는 비용을 비교 해준다.

@@ -11,6 +11,11 @@ SuperNode::~SuperNode()
 {
 }
 
+MegaNode * SuperNode::get_mega_node(const int _num)
+{
+	return mega_node_vector.at(_num);
+}
+
 void SuperNode::set_mega_node(MegaNode * _mega_node)
 {
 	mega_node_vector.push_back(_mega_node);

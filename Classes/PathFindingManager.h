@@ -11,6 +11,7 @@
 
 using namespace std;
 
+class MapTree;
 class Path;
 
 class PathFindingManager {
@@ -20,22 +21,29 @@ public:
 		unsigned int x;
 		unsigned int y;
 	};
-	PathFindingManager();
-	PathFindingManager(const int _size_x, const int _size_y, const int _size_cell);
+	
+	PathFindingManager(const int _size_x, const int _size_y, const int _node_size);
 	~PathFindingManager();
-	void finding_path(const float _str_x, const float _str_y,
-		const float _end_x, const float _end_y);
+	void finding_path(const float _str_x, const float _str_y, const float _end_x, const float _end_y, const int _node_size);
 	void goal_path_clear();
 	vector<vec2*> goal_path;
 private:
-	
-	enum Direction {
-		up, down, right, left,
-		upper_left, lower_right, lower_left, upper_right, dir_count
+	PathFindingManager();
+
+	enum class Direction {
+		up, 
+		down, 
+		right, 
+		left,
+		upper_left, 
+		lower_right, 
+		lower_left, 
+		upper_right, 
+		dir_count
 	};
-	const unsigned int size_x;
-	const unsigned int size_y;
-	const float size_cell;
+	int size_x;
+	int size_y;
+	int node_size;
 
 	void init_path();
 	void path_vector_clear(vector<Path*>& _vector);

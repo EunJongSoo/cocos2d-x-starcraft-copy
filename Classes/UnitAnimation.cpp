@@ -159,7 +159,7 @@ bool UnitAnimation::clip_aniamtion(const clip* const _clip, Sprite* const _sprit
 	if (0.05f > dt) return false;
 	dt = 0;
 
-	bool is_left = _dir > left_check;
+	bool is_left = _dir > Direction::left_check;
 	int tmp_dir = is_left ? _dir - 10 : _dir;
 	sprite_flipped_x(_sprite, is_left, _sprite->isFlippedX());
 	

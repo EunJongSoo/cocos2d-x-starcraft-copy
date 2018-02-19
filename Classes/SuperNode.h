@@ -12,6 +12,7 @@ public:
 	SuperNode();
 	~SuperNode();
 
+	MegaNode* get_mega_node(const int _num);
 	void set_mega_node(MegaNode* _mega_node);
 	void check_open_node();
 	bool is_open_node(char _dir);

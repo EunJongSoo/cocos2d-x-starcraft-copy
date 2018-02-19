@@ -128,6 +128,9 @@ bool HelloWorld::init()
 	start = clock();
 	end = clock();
 
+	CCLOG("sizeof Unit : %d", sizeof(Unit));
+
+
     return true;
 }
 
