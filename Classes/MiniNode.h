@@ -21,7 +21,11 @@ public:
 		up = 1,
 		down = 2,
 		left = 4,
-		right = 8
+		right = 8,
+		up_left = 16,
+		up_right = 32,
+		down_left = 64,
+		down_right = 128
 	};
 
 public:
