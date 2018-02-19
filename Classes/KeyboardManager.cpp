@@ -1,3 +1,10 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : KeyboardManager.cpp
+****************************/
+
+
 #include "KeyboardManager.h"
 #include "Header.h"
 

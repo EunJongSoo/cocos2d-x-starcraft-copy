@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : HelloWorldScene.cpp
+****************************/
+
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 
@@ -65,6 +71,7 @@ bool HelloWorld::init()
         return false;
     }
 
+	// 입력 장치를 관리하는 클래스
 	input_manager = new InputManager();
 	this->addChild(input_manager);
 
@@ -126,8 +133,13 @@ bool HelloWorld::init()
 
 void HelloWorld::update(float _dt) {
 	
-	// 조작
-	InputInfo * _input_info = input_manager->input_prossce(get_origin());
+	// 입력 정보를 받을 객체를 동적할당 한다.
+	InputInfo * _input_info = new InputInfo();
+
+	// 입력 정보를 받는다.
+	input_manager->input_process(get_origin(), _input_info);
+	
+	// 전체 유닛 리스트를 받아온다
 	std::vector<PlayerUnitManager*>& unit_manager_vector = unit_layer->get_unit_manager_vector();
 
 	// 메인 프로세스
@@ -136,6 +148,7 @@ void HelloWorld::update(float _dt) {
 	// 그리기
 	draw_process(_input_info, unit_manager_vector, _dt);
 
+	// 입력 정보를 안전 해제 해준다.
 	SAFE_DELETE(_input_info);
 }
 
@@ -175,7 +188,7 @@ void HelloWorld::create_drag_rect(InputInfo * const _input) {
 		draw_node->clear();
 
 		// 마우스 상태가 드래그 중인지 확인한다.
-		if (mouse_info->get_mouse_state() == MouseInfo::mouse_state::L_dragging) {
+		if (mouse_info->get_mouse_state() == MouseInfo::Mouse_state::L_dragging) {
 			// 마우스 클릭 시작점과 끝점의 값을 저장한다.
 			Vec2 start_vec2(mouse_info->get_start_pos());
 			Vec2 end_vec2(mouse_info->get_end_pos());

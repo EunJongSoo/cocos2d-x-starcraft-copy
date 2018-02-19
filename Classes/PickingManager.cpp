@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : PickingManager.cpp
+****************************/
+
 #include <vector>
 #include "PickingManager.h"
 #include "Unit.h"
@@ -23,12 +29,12 @@ const std::vector<Unit*>& PickingManager::picking_unit(InputInfo * const _input,
 		// 마우스 명령 종류에 따라 해당 이벤트를 동작
 		switch (info->get_mouse_state())
 		{
-		case MouseInfo::L_drag: {
+		case MouseInfo::Mouse_state::L_drag: {
 			run_action_mouse_L_drag(info->get_start_pos(), info->get_end_pos(), _manager_vector);
 			break;
 		}
-		case MouseInfo::L_double:	break;
-		case MouseInfo::L_up: {
+		case MouseInfo::Mouse_state::L_double:	break;
+		case MouseInfo::Mouse_state::L_up: {
 			run_action_mouse_L_up(info->get_end_pos(), _manager_vector);
 			break;
 		}
@@ -55,7 +61,9 @@ const std::vector<Unit*>& PickingManager::picking_unit(InputInfo * const _input,
 void PickingManager::run_action_mouse_L_up(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector)
 {
 	// 유닛이 클릭 되었을때의 처리를 한다.
+	// 전체 플레이어 유닛 매니저를 대상으로 검색한다.
 	for (PlayerUnitManager* manager : _manager_vector) {
+		// 해당 플레이어 유닛매니저의 유닛 벡터를 가져온다.
 		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
 		// 유닛을 찾았는지 확인한다.
 		if (mouse_L_up_process(_vec2, unit_vector)) {
@@ -85,6 +93,8 @@ void PickingManager::run_action_mouse_L_drag(const cocos2d::Vec2& _str_vec2, con
 	// 드래그된 유닛을 찾는다.
 	for (PlayerUnitManager* manager : _manager_vector) {
 		std::vector<Unit*>& unit_vector = manager->get_unit_vector();
+		// 드래그된 유닛의 숫자에 따라 트루, 펄스가 반환된다.
+		// 드래그된 유닛이 12개가 되면 트루가 반환되어 검색을 중지한다.
 		if (find_drag_unit(drag_rect, unit_vector, tmp_select_unit_vector)) {
 			break;
 		}

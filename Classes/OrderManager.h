@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : OrderManager.h
+****************************/
+
 #ifndef ORDER_MANAGER_H_
 #define ORDER_MANAGER_H_
 

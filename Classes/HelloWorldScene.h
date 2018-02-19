@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : HelloWorldScene.h
+****************************/
+
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 

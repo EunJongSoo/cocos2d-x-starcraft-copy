@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : MouseManager.h
+****************************/
+
 #ifndef MOUSE_MANAGER_H_
 #define MOUSE_MANAGER_H_
 
@@ -28,13 +34,13 @@ private:
 
 	void correction_mouse_location_y(cocos2d::Vec2& _point);
 	bool mouse_distance_check(const cocos2d::Vec2& _vec2);
-	void set_value(MouseInfo::mouse_state _state, const cocos2d::Vec2& _start_pos, const cocos2d::Vec2& _end_pos);
+	void set_value(MouseInfo::Mouse_state _state, const cocos2d::Vec2& _start_pos, const cocos2d::Vec2& _end_pos);
 
 private:
 	cocos2d::Size win_size;
 
-	MouseInfo::mouse_state state;
-	MouseInfo::mouse_state order;
+	MouseInfo::Mouse_state state;
+	MouseInfo::Mouse_state order;
 	cocos2d::Vec2 start_pos;
 	cocos2d::Vec2 end_pos;
 

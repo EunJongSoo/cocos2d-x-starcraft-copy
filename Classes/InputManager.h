@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : InputManager.h
+****************************/
+
 #ifndef INPUT_MANAGER_H_
 #define INPUT_MANAGER_H_
 
@@ -14,7 +20,7 @@ public:
 	InputManager();
 	~InputManager();
 
-	InputInfo* input_prossce(const cocos2d::Vec2& _origin);
+	void input_process(const cocos2d::Vec2& _origin, InputInfo* const _input);
 private:
 	KeyboardManager* keyboard_manager;
 	MouseManager* mouse_manager;

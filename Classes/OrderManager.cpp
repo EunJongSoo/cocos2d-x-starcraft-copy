@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-19
+작성자 : 은종수
+파일명 : OrderManager.cpp
+****************************/
+
 #include <vector>
 #include "OrderManager.h"
 
@@ -13,7 +19,7 @@ OrderManager::~OrderManager()
 {
 }
 
-void OrderManager::order_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector, const std::vector<Unit*>& select_unit_vector)
+void OrderManager::order_process(InputInfo * const _input, const std::vector<PlayerUnitManager*>& _manager_vector, const std::vector<Unit*>& _select_unit_vector)
 {
 	// 마우스 명령 확인
 	MouseInfo* info = _input->get_mouse_info();
@@ -21,8 +27,8 @@ void OrderManager::order_process(InputInfo * const _input, const std::vector<Pla
 		// 마우스 명령 종류에 따라 해당 이벤트를 동작
 		switch (info->get_mouse_state())
 		{
-		case MouseInfo::R_down: {
-			run_action_mouse_R_down(info->get_start_pos(), _manager_vector, select_unit_vector);
+		case MouseInfo::Mouse_state::R_down: {
+			run_action_mouse_R_down(info->get_start_pos(), _manager_vector, _select_unit_vector);
 			break;
 		}
 		}
@@ -30,10 +36,10 @@ void OrderManager::order_process(InputInfo * const _input, const std::vector<Pla
 }
 
 // 마우스 오른클릭 시작할때 이벤트
-void OrderManager::run_action_mouse_R_down(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector, const std::vector<Unit*>& _unit_vector)
+void OrderManager::run_action_mouse_R_down(const cocos2d::Vec2& _vec2, const std::vector<PlayerUnitManager*>& _manager_vector, const std::vector<Unit*>& _select_unit_vector)
 {
 	// 선택된 유닛이 있는지 확인한다.
-	if (_unit_vector.empty()) {
+	if (_select_unit_vector.empty()) {
 		// 없으면 빠져나간다.
 		return;
 	}
@@ -53,25 +59,37 @@ void OrderManager::run_action_mouse_R_down(const cocos2d::Vec2& _vec2, const std
 		// 유닛을 찾으면 검색을 중단한다.
 		if (unit != nullptr) {
 			// 있을때의 처리를 한다.
-			R_click_unit_process(unit, _unit_vector);
+			R_click_unit_process(unit, _select_unit_vector);
 			return;
 		}
 	}
 	// 없을때의 처리를 한다.
-	R_click_not_unit_process(_vec2, _unit_vector);
+	R_click_not_unit_process(_vec2, _select_unit_vector);
 }
 
-void OrderManager::R_click_unit_process(Unit* _unit, const std::vector<Unit*>& _unit_vector)
+void OrderManager::R_click_unit_process(Unit* _unit, const std::vector<Unit*>& _select_unit_vector)
 {
 	// 유닛의 소속팀에 따라 명령이 달라져야함
 	// 유닛 행동을 지시하는 클래스가 만들어지면 상세 정의 필요
-	attack_unit(_unit, _unit_vector);
+	attack_unit(_unit, _select_unit_vector);
 }
 
-void OrderManager::R_click_not_unit_process(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
+void OrderManager::R_click_not_unit_process(const cocos2d::Vec2& _end_vec2, const std::vector<Unit*>& _select_unit_vector)
 {
-	CCLOG("pos_x : %f, pos_y : %f", _vec2.x, _vec2.y);
-	move_unit(_vec2, _unit_vector);
+	// 유닛이 이동을 한다.
+	// 현재 위치와 이동 목적지가 필요하다.
+	
+	// 선택된 유닛의 중간점 찾기
+	for (Unit* unit : _select_unit_vector) {
+
+		unit->getPosition();
+
+	}
+
+
+
+	CCLOG("pos_x : %f, pos_y : %f", _end_vec2.x, _end_vec2.y);
+	move_unit(_end_vec2, _select_unit_vector);
 }
 
 Unit * OrderManager::find_click_unit(const cocos2d::Vec2& _vec2, const std::vector<Unit*>& _unit_vector)
