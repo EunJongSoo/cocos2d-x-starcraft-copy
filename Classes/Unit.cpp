@@ -14,7 +14,7 @@
 using namespace cocos2d;
 
 Unit::Unit() :
-	_unit_dir(direction::up),
+	_unit_dir(Direction::up),
 	_production_time(0.0f),
 	_select_unit(false),
 	_player_color(kWhite),
@@ -80,8 +80,8 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color
 
 	// 임시작성
 	// 유닛 정보를 생성한다.
-	_unit_info = new unit_info(1, 1, 1, 1, 1, 1, 1, unit_type::marine, UpgradeType::bionic, "marine");
-	_unit_info2 = new unit_info2(1, 1, 1, 1, 1);
+	_unit_info = new UnitInfo(1, 1, 1, 1, 1, 1, 1, unit_type::marine, UpgradeType::bionic, "marine");
+	_unit_info2 = new UnitInfo2(1, 1, 1, 1, 1);
 
 	// 임시작성
 	// 유닛 종류에 따라 달라짐
@@ -243,29 +243,29 @@ void Unit::check_dir(const cocos2d::Vec2 & _dir) {
 	// y값이 0.33f보다 높은지 확인한다.
 	if (_dir.y > up_right_left2) {
 		// y값이 0.99f 보다 높은지 확인한다.
-		if (_dir.y > up)						_unit_dir = direction::up;
+		if (_dir.y > up)						_unit_dir = Direction::up;
 		// y값이 0.66f 보다 높은지 확인한다.
-		else if (_dir.y > up_right_left1) 		_unit_dir = (_dir.x > 0) ? direction::up_right1 : direction::up_left1;
+		else if (_dir.y > up_right_left1) 		_unit_dir = (_dir.x > 0) ? Direction::up_right1 : Direction::up_left1;
 		// 나머지는 0.33f보다 높고 0.66f보다 낮다.
-		else                         			_unit_dir = (_dir.x > 0) ? direction::up_right2 : direction::up_left2;
+		else                         			_unit_dir = (_dir.x > 0) ? Direction::up_right2 : Direction::up_left2;
 	}
 	// y값이 -0.33f보다 높은지 확인한다.
 	else if (_dir.y > down_right_left1) {
 		// y값이 0.1f보다 높은지 확인한다.
-		if (_dir.y > up_right_left3)			_unit_dir = (_dir.x > 0) ? direction::up_right3 : direction::up_left3;
+		if (_dir.y > up_right_left3)			_unit_dir = (_dir.x > 0) ? Direction::up_right3 : Direction::up_left3;
 		// y값이 -0.1f 보다 높은지 확인한다.
-		else if (_dir.y > right_left)			_unit_dir = (_dir.x > 0) ? direction::right : direction::left;
+		else if (_dir.y > right_left)			_unit_dir = (_dir.x > 0) ? Direction::right : Direction::left;
 		// 나머지는 -0.33보다 높고 -0.1f보다 낮다.
-		else									_unit_dir = (_dir.x > 0) ? direction::down_right1 : direction::down_left1;
+		else									_unit_dir = (_dir.x > 0) ? Direction::down_right1 : Direction::down_left1;
 	}
 	// 나머지는 -0.33보다 낮다.
 	else {
 		// y값이 -0.66f보다 높은지 확인한다.
-		if (_dir.y > -down_right_left2)			_unit_dir = (_dir.x > 0) ? direction::down_right2 : direction::down_left2;
+		if (_dir.y > -down_right_left2)			_unit_dir = (_dir.x > 0) ? Direction::down_right2 : Direction::down_left2;
 		// y값이 -0.99f보다 높은지 확인한다.
-		else if (_dir.y > down_right_left3)		_unit_dir = (_dir.x > 0) ? direction::down_right3 : direction::down_left3;
+		else if (_dir.y > down_right_left3)		_unit_dir = (_dir.x > 0) ? Direction::down_right3 : Direction::down_left3;
 		// 나머지는 -0.99보다 낮다.
-		else                             		_unit_dir = direction::down;
+		else                             		_unit_dir = Direction::down;
 	}
 }
 

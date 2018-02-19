@@ -13,6 +13,7 @@
 // class 전방선언
 class UnitWeapon;
 class UnitAnimation;
+class AIManager;
 
 class Unit :public cocos2d::Sprite {
 public:
@@ -42,8 +43,8 @@ public:
 		clockking,
 	};
 
-	struct unit_info {
-		unit_info(int _hp, int _mp, int _shield, int _attack,
+	struct UnitInfo {
+		UnitInfo(int _hp, int _mp, int _shield, int _attack,
 			int _defence, int _attack_lv, int _defence_lv, unit_type _unit_type,
 			UpgradeType _up_type, char* _name) :
 			killing_count(0),
@@ -70,10 +71,10 @@ public:
 		UpgradeType upgrade_type;					// 업그레이드 종류
 		std::string unit_name;						// 유닛 이름
 	private:
-		unit_info();
+		UnitInfo();
 	};
-	struct unit_info2 {
-		unit_info2(float _move_speed, float _attack_speed,
+	struct UnitInfo2 {
+		UnitInfo2(float _move_speed, float _attack_speed,
 			float _sight_range, float _min_attack_range,
 			float _max_attack_range) :
 			move_speed(_move_speed),
@@ -88,7 +89,7 @@ public:
 		float min_attack_range;						// 최소_사정거리
 		float max_attack_range;						// 최대_사정거리
 	private:
-		unit_info2();
+		UnitInfo2();
 	};
 	struct production_info {
 		float required_production_time;				// 필요 생산 시간
@@ -114,7 +115,7 @@ public:
 	inline bool is_select() const { return _select_unit; }
 	inline void set_select_unit(bool _selete) { _select_unit = _selete; }
 
-	direction _unit_dir;
+	Direction _unit_dir;
 	
 private:
 	Unit();
@@ -148,8 +149,8 @@ private:
 
 	cocos2d::Vec2 _move_vec2;						// 이동 목표
 	cocos2d::Vec2 _my_pos_vec2;						// 시작위치, 정찰 명령시 사용
-	unit_info * _unit_info;							// 구조체 유닛 능력치 정보
-	unit_info2 * _unit_info2;						// 구조체 유닛 능력치 정보2
+	UnitInfo * _unit_info;							// 구조체 유닛 능력치 정보
+	UnitInfo2 * _unit_info2;						// 구조체 유닛 능력치 정보2
 	production_info * _production_info;				// 구조체 생성 정보
 	Unit * _target_unit;							// 공격 목표
 	UnitAnimation * _unit_animation;
