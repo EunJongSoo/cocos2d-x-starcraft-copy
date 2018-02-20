@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-20
+작성자 : 은종수
+파일명 : MiniNode.h
+****************************/
+
 #ifndef MINI_NODE_H_
 #define MINI_NODE_H_
 
@@ -36,10 +42,12 @@ public:
 	bool is_open_node(char _dir);
 	void set_open_node(char _dir);
 	void set_mini_node(unsigned int _index, unsigned short _flag);
+
 private:
 	char open_node;
-	unsigned int index;						// 노드 인덱스
+	unsigned int index;					// 노드 인덱스
 	unsigned short mini_tile_flags;		// 미니 타일 플레그
+
 };
 
 #endif
