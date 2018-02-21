@@ -1,5 +1,5 @@
 /****************************
-수정일 : 2017-02-20
+수정일 : 2017-02-21
 작성자 : 은종수
 파일명 : MegaNode.h
 ****************************/
@@ -29,19 +29,20 @@ class MiniNode;
 
 class MegaNode {
 public:
-	MegaNode();
+	MegaNode(int _index);
 	~MegaNode();
 
-	void set_mini_node(MiniNode* _mega_node);
+	void set_mini_node(MiniNode* _mini_node);
 	bool is_open_node(char _dir);
 	void check_open_node();
 
 private:
+	MegaNode();
 	void set_open_node(char _dir);
 	
 private:
 	char open_node;								// 통행 가능한 방향을 표시함
-	unsigned int index;							// 노드 인덱스
+	int index;									// 노드 인덱스
 	std::vector<MiniNode*> mini_node_vector;
 
 };

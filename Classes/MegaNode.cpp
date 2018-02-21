@@ -1,19 +1,25 @@
+/****************************
+수정일 : 2017-02-21
+작성자 : 은종수
+파일명 : MegaNode.cpp
+****************************/
+
 #include <vector>
 #include "MegaNode.h"
 #include "MiniNode.h"
 
-MegaNode::MegaNode()	:
-	open_node(0)
-{
-}
+MegaNode::MegaNode() {}
+
+MegaNode::MegaNode(int _index) : open_node(0), index(_index)
+{}
 
 MegaNode::~MegaNode()
 {
 }
 
-void MegaNode::set_mini_node(MiniNode * _mega_node)
+void MegaNode::set_mini_node(MiniNode * _mini_node)
 {
-	mini_node_vector.push_back(_mega_node);
+	mini_node_vector.push_back(_mini_node);
 }
 
 bool MegaNode::is_open_node(char _dir)
