@@ -1,3 +1,9 @@
+/****************************
+수정일 : 2017-02-21
+작성자 : 은종수
+파일명 : SuperNode.h
+****************************/
+
 #ifndef SUPER_NODE_H_
 #define SUPER_NODE_H_
 
@@ -9,7 +15,7 @@ namespace std {
 
 class SuperNode {
 public:
-	SuperNode();
+	SuperNode(int _index);
 	~SuperNode();
 
 	MegaNode* get_mega_node(const int _num);
@@ -17,11 +23,12 @@ public:
 	void check_open_node();
 	bool is_open_node(char _dir);
 private:
+	SuperNode();
 	void set_open_node(char _dir);
-
-	std::vector<MegaNode*> mega_node_vector;
+	
 	char open_node;
-
+	int index;
+	std::vector<MegaNode*> mega_node_vector;
 };
 
 #endif

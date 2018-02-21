@@ -1,9 +1,19 @@
+/****************************
+수정일 : 2017-02-21
+작성자 : 은종수
+파일명 : SuperNode.cpp
+****************************/
+
 #include <vector>
 #include "SuperNode.h"
 #include "MegaNode.h"
 #include "MiniNode.h"
 
 SuperNode::SuperNode()
+{
+}
+
+SuperNode::SuperNode(int _index) : index(_index)
 {
 }
 
