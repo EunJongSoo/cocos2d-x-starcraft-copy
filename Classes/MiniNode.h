@@ -1,5 +1,5 @@
 /****************************
-수정일 : 2017-02-20
+수정일 : 2017-02-21
 작성자 : 은종수
 파일명 : MiniNode.h
 ****************************/
@@ -39,9 +39,9 @@ public:
 	~MiniNode();
 	
 	bool is_walkable();
-	bool is_open_node(char _dir);
-	void set_open_node(char _dir);
-	void set_mini_node(unsigned int _index, unsigned short _flag);
+	bool is_open_node(const char _dir);
+	void set_open_node(const char _dir);
+	void set_idx_mini_node(const int _index, const unsigned short _flag);
 
 private:
 	char open_node;
