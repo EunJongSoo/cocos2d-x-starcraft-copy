@@ -1,5 +1,5 @@
 /****************************
-수정일 : 2017-02-19
+수정일 : 2017-02-21
 작성자 : 은종수
 파일명 : BackGroundLayer.cpp
 ****************************/
@@ -34,7 +34,7 @@ bool BackGroundLayer::init()
 
 bool BackGroundLayer::create_map(MapData* const _map_data, MapTree* const _map_tree)
 {
-	_map_data->load_map_data("(2)The Small Divide.chk");
+	_map_data->load_map_data("(8)Orbital Death.chk");
 	
 	create_map_sprite(_map_data);
 	create_map_tree(_map_data, _map_tree);
@@ -74,7 +74,8 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 	int mini_width4 = mini_width * 4;
 	std::vector<MiniNode*> mini_node_vector;
 
-
+	int start, end;
+	start = clock();
 	// 미니노드를 만들고 인덱스와 플레그를 저장
 	for (int h = 0; h < mini_height; ++h) {
 		for (int w = 0; w < mini_width; ++w) {
@@ -91,7 +92,7 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 			int mini_tile_index = (w % 4) + ((h % 4) * 4);
 			int flag = _map_data->find_mini_tile_flag(mega_tile_num, mini_tile_index);
 
-			mini_node->set_mini_node(w + h * mini_width, flag);
+			mini_node->set_idx_mini_node(w + h * mini_width, flag);
 			mini_node_vector.push_back(mini_node);
 		}
 	}
@@ -175,9 +176,14 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 		}
 	}
 
+	end = clock();
+	CCLOG("mini node create time: %d", end - start);
+
 	std::vector<MegaNode*> mega_node_vector;
 
-	// 각 메가타일에 미니타일을 추가한다.
+	// 시간 체크
+	start = clock();
+	// 각 메가노드에 미니노드를 추가한다.
 	for (int h = 0; h < mega_height; ++h) {
 		for (int w = 0; w < mega_width; ++w) {
 		
@@ -187,7 +193,7 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 			int line3 = line2 + mini_width;
 			int line4 = line3 + mini_width;
 
-			MegaNode* mega_node = new MegaNode;
+			MegaNode* mega_node = new MegaNode(h * mega_width + w);
 
 			mega_node->set_mini_node(mini_node_vector[line1]);
 			mega_node->set_mini_node(mini_node_vector[line1 + 1]);
@@ -214,10 +220,13 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 			mega_node_vector.push_back(mega_node);
 		}
 	}
+	end = clock();
+	CCLOG("mega node create time: %d", end - start);
 
 	int super_height = mega_height / 2;
 	int super_width = mega_width / 2;
 
+	// 각 슈퍼노드에 메가노드를 추가한다.
 	for (int h = 0; h < super_height; ++h) {
 		for (int w = 0; w < super_width; ++w) {
 
@@ -225,7 +234,7 @@ void BackGroundLayer::create_map_tree(MapData * const _map_data, MapTree* const 
 			int line1 = w * 2 + h_correction;
 			int line2 = line1 + mega_width;
 
-			SuperNode* super_node = new SuperNode;
+			SuperNode* super_node = new SuperNode(h * super_width + w);
 
 			super_node->set_mega_node(mega_node_vector[line1]);
 			super_node->set_mega_node(mega_node_vector[line1 + 1]);
