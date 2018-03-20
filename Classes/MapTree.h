@@ -26,7 +26,7 @@ public:
 	};
 
 	void set_super_node(SuperNode* _super_node);
-	bool is_open_node(const float x, const float y, const char _dir, const int _node_size);
+	//bool is_open_node(const float x, const float y, const char _dir, const int _node_size);
 private:
 	std::vector<SuperNode*> super_node_vector;
 
