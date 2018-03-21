@@ -186,12 +186,14 @@ void HelloWorld::draw_process(InputInfo * const _input, const std::vector<Player
 // 기능 이관이 필요함
 void HelloWorld::create_drag_rect(InputInfo * const _input) {
 	MouseInfo* mouse_info = _input->get_mouse_info();
-	if (mouse_info) {
+	
+	if (mouse_info->get_mouse_state() != MouseInfo::Mouse_state::none) {
 		// 있으면 화면에 그린 그림을 삭제한다.
 		draw_node->clear();
 
 		// 마우스 상태가 드래그 중인지 확인한다.
 		if (mouse_info->get_mouse_state() == MouseInfo::Mouse_state::L_dragging) {
+
 			// 마우스 클릭 시작점과 끝점의 값을 저장한다.
 			Vec2 start_vec2(mouse_info->get_start_pos());
 			Vec2 end_vec2(mouse_info->get_end_pos());
@@ -209,7 +211,7 @@ Vec2 HelloWorld::get_origin() const
 
 void HelloWorld::camera_scroll(InputInfo * const _input)
 {
-	const Vec2& move_pos = camera_manager->camera_scroll(_input->get_normal_mouse_info()->get_end_pos());
+	const Vec2& move_pos = camera_manager->camera_scroll(_input->get_mouse_info()->get_end_pos());
 	ui_layer->setPosition(ui_layer->getPosition() + move_pos);
 }
 
