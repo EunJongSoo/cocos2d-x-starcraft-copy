@@ -76,7 +76,7 @@ public:
 
 	성공적으로 애니메이션을 재생하면 성공여부를 반환해주고 있다.
 	*/
-	bool run_action_aniamtion(const UnitState _state, const float _dt, const int _dir = 0, const int _frame = 0);
+	bool run_action_aniamtion(UnitState _state, const float _dt, int _dir = 0);
 
 	/* 애니메이션을 출력할때 프레임이라는 변수를 1개씩 더하면서 출력하고 있다.
 	그런데 상태값이 바뀌어 다른 애니메이션이 되면 프레임을 0번부터 출력해야되기 때문에

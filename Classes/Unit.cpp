@@ -130,7 +130,7 @@ bool Unit::init(unit_type _type, const cocos2d::Vec2& _vec2, player_color _color
 	char str[16] = { 0, };
 	sprintf_s(str, sizeof(str), "marine0016.bmp");
 	auto sprite_cache = SpriteFrameCache::getInstance();
-	this->initWithTexture(resources_manager->load_resources(str, _player_color));
+	this->initWithTexture(resources_manager->load_texture2d(str, _player_color));
 
 	// 임시작성
 	// 유닛 정보를 생성한다.
@@ -236,61 +236,26 @@ void Unit::hit(int _dmg) {
 AI 부분에 미확정 부분이 많아서 대충 틀만 만들어두고 임시로 코딩된 부분이 많다.
 죄다 뜯어 고쳐야 할 것들*/
 
-void Unit::run_action_animation(float _dt) {
-	// 후처리는 다른 곳에서..
-	// unit_animation->run_action_aniamtion(unit_state, this, _dt, unit_dir);
-
+void Unit::run_action_animation(float _dt) {	
+	_unit_animation->run_action_aniamtion(_unit_state, _dt, _unit_dir);
+	weapon_animaiton(_dt);
 	switch (_unit_state)
-	{
-	case UnitState::production: 		break;
-	case UnitState::idle:
-		_unit_animation->run_action_aniamtion(UnitState::idle, _dt, _unit_dir);
-		break;
-	case UnitState::move:
-		// 이동처리 따로 애니메이션 처리 따로 
-		run_action_move();																	// 이동처리
-		_unit_animation->run_action_aniamtion(UnitState::move, _dt, _unit_dir);		// 애니메이션 처리
-		break;
-		
-		/*이부분 무슨코드지..????????????
-		{}가 왜 있는지 모르겠다.
-
-		남아 있는 주석을 보면 유닛이 공격을 할때마다 유닛웨폰 클래스를 호출하기 때문에
-		조건을 넣어서 웨폰클래스를 호출하도록 if문을 붙이려고 {}를 친거 같다.
-
-		실제로 지금 공격을 하면 마린 총알이 계속 생성되서 그 이후 애니메이션이 안보인다.*/
+	{	
+	case UnitState::production: 						break;
+	case UnitState::idle:								break;
+	case UnitState::move:	run_action_move();			break;
 	case UnitState::attack: {
-		_unit_animation->run_action_aniamtion(UnitState::attack, _dt, _unit_dir, 2);	// 애니메이션 처리		
-		{														
 			_weapon = new UnitWeapon(_target_unit, unit_type::marine_weapon);
 			this->getParent()->addChild(_weapon);
 			_bullet_vector.push_back(_weapon);
-		}
 		break;
 	}
-	case UnitState::patrol: {
-		/*패트롤 상태를 처리하는 부분이다.
-		패트롤도 이동을 하는것이기 때문에 애니메이션을 동일한것을 사용한다.
-
-		유닛 상태가 대기인것을 확인하는건
-		이동으로 목적지에 도착하면 대기 상태가 되기 때문이다.
-
-		그리고 대기 상태가 되면 다시 출발지점으로 돌아가야 하기 때문에
-		출발지점과 도착지점의 값을 바꿔줬다.*/
-		run_action_move();														// 이동처리, 기능 이관 해야됨
-		if (_unit_state == UnitState::idle) {
-			set_state(UnitState::patrol);
-			std::swap(_move_vec2, _my_pos_vec2);
-		}
-		_unit_animation->run_action_aniamtion(UnitState::move, _dt, _unit_dir);		// 애니메이션 처리
-		break;
+	case UnitState::patrol: run_action_move();			break;
+	case UnitState::hold: 								break;
+	case UnitState::die: _unit_dir = Direction::up;		break;
+	default:											break;
 	}
-	case UnitState::hold: 		break;
-	case UnitState::die: 		_unit_animation->run_action_aniamtion(UnitState::die, _dt); 		break;
-	default:
-		break;
-	}
-	weapon_animaiton(_dt);
+	
 }
 
 // 임시 작성, 기능 이관 해야됨
@@ -335,7 +300,14 @@ cocos2d에 있는 Rect를 사용해서 충돌체크를 하는데
 void Unit::run_action_move() {
 	Rect bounding = this->getBoundingBox();
 	if (bounding.containsPoint(_move_vec2)) {
-		set_state(UnitState::idle);
+		if (_unit_state == UnitState::move) {
+			set_state(UnitState::idle);
+		}
+		/*패트롤 상태를 처리하는 부분이다.
+		출발지점과 도착지점의 값을 바꿔줬다.*/
+		else if (_unit_state == UnitState::patrol) {
+			std::swap(_move_vec2, _my_pos_vec2);
+		}
 	}
 	else {
 		// 현재 유닛 위치를 저장

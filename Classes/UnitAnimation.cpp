@@ -99,10 +99,19 @@ _unit_animation->run_action_aniamtion(UnitState::attack, _dt, _unit_dir, 2);
 수정이 필요한데 아직 유닛별 데이터를 관리할 부분이 작업되지 않아
 수정순서가 뒤로 밀린다.
 */
-bool UnitAnimation::run_action_aniamtion(const UnitState _state, const float _dt, const int _dir, const int _frame) {
+bool UnitAnimation::run_action_aniamtion(UnitState _state, const float _dt, const int _dir) {
+	int frame = 0;
+	
+	if (_state == UnitState::attack) {
+		frame = 2;
+	}
+	else if (_state == UnitState::patrol) {
+		_state = UnitState::move;
+	}
+
 	for (clip* _clip : clip_vector) {
 		if (_clip->state == _state) {
-			return run_clip_aniamtion(_clip, _dt, _dir, _frame);
+			return run_clip_aniamtion(_clip, _dt, _dir, frame);
 		}
 	}
 }
@@ -276,7 +285,7 @@ bool UnitAnimation::run_clip_aniamtion(const clip* const _clip, const float _dt,
 cocos2d::Texture2D * UnitAnimation::load_texture(const char * const _str, const player_color _color)
 {
 	auto resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
-	return resources_manager->load_resources(_str, _color);
+	return resources_manager->load_texture2d(_str, _color);
 }
 
 /* 클립에 텍스쳐를 추가한다.*/
