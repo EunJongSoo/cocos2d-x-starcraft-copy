@@ -19,7 +19,7 @@ bool UiLayer::init()
 		return false;
 
 	ResourcesManager* resources_manager = TemplateSingleton<ResourcesManager>::get_instance();
-	Texture2D* texture = resources_manager->load_resources("tconsole.png");
+	Texture2D* texture = resources_manager->load_texture2d("tconsole.png");
 	Sprite* sprite = cocos2d::Sprite::createWithTexture(texture);
 	sprite->setPosition(0, 0);
 	sprite->setAnchorPoint(Vec2::ZERO);
