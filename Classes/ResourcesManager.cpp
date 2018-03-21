@@ -24,7 +24,7 @@ ResourcesManager::~ResourcesManager()
 }
 
 // 리소스를 불러온다.
-cocos2d::Texture2D * ResourcesManager::load_resources(const std::string& _file_name, const player_color _color)
+cocos2d::Texture2D * ResourcesManager::load_texture2d(const std::string& _file_name, const player_color _color)
 {
 	const char* extension = strchr(_file_name.c_str(), '.');
 	cocos2d::Texture2D* texture = nullptr;

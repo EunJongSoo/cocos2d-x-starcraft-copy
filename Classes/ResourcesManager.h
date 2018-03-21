@@ -18,8 +18,7 @@ public:
 	~ResourcesManager();
 
 	// 리소스를 불러오는 함수
-	cocos2d::Texture2D* load_resources(const std::string& _file_name, const player_color _color = player_color::none);
-
+	cocos2d::Texture2D* load_texture2d(const std::string& _file_name, const player_color _color = player_color::none);
 private:
 	std::map<std::string, Bitmap*>* find_bitmap_map(const player_color _str);
 	Bitmap* load_bitmap(const std::string& _file_name, const player_color _color);
