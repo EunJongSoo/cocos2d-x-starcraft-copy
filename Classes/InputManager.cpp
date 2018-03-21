@@ -36,8 +36,8 @@ InputManager::InputManager() :
 그래서 필요가 없는데 왜 등록을 했는지 모르겠다.*/
 InputManager::~InputManager() 
 {
-	SAFE_DELETE(keyboard_manager);
-	SAFE_DELETE(mouse_manager);
+	/*SAFE_DELETE(keyboard_manager);
+	SAFE_DELETE(mouse_manager);*/
 }
 
 /*
@@ -54,9 +54,5 @@ void InputManager::input_process(const cocos2d::Vec2& _origin, InputInfo* const 
 	if (info) {
 		info->set_mouse_origin(_origin);
 	}
-	MouseInfo* normal_info = mouse_manager->get_normal_mouse_info();
-	if (normal_info) {
-		normal_info->set_mouse_origin(_origin);
-	}
-	_input->set_info(info, normal_info);
+	_input->set_info(info);
 }
